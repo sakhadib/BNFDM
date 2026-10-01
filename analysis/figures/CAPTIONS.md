@@ -27,6 +27,29 @@ glyphs; every category is named in Latin script or by an ASCII family code.
 
 ---
 
+## Where each figure sits in the paper
+
+Figure numbers are assigned by LaTeX, so they do not match the file names.
+Current mapping (`paper/acl_latex.tex`):
+
+| file | paper | location |
+|---|---|---|
+| fig1_literal_capture | Figure 1 | body |
+| fig2_capture_matrix | Figure 2 | body |
+| fig3_three_way_bangla | Figure 3 | body |
+| fig4_confidence_reliability | Figure 4 | body |
+| fig5_no_signal_control | Figure 5 | body |
+| fig6_order_sensitivity | Figure 6 | body |
+| fig9_unit_integrity | Figure 7 | body |
+| fig10_crosslingual | Figure 8 | body |
+| fig7_position_bias | Figure 9 | Appendix C |
+| fig8_option_ablation | Figure 10 | Appendix D, beside Table 7 |
+
+Position bias and option ablation were moved to the appendix to bring the body
+inside the eight-page limit; both are fully described in the text and the
+option-ablation numbers also appear as Table 7.
+
+
 ## fig1_literal_capture
 
 **Plot.** Left: accuracy across the five distractor families (random,

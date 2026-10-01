@@ -36,7 +36,9 @@
 \newcommand{\Dhard}{\textsc{d-hard}}
 \newcommand{\LAR}{\textsc{lar}}
 
-\title{Literal Capture: Auditing Non-Generative Decision Models\\on Bangla Idioms}
+\title{Literal Capture in Typed Decision Models: A Behavioural Audit of\\
+Calibration, Option-Order Stability and Figurative Meaning\\
+on 10{,}359 Bangla Idioms}
 
 \author{Anonymous Submission}
 
@@ -75,7 +77,11 @@ returns a probability distribution over exactly those options. It is not
 autoregressive, it does not sample, and it produces no text. This class has
 grown quickly as infrastructure --- routing, intent classification, content
 gating, tool selection --- precisely because it is cheap, bounded and returns a
-number a caller can threshold on.
+number a caller can threshold on. An ecosystem analysis of 2{,}170 public
+projects finds it already embedded as a reusable decision component across
+domains \citep{ling2026wild}, and proposals now place these models at the
+adjudication points of autonomous security harnesses
+\citep{santos2026pentest}. The threshold is load-bearing.
 
 That bounded interface is also an explainability problem. There is no rationale
 to inspect, no chain of thought to measure for faithfulness
@@ -121,6 +127,30 @@ provably nothing to report (\S\ref{sec:nosignal}).
 \end{enumerate}
 
 \section{Background}
+
+\paragraph{The decision-model class.} The evaluation literature here is still
+forming: an audit of 28 papers appearing within nine days of the first widely
+used release finds that the typed readout has shown no independent accuracy
+advantage, with the gains sitting in latency, cost and cascade placement
+\citep{tang2026audit}. Independent evaluations agree on the shape --- competitive
+rubric judging at 29--325$\times$ lower cost \citep{rao2026rubric}, a median
+11.6 F1 deficit at 44$\times$ lower cost across 18 social-science tasks
+\citep{ibrahim2026evaluating}, zero-shot alignment-failure detection from one
+calibrated call \citep{guo2026justask}, and efficiency from sharing encoded
+context \citep{yu2026visualjev}.
+
+Two results bear directly on ours. \citet{ibrahim2026evaluating} report
+decision-model \emph{calibration exceeding most LLM baselines} and recommend a
+cheap first stage that routes uncertain items onward; \citet{li2026jevjudge}
+build that system, accepting high-confidence verdicts and escalating the rest.
+Both are load-bearing on the returned confidence being diagnostic, and
+\S\ref{sec:confidence}--\S\ref{sec:nosignal} give the conditions under which it
+is not --- a boundary condition on the pattern, not a contradiction of it.
+Concurrently, \citet{sun2026typesafe} show these models follow an option's
+\emph{name} rather than the definition bound to it, type-safety masking the
+failure because every output stays well-formed, and \citet{xu2026jevout} flip
+61.4\% of correct decisions with benign context. \S\ref{sec:bagofwords} and
+\S\ref{sec:unit} meet both from the opposite direction.
 
 \paragraph{Idioms in NLP.} Idiom resources and tasks are well established
 \citep{haagsma2020magpie,tayyarmadabushi2022semeval,chakrabarty2022flute}, and
@@ -247,7 +277,7 @@ $0.016$.}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig1_literal_capture.pdf}
+\includegraphics[width=0.90\linewidth]{figures/fig1_literal_capture.pdf}
 \caption{The distractor ladder (left) and literal attraction rate (right) for
 the two open arms. \textbf{Cyan} is Laya-ml ($n=8{,}876$), \textbf{magenta} is
 Lod-lille ($n=888$); the black dashed line is chance ($0.250$) and error bars are
@@ -298,26 +328,23 @@ it.}
 \label{tab:ladder}
 \end{table}
 
-This is the central result. Capability on the surrounding task does not protect
-against literal capture. \LAR{} therefore measures something accuracy does not:
-a model can be selected as ``better'' on a conventional benchmark while being
-strictly worse at the thing that benchmark is a proxy for. The error is not
-diffuse either --- the full decomposition under \Dlit{} is gold $0.151$ /
-literal $0.644$ / other $0.207$ for Laya-ml and $0.066$ / $0.885$ / $0.048$ for
-Lod-lille. On the clearest items Laya-ml places $p = 1.000$ on the literal gloss
-and $0.000$ on the gold.
+This is the central result: \LAR{} measures something accuracy does not, so a
+model can be selected as ``better'' on a conventional benchmark while being
+strictly worse at what that benchmark proxies for. The error is not diffuse ---
+the decomposition under \Dlit{} is gold / literal / other $= 0.151$ / $0.644$ /
+$0.207$ for Laya-ml and $0.066$ / $0.885$ / $0.048$ for Lod-lille, and on the
+clearest items Laya-ml places $p = 1.000$ on the literal gloss.
 
 \paragraph{A confound we do not hide.} Jev-1.13 reaches $\LAR = 0.047$, two
 orders of magnitude below the open arms. That number is \emph{English}. The
 shared literal pool exists only for the 3{,}265 items with an English literal
 gloss, and the commercial arm ran it in English while the open arms ran it in
 Bangla. Figure~\ref{fig:matrix} draws the full language $\times$ model matrix
-including the two cells that were never run, so the reader can see the shape of
-the missing experiment rather than infer a clean three-way comparison that we did
-not perform. A second caveat belongs with it: the pool is not neutral. Laya-ml's
-in-pool \LAR{} is $0.747$ against $0.583$ out of pool, while its \Drand{}
-accuracy differs by only $0.008$ --- items that happen to have an English literal
-gloss are the more literally-attracting ones.
+including the two cells never run, so the shape of the missing experiment is
+visible rather than inferred. The pool is also not neutral: Laya-ml's in-pool
+\LAR{} is $0.747$ against $0.583$ out of pool while its \Drand{} accuracy
+differs by only $0.008$, so items with an English literal gloss are the more
+literally-attracting ones.
 
 \begin{figure}[t]
 \centering
@@ -405,7 +432,7 @@ show the inversion.}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig4_confidence_reliability.pdf}
+\includegraphics[width=0.90\linewidth]{figures/fig4_confidence_reliability.pdf}
 \caption{Reliability, 15 equal-width bins, panels left to right \textbf{Laya-ml},
 \textbf{Lod-lille}, \textbf{Jev-1.13}. Dark grey circles are the random-distractor
 condition; model-coloured squares are the $+$literal condition. The grey dashed
@@ -430,6 +457,15 @@ Jev-1.13 is the interesting exception, and it is only an exception in one
 direction. Its reliability is near-ideal in English (ECE $0.005$--$0.047$) and
 its confidence-gated AURC beats random by an order of magnitude. That makes
 \S\ref{sec:nosignal} harder to dismiss, not easier.
+
+This does not contradict \citet{ibrahim2026evaluating}, who find decision-model
+calibration better than most LLM baselines --- we reproduce that for the
+commercial arm on its own language. The claim is narrower: in-distribution
+calibration does not transfer to a targeted distractor shift, and it fails in
+the costly direction. A confidence-gated cascade \citep{li2026jevjudge} accepts
+the high-confidence tail without review, and on the literal-bearing families
+that tail is where the open models are \emph{least} accurate, so the gate routes
+exactly the wrong items past the escalation step.
 
 \section{A semantics-free control}
 \label{sec:nosignal}
@@ -460,12 +496,15 @@ collapses appropriately ($0.282$). We read this as the operational point of the
 paper: a calibration number measured on in-distribution options says very little
 about what the model will report when the option list is degenerate, and a
 production caller thresholding on a returned probability is exposed to exactly
-that case.
+that case. The exposure is not hypothetical: confidence-based acceptance is the
+mechanism of the cascade designs now proposed for this class
+\citep{li2026jevjudge,ibrahim2026evaluating}, and a degenerate option list is a
+routine consequence of an upstream bug, an empty retrieval or a mis-specified
+schema rather than an adversarial construction.
 
-A useful side-check comes with it. McNemar between the two open arms under
-\textsc{o4} is not significant ($p = 0.76$); the instrument's null behaves
-identically in both, which is evidence that the task is measuring option
-semantics rather than an artifact of either scorer.
+A side-check comes with it: McNemar between the two open arms under \textsc{o4}
+is not significant ($p = 0.76$), so the instrument's null behaves identically in
+both.
 
 \section{Option order is architecture-specific}
 \label{sec:order}
@@ -512,7 +551,7 @@ upstream issue report at scale.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig6_order_sensitivity.pdf}
+\includegraphics[width=0.90\linewidth]{figures/fig6_order_sensitivity.pdf}
 \caption{Order sensitivity. \emph{Left:} how many distinct glosses each model
 selects across the 24 orderings of one option set; within each group bars run
 \textbf{cyan} Laya-ml, \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13, and
@@ -524,29 +563,20 @@ are near-stable.}
 \label{fig:order}
 \end{figure*}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/fig7_position_bias.pdf}
-\caption{Share of selections falling on each option slot, panels left to right
-\textbf{Laya-ml}, \textbf{Lod-lille}, \textbf{Jev-1.13}. The gold option is placed
-uniformly at random, so the black dashed line at $0.25$ is the expectation under
-no positional bias and any departure from it is bias. Laya-ml takes slot B 37.2\%
-of the time and slot A 14.6\%; the other two show only a mild primacy gradient.}
-\label{fig:position}
-\end{figure*}
 
 The residual positional bias follows (Figure~\ref{fig:position}). With the gold
 placed uniformly, Laya-ml selects slot B 37.2\% of the time against 14.6\% for
 slot A, and its accuracy is $0.152$ when the gold sits in A against $0.403$ in B
 --- a $2.6\times$ swing from position alone.
 
-\paragraph{Methodological consequence.} Any evaluation of this model class that
-fixes option order is partly measuring position. All results in this paper
-randomise order per item, seeded by item id, and are therefore averages over
-position rather than measurements at one of them. We suggest this should be a
-default for the class, not a robustness check.
+\paragraph{Methodological consequence.} Any evaluation of this class that fixes
+option order is partly measuring position. All results here randomise order per
+item, seeded by item id, and are averages over position rather than measurements
+at one of them; we suggest this as a default for the class, not a robustness
+check.
 
 \section{Options are read as a bag of words}
+\label{sec:bagofwords}
 
 The \textsc{o}-series ablates the option text while holding the idiom fixed
 (Figure~\ref{fig:options}). Two readings matter. First, truncating each option to
@@ -558,19 +588,17 @@ semantics-free bar is the only large one in the figure, which is what certifies
 the instrument: the task really is measuring option semantics, it is just
 measuring them as a bag.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/fig8_option_ablation.pdf}
-\caption{Option-side ablation, panels left to right \textbf{Laya-ml},
-\textbf{Lod-lille}, \textbf{Jev-1.13}. In each panel the fifth, \textbf{grey} bar
-is the semantics-free control of \S\ref{sec:nosignal}; the whole Jev-1.13 panel is
-hatched because its task is in \textbf{English}. Error bars are 95\% bootstrap
-CIs and the black dashed line is chance. Truncating and word-scrambling the
-option text cost almost nothing in any of the three models.}
-\label{fig:options}
-\end{figure*}
+This converges with \citet{sun2026typesafe}, who hold the option definitions
+fixed and permute which name is bound to which, and find the decision follows
+the name. We hold the names fixed and destroy the internal structure of the
+text, and find the decision barely moves. The two manipulations are
+complementary halves of the same claim: within an option, these models are
+reading lexical identity rather than composed meaning, and the typed interface
+reports a well-formed, high-confidence answer either way.
+
 
 \section{Neither open model treats the idiom as a unit}
+\label{sec:unit}
 
 E3 perturbs the idiom while holding the option list fixed
 (Figure~\ref{fig:unit}). This is the experiment that replaces token attribution:
@@ -591,16 +619,22 @@ the usable signal --- which is itself the diagnosis. These models are not
 retrieving a stored figurative entry; they are matching whatever lexical material
 is available, and a carrier sentence simply supplies more of it.
 
+That cuts both ways, and \citet{xu2026jevout} supply the other edge: short,
+fluent, task-preserving context flips an initially correct decision 61.4\% of
+the time. Our gold carrier sentences are the benign case of the same mechanism.
+A model whose answer improves when helpful context is appended is, by the same
+token, a model whose answer moves when context is appended at all --- and
+nothing in the interface distinguishes the two.
+
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig9_unit_integrity.pdf}
-\caption{Unit integrity: the idiom is perturbed, the options are held fixed.
-\textbf{Cyan} is Laya-ml, \textbf{magenta} is Lod-lille; error bars 95\%
-bootstrap CIs, black dashed line chance (left panel). \emph{Left:} accuracy.
-\emph{Right:} agreement with the answer given on the intact idiom. Scrambling and
-reversing the word order of a non-compositional expression does not meaningfully
-hurt either model, which is the bag-of-words signature. Only the carrier-sentence
-variant clearly helps.}
+\includegraphics[width=0.90\linewidth]{figures/fig9_unit_integrity.pdf}
+\caption{Unit integrity: the idiom is perturbed, the options held fixed.
+\textbf{Cyan} Laya-ml, \textbf{magenta} Lod-lille; error bars 95\% bootstrap
+CIs, dashed line chance (left panel). \emph{Left:} accuracy. \emph{Right:}
+agreement with the answer on the intact idiom. Scrambling and reversing a
+non-compositional expression does not meaningfully hurt either model --- the
+bag-of-words signature.}
 \label{fig:unit}
 \end{figure*}
 
@@ -622,14 +656,13 @@ an artifact of the scorer rather than of the language.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig10_crosslingual.pdf}
+\includegraphics[width=0.90\linewidth]{figures/fig10_crosslingual.pdf}
 \caption{Accuracy by task language, grouped by model: \textbf{cyan} Laya-ml
 (four bars), \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13. \textbf{Solid}
-bars are Bangla input, \textbf{hatched} bars are English input; Laya-ml's third
-and fourth bars use the English-only checkpoint, the fourth being the control.
-Error bars 95\% bootstrap CIs, black dashed line chance. Every model gains
-20--45 points from presenting the same idiom in English, and the English
-checkpoint on Bengali script (fourth bar) sits near chance.}
+bars are Bangla input, \textbf{hatched} bars English; Laya-ml's third and fourth
+bars use the English-only checkpoint, the fourth being the control. Error bars
+95\% bootstrap CIs, dashed line chance. Every model gains 20--45 points from the
+same idiom presented in English.}
 \label{fig:crosslingual}
 \end{figure*}
 
@@ -644,17 +677,24 @@ the three. Option-order dependence is the exception, and informatively so: it
 tracks the scoring architecture, and the architecture that claims
 order-independence very nearly delivers it.
 
-For practitioners the implications are concrete. A returned probability from this
-model class should not be thresholded without a measurement of what the model
-returns on a degenerate option list, because that number can be high while
-accuracy is at chance. A benchmark score should not be read as evidence against
-literal capture, because the two move in opposite directions here. And an
-evaluation that fixes option order is partly reporting position.
+For practitioners: a returned probability should not be thresholded without
+measuring what the model returns on a degenerate option list, since that number
+can be high while accuracy is at chance; a benchmark score is not evidence
+against literal capture, since the two move in opposite directions; and an evaluation that
+fixes option order is partly reporting position.
 
-For the low-resource story, \S\ref{sec:crosslingual} is the sharpest form of a
-familiar result: these models hold the concepts and cannot reach them through
-Bangla. That is a different problem from not having the concepts, and it suggests
-a different remedy.
+Against the current literature this is a boundary condition, not a rebuttal: the
+cost and latency advantages are established \citep{tang2026audit,rao2026rubric},
+and what we add is that the property the cascade designs depend on --- a
+confidence number that means something --- is the one that degrades first, and
+silently. Three concurrent findings now point the same way: the decision follows
+an option's \emph{name} rather than its bound definition
+\citep{sun2026typesafe}, benign context flips a majority of correct decisions
+\citep{xu2026jevout}, and here confidence rises as accuracy falls. The typed
+interface guarantees a well-formed answer and nothing about whether it was
+arrived at for a reason, so each failure is invisible to a caller who only
+checks that the output validates. And \S\ref{sec:crosslingual} shows the
+concepts are present but unreachable through Bangla --- not absent.
 
 \section*{Limitations}
 
@@ -773,6 +813,35 @@ no semantics & \neu{0.256} & \neu{0.233} & \neu{0.254} \\
 chance by construction in all three arms. Jev-1.13's column is English.}
 \label{tab:options}
 \end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.90\linewidth]{figures/fig8_option_ablation.pdf}
+\caption{Option-side ablation, panels left to right \textbf{Laya-ml},
+\textbf{Lod-lille}, \textbf{Jev-1.13}. In each panel the fifth, \textbf{grey} bar
+is the semantics-free control of \S\ref{sec:nosignal}; the whole Jev-1.13 panel is
+hatched because its task is in \textbf{English}. Error bars are 95\% bootstrap
+CIs and the black dashed line is chance. Truncating and word-scrambling the
+option text cost almost nothing in any of the three models.}
+\label{fig:options}
+\end{figure*}
+
+\section{Position bias}
+\label{app:position}
+
+Figure~\ref{fig:position} gives the per-slot selection shares behind the
+summary in \S\ref{sec:order}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.90\linewidth]{figures/fig7_position_bias.pdf}
+\caption{Share of selections falling on each option slot, panels left to right
+\textbf{Laya-ml}, \textbf{Lod-lille}, \textbf{Jev-1.13}. The gold option is placed
+uniformly at random, so the black dashed line at $0.25$ is the expectation under
+no positional bias and any departure from it is bias. Laya-ml takes slot B 37.2\%
+of the time and slot A 14.6\%; the other two show only a mild primacy gradient.}
+\label{fig:position}
+\end{figure*}
 
 \section{Reproducibility}
 \label{app:repro}
