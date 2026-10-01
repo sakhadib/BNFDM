@@ -127,7 +127,7 @@ renders Bangla natively.
 
 ## Data
 
-[Bangla Bagdhara](https://www.kaggle.com/datasets/sakhadib/bangla-bagdhara) — 10,361
+[Bangla Bagdhara](https://www.kaggle.com/datasets/sakhadib/bangla-bagdhara) — 10,361 published rows (10,359 on load, 8,876 usable); Sakhawat et al., LREC 2026, doi:10.63317/546w2cys6m6t
 idioms under a 19-field schema, expert-validated by consensus of ≥2 Bangla
 linguists. After deduplication on the idiom string and requiring both a literal and a
 figurative gloss: **8,876 items**.

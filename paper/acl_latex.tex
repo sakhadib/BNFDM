@@ -38,7 +38,7 @@
 
 \title{Literal Capture in Typed Decision Models: A Behavioural Audit of\\
 Calibration, Option-Order Stability and Figurative Meaning\\
-on 10{,}359 Bangla Idioms}
+in Bangla Idioms}
 
 \author{Anonymous Submission}
 
@@ -53,7 +53,7 @@ usual explainability toolkit of rationales, chain-of-thought and token
 attribution does not apply, and idioms make token-level attribution ill-posed in
 principle: a non-compositional expression has no word whose removal is
 informative. We therefore audit three such models entirely through
-\emph{interventions on the option set}, using 10{,}359 expert-annotated Bangla
+\emph{interventions on the option set}, using 10{,}361 expert-annotated Bangla
 idioms that ship with both a gold figurative gloss and a gold literal gloss. Our
 instrument holds the item, the instruction and $k$ fixed and varies only the
 distractor family, which isolates one failure mode at a time and needs no new
@@ -153,8 +153,9 @@ failure because every output stays well-formed, and \citet{xu2026jevout} flip
 \S\ref{sec:unit} meet both from the opposite direction.
 
 \paragraph{Idioms in NLP.} Idiom resources and tasks are well established
-\citep{haagsma2020magpie,tayyarmadabushi2022semeval,chakrabarty2022flute}, and
-the difficulty of figurative language for distributional models is long-noted
+\citep{haagsma2020magpie,tayyarmadabushi2022semeval,chakrabarty2022flute},
+including for Bangla \citep{sakhawat2026bagdhara}, and the difficulty of
+figurative language for distributional models is long-noted
 \citep{shwartz2019pain}. Psycholinguistics frames the phenomenon as competition
 between a literal and a figurative route whose resolution depends on
 decomposability and context
@@ -178,27 +179,38 @@ test \citep{geifman2017selective,geifman2019selectivenet,traub2024selective}. We
 report the combination that matters for deployment: accuracy \emph{decreasing}
 with confidence, and a confidence gate underperforming a random one.
 
-\paragraph{Behavioural testing.} Our design is in the tradition of behavioural
-checklists, contrast sets and counterfactual minimal pairs
-\citep{ribeiro2020checklist,gardner2020contrast,kaushik2020difference,naik2018stress,jia2017adversarial}.
-The contribution is to carry that tradition into a model class with no text
-output, where it is one of the few instruments available.
+\paragraph{Behavioural testing.} Our design follows behavioural checklists,
+contrast sets and counterfactual minimal pairs
+\citep{ribeiro2020checklist,gardner2020contrast,kaushik2020difference,naik2018stress,jia2017adversarial};
+the contribution is carrying that tradition into a model class with no text
+output, where it is one of the few instruments left.
 
-\paragraph{Low-resource evaluation.} Bangla is served by strong encoders and
-corpora \citep{bhattacharjee2022banglabert,kakwani2020indicnlpsuite}, and
-cross-lingual benchmarks establish the transfer gap
-\citep{hu2020xtreme,ruder2021xtremer,adelani2021masakhaner}.
+\paragraph{Low-resource evaluation.} Bangla has strong encoders and corpora
+\citep{bhattacharjee2022banglabert,kakwani2020indicnlpsuite}, and cross-lingual
+benchmarks establish the transfer gap
+\citep{hu2020xtreme,ruder2021xtremer,adelani2021masakhaner};
 \S\ref{sec:crosslingual} localises our failure to the Bangla side rather than to
-figurativeness itself.
+figurativeness.
 
 \section{The meaning-choice instrument}
 \label{sec:instrument}
 
-\paragraph{Data.} We use a corpus of 10{,}359 expert-annotated Bangla idioms.
-Each row carries the idiom, a gold figurative meaning in Bangla, an expert
-literal gloss, semantic tags, alternative surface forms certified as
-meaning-preserving, and a gold carrier sentence. We add no annotation; every
-intervention below is assembled from fields that already exist.
+\paragraph{Data.} We use \emph{Bangla Bagdhara}
+\citep{sakhawat2026bagdhara}, a corpus of 10{,}361 Bangla (Bengali) idioms
+annotated under a 19-field schema by expert consensus.\footnote{Our load yields
+10{,}359 rows; the two-row gap is an unresolved parsing discrepancy and affects
+no reported figure. Of these, 8{,}876 carry every field the instrument
+requires.} Each row carries the idiom,
+a gold figurative meaning in Bangla, an expert literal gloss, semantic tags,
+alternative surface forms certified as meaning-preserving, and a gold carrier
+sentence. We add no annotation; every intervention below is assembled from
+fields that already exist.
+
+Its own benchmark on the same underlying task reports no model among 30
+multilingual and instruction-tuned LLMs above 50\% accuracy, against 83.4\% for
+human annotators. Option construction differs, so those figures are not directly
+comparable to ours, but they locate the difficulty in the material rather than
+in our instrument.
 
 \paragraph{Task.} Given an idiom, choose its gold figurative meaning from $k=4$
 candidates. Chance is $0.250$ throughout. The \textbf{distractor family is the
@@ -730,7 +742,7 @@ script and qualitative Bangla examples are confined to the text.
 
 \section*{Ethics Statement}
 
-The corpus is a published, expert-annotated resource of idioms; it contains no
+The corpus is a published, expert-annotated resource of idioms \citep{sakhawat2026bagdhara}; it contains no
 personal data and no content about identifiable individuals. Our interventions
 rewrite option lists and perturb idiom strings, and produce no new annotation and
 no generated text.
