@@ -109,17 +109,14 @@ four options.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/fig_bn_teaser.pdf}
-\caption{\textbf{Literal capture is a property of the language, not the model.}
-The Bangla idiom \emph{abarjana} means an unwanted person; its words mean
-garbage. Jev-1.13, the strongest of the three models we audit, is asked the same
-question twice with the same four options, once in Bangla and once in English.
-In Bangla it puts $0.85$ on the literal reading and $0.09$ on the gold; in
-English it puts $0.96$ on the gold. Colour marks the option's role rather than
-the model. Across 3{,}265 items the same swap moves literal attraction from
-$0.304$ to $0.047$ for this model, and from $0.731$ to $0.379$ and $0.918$ to
-$0.241$ for the two open ones (\S\ref{sec:capture}). Figures rendered outside
-\LaTeX{} carry the original script; see Appendix~\ref{app:why}.}
+\includegraphics[width=\columnwidth]{figures/teaser_crop.jpg}
+\caption{\textbf{The model takes the words.} \emph{Agnibal} is built from the
+words for \emph{fire} and \emph{strength} and means intense hunger; English says
+\emph{fire in the belly}. With both readings in the option list, all three
+models we audit choose the literal one in Bangla, at $p = 1.00$, $0.97$ and
+$0.36$; asked in English with the same four options, two of the three recover.
+Across 3{,}265 items literal attraction falls from $0.731$, $0.918$ and $0.304$
+in Bangla to $0.379$, $0.241$ and $0.047$ in English (\S\ref{sec:capture}).}
 \label{fig:teaser}
 \end{figure}
 
@@ -1421,6 +1418,19 @@ most accurate and the least captured, while Lod-lille is more accurate than
 Laya-ml and more captured.}
 \label{tab:matrix}
 \end{table}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bn_teaser.pdf}
+\caption{The same contrast on a second item, with the returned probabilities.
+\emph{Abarjana} means an unwanted person; its words mean garbage. Jev-1.13 is
+asked the identical question with the same four options in both languages: in
+Bangla it puts $0.85$ on the literal reading and $0.09$ on the gold, in English
+$0.96$ on the gold. Colour marks the option's role, not the model. This is
+Figure~\ref{fig:teaser}'s claim with the numbers attached.}
+\label{fig:bnteaser}
+\end{figure}
 
 \section{Cross-lingual arms}
 \label{app:crossling}
