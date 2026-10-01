@@ -197,6 +197,15 @@ SEEDS = {"j1_order": 17000, "j2_lit_en": 12000, "j3_ceiling_en": 11000,
 
 full = pd.read_json(D("splits","full.jsonl"), lines=True)
 
+# full.jsonl is shared with the Bangla arms and is written before the English
+# columns are derived, so rebuild them here rather than depending on the file.
+if "lit_en" not in full.columns:
+    full["lit_en"] = full.literal_meaning.map(eng_literal)
+    full["lit_fig_overlap"] = [
+        jaccard(r.lit_en, r.figurative_meaning_en) if r.lit_en else np.nan
+        for r in full.itertuples()]
+    print("rebuilt lit_en:", int((full.lit_en.str.len() > 0).sum()), "items")
+
 def words(t):
     t = re.sub(f"[{re.escape(PUNCT)}]", " ", unicodedata.normalize("NFC", str(t)))
     return [w for w in t.split() if w]
