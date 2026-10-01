@@ -9,39 +9,63 @@ self-rationalisation), every diagnostic here is an **intervention on the input**
 a gold counterfactual already present in the resource. Nothing depends on a model's
 self-report.
 
-**Headline:** Laya-multilingual answers a 4-way meaning-choice question correctly
-36.7% of the time against random distractors. Swap one distractor for the idiom's own
-expert-annotated *literal* gloss and accuracy falls to **15.1% — below the 25% chance
-floor** — because the model takes the literal reading **64.4%** of the time, and is
-*more confident* when it does so than when it is right.
+Two architecturally unrelated models, run on byte-identical questions:
+
+| | Laya-multilingual | Lod-lille |
+|---|---|---|
+| checkpoint | `convaiinnovations/laya` · `multilingual` | `mrn-dk/lod-lille-0.6B` |
+| architecture | mmBERT encoder + option-marker scorer | Qwen3-0.6B + independent-option scoring |
+| params | 322M | 0.6B |
+| items | 8,876 (full) | 888 (fixed 10%) |
+
+**Headline.** Both models answer a 4-way meaning-choice question well above chance
+against random distractors (0.367 / 0.484). Swap one distractor for the idiom's own
+expert-annotated **literal** gloss and both fall **below the 0.25 chance floor**
+(0.151 / 0.066), taking the literal reading **64.4% / 88.5%** of the time — and both
+are *more confident* when captured than when correct. The stronger model is the more
+captured one.
 
 → **[FINDINGS.md](FINDINGS.md)** for the full write-up.
+
+## Four claims
+
+1. **Literal capture** is severe, measurable without annotation, and does not improve
+   with capability.
+2. **Calibration claims do not survive**, under either philosophy — fitted
+   temperatures (Laya) or deliberately unfitted (Lod). Gating on confidence is worse
+   than not gating.
+3. **Option-order dependence dissociates cleanly**: 83.7% of Laya's items change
+   answer under reordering versus 10.7% of Lod's, a 12× gap in probability stability.
+   Independent-option scoring delivers what it claims; option-marker scoring does not.
+4. **Failure localises to Bangla**, not to figurativeness: +0.246 / +0.380 from
+   swapping language alone on the same model.
 
 ## Layout
 
 ```
 BNFDM/
-├── FINDINGS.md                 write-up: 8 result sections, limitations
-├── LAYA_RUN/                   raw experiment output (Colab, Tesla T4)
-│   ├── configs/task.json       the task instrument
-│   ├── data/splits/            dev · test · probe_400 · meta
-│   └── results/laya-ml/        e1_ladder, e2_invariance, e3_unit,
-│                               e4_crosslingual, e5_calibration,
-│                               e6_options, e7_order  (raw.csv + summaries)
+├── FINDINGS.md                      write-up: 8 result sections, limitations
+├── LAYA_RUN/  results/laya-ml/      full set, n = 8,876
+├── LOD_RUN/   results/lod-lille-0.6b/  10% subset, n = 888
+│              data/splits/          full · sub10 · meta (shared contract)
 └── analysis/
-    ├── bnfdm_style.py          CMYK palette, ACL figure style, bootstrap/ECE/AURC
-    ├── analyze.py              raws -> analysis/tables/*.csv + tables.tex
-    ├── figures.py              tables -> analysis/figures/*.pdf
-    ├── tables/                 24 derived tables + LaTeX
-    └── figures/                10 figures; each .pdf has a .png preview and a
-                                .csv of exactly the data plotted
+    ├── bnfdm_style.py               CMYK palette, ACL style, bootstrap/ECE/AURC
+    ├── analyze.py                   raws -> tables/<arm>/*.csv
+    ├── crossmodel.py                pairing check, McNemar, subset check
+    ├── tables_tex.py                -> tables/tables.tex
+    ├── figures.py                   -> figures/*.pdf
+    ├── tables/   <arm>/ and _cross/
+    └── figures/  11 figures; each .pdf has a .png preview and a .csv of
+                  exactly the data plotted
 ```
 
 Reproduce:
 
 ```bash
-python3 analysis/analyze.py    # tables
-python3 analysis/figures.py    # figures
+python3 analysis/analyze.py      # per-arm tables
+python3 analysis/crossmodel.py   # pairing verification + paired tests
+python3 analysis/tables_tex.py   # LaTeX
+python3 analysis/figures.py      # figures
 ```
 
 Needs `pandas`, `numpy`, `scipy`, `matplotlib`. No GPU, no model download — the
@@ -63,28 +87,43 @@ item, instruction, k and per-item option-order randomisation are held fixed.
 | `D-lit` | **the idiom's own `literal_meaning`** + random | **literal attraction** |
 | `D-hard` | literal + surface + tag combined | compound |
 
-Seven experiments: **E1** distractor ladder · **E2** surface invariance via
+Seven experiments per arm: **E1** distractor ladder · **E2** surface invariance via
 `alternative_idioms` · **E3** unit integrity under shuffle/delete/substitute ·
 **E4** cross-lingual failure localisation · **E5** calibration and selective
 prediction · **E6** option-side attribution · **E7** option-order sensitivity.
+
+### Pairing
+
+The arms were run in different accounts from separate notebooks, each rebuilding the
+corpus and the task instrument from a hardcoded contract (same dataset,
+dedup/filter pipeline, k, option keys, instruction string, families and per-item
+seeds). `crossmodel.py` verifies this empirically before reporting any paired test:
+on all 4,440 overlapping rows the gold key, gold position, idiom and literal-key
+match at **1.000**. A failure there is fatal, not cosmetic.
 
 ## Figures
 
 | | |
 |---|---|
-| `f1_distractor_ladder` | accuracy across the ladder; Literal Attraction Rate |
+| `f1_distractor_ladder` | accuracy across the ladder, both arms; LAR |
 | `f2_literal_capture` | outcome decomposition; p(gold) vs p(literal) |
 | `f3_confidence_anti_diagnostic` | confidence by outcome; inverted reliability |
 | `f4_position_bias` | selection share by slot; accuracy by gold slot |
-| `f5_order_instability` | distinct answers across 24 orderings; p(gold) range |
-| `f6_crosslingual` | four input/checkpoint arms; failure localisation |
+| `f5_order_instability` | distinct glosses chosen across 24 orderings |
+| `f6_crosslingual` | six input/checkpoint arms; failure localisation |
 | `f7_unit_integrity` | accuracy and agreement under perturbation |
 | `f8_option_ablation` | option-text ablation; semantic signal retained |
-| `f9_selective_prediction` | risk-coverage curves; AURC vs a random gate |
-| `f10_stratified` | by idiom length and corpus frequency |
+| `f9_selective_prediction` | risk-coverage; AURC vs a random gate |
+| `f10_cross_model` | paired McNemar deltas; four claims side by side |
+| `f11_stratified_and_subset` | by idiom length; 10% subset representativeness |
 
 No titles (captions belong in the paper), ACL single/double column widths, embedded
-TrueType, CMYK palette on white.
+TrueType, CMYK palette on white. Laya is drawn in cyan, Lod in magenta throughout.
+
+**No Bangla glyphs in any figure** — matplotlib does not use HarfBuzz and cannot
+shape Bengali, and no Bengali font was available on the analysis machine. Every
+figure is quantitative by design; qualitative examples live in `FINDINGS.md`, which
+renders Bangla natively.
 
 ## Data
 
@@ -95,10 +134,3 @@ figurative gloss: **8,876 items**.
 
 Sakhawat et al., *When Words Don't Mean What They Say: Figurative Understanding in
 Bengali Idioms*, LREC 2026.
-
-## Status
-
-The Laya arm is complete on all 8,876 items. A second arm
-(`mrn-dk/lod-lille-0.6B`, ex `thefloydd/qwen3-0.6b-rlcd`) is planned on a fixed 10%
-subset; option sets are rebuilt from identical per-item seeds so the two arms pair
-item-for-item and support McNemar rather than two accuracy numbers side by side.

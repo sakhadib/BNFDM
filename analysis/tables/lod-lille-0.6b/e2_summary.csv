@@ -1,0 +1,2 @@
+arm,n_pairs,n_items,agreement,agree_lo,agree_hi,acc_canonical,acc_variant,both_correct,neither_correct,mean_jsd,median_jsd,mean_abs_dP_gold
+lod-lille-0.6b,310,234,0.677419,0.622581,0.725806,0.035484,0.158065,0.016129,0.822581,0.085232,0.024637,0.125094

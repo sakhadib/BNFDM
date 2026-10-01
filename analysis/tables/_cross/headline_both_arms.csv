@@ -1,0 +1,3 @@
+arm,label,n_items,acc_random_distractors,acc_plus_literal,literal_attraction_rate,below_chance_with_literal,conf_when_correct,conf_when_captured,confidence_inverted,order_unstable_share,mean_p_gold_range,acc_bangla,acc_english,language_gap,bangla_gap_share,shuffle_delta,option_scramble_delta,option_null_accuracy,surface_invariance_agreement
+laya-ml,Laya-ml,8876,0.36717,0.150856,0.643646,True,0.431749,0.596255,True,0.836694,0.345661,0.371191,0.616939,0.245748,0.373702,0.010686,-0.008224,0.255746,0.657016
+lod-lille-0.6b,Lod-lille,888,0.484234,0.066441,0.885135,True,0.453105,0.787493,True,0.107023,0.029434,0.483391,0.863688,0.380298,0.43299,-0.027778,-0.013514,0.233108,0.677419

@@ -1,0 +1,2 @@
+arm,n_items,n_permutations,answer_unstable_share,correctness_varies_share,mean_distinct_options,mean_distinct_keys,mean_p_gold_std,mean_p_gold_range,max_p_gold_range,mean_conf_range,overall_accuracy
+lod-lille-0.6b,299,24,0.107023,0.070234,1.137124,3.959866,0.009231,0.029434,0.224669,0.044084,0.076644

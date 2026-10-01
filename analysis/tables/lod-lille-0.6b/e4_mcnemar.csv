@@ -1,0 +1,2 @@
+arm,comparison,n_paired,bn_only_right,en_only_right,mcnemar_p,delta_accuracy
+lod-lille-0.6b,en vs bn,873,46,378,5.474452110335133e-66,0.3802978235967927

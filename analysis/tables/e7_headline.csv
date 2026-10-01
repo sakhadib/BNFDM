@@ -1,2 +1,0 @@
-n_items,n_permutations,unstable_share,mean_distinct_answers,mean_p_gold_std,mean_p_gold_range,max_p_gold_range,mean_conf_range,overall_accuracy
-992,24,1.0,3.822581,0.09555,0.345661,0.8839,0.391371,0.143775

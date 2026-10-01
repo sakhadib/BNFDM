@@ -1,64 +1,88 @@
-% Main result: distractor ladder
-\begin{tabular}{llrrr}
+% Distractor ladder, both arms. Delta is paired on the 888 shared items.
+\begin{tabular}{lrrrrr}
 \toprule
-Distractor set & & Accuracy & LAR & ECE \\
+& \multicolumn{2}{c}{Laya-ml (8{,}876)} & \multicolumn{2}{c}{Lod-lille (888)} & \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Distractor set & Acc. & LAR & Acc. & LAR & $\Delta$ \\
 \midrule
-random & & 0.367 \tiny[0.357,0.377] & -- & 0.071 \\
-surface-matched & & 0.338 \tiny[0.328,0.347] & -- & 0.099 \\
-tag-matched & & 0.333 \tiny[0.323,0.342] & -- & 0.100 \\
-+ own literal gloss & & 0.151 \tiny[0.144,0.159] & 0.644 & 0.385 \\
-literal + surface + tag & & 0.144 \tiny[0.137,0.151] & 0.630 & 0.389 \\
+random & 0.367 & -- & 0.484 & -- & +0.133$^{***}$ \\
+surface-matched & 0.338 & -- & 0.412 & -- & +0.073$^{***}$ \\
+tag-matched & 0.333 & -- & 0.446 & -- & +0.120$^{***}$ \\
++ own literal gloss & 0.151 & 0.644 & 0.066 & 0.885 & -0.070$^{***}$ \\
+literal + surface + tag & 0.144 & 0.630 & 0.063 & 0.855 & -0.086$^{***}$ \\
 \midrule
-chance & & 0.250 & -- & -- \\
+chance & 0.250 & -- & 0.250 & -- & \\
+\bottomrule
+\end{tabular}
+
+% Confidence is anti-diagnostic in both models
+\begin{tabular}{lrrrrr}
+\toprule
+& \multicolumn{2}{c}{Laya-ml} & \multicolumn{3}{c}{Lod-lille} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-6}
+Outcome & Share & Conf. & Share & Conf. & Head \\
+\midrule
+correct & 0.148 & 0.432 & 0.065 & 0.453 & 0.295 \\
+captured by literal & 0.637 & 0.596 & 0.870 & 0.787 & 0.631 \\
+other error & 0.217 & 0.421 & 0.066 & 0.399 & 0.248 \\
+\bottomrule
+\end{tabular}
+
+% Option-order sensitivity, all 24 orderings of a fixed option set
+\begin{tabular}{lrr}
+\toprule
+& Laya-ml & Lod-lille \\
+& ($n{=}992$) & ($n{=}299$) \\
+\midrule
+items whose chosen gloss changes & 0.837 & 0.107 \\
+items whose correctness varies & 0.686 & 0.070 \\
+mean distinct glosses (of 4) & 2.829 & 1.137 \\
+mean range of $p$(gold) & 0.346 & 0.029 \\
+mean range of confidence & 0.391 & 0.044 \\
 \bottomrule
 \end{tabular}
 
 % Cross-lingual localisation
-\begin{tabular}{lrr}
+\begin{tabular}{llrr}
 \toprule
-Input / checkpoint & Accuracy & Conf. \\
+Model & Input / checkpoint & Accuracy & Conf. \\
 \midrule
-Bangla idiom / multilingual & 0.371 \tiny[0.361,0.382] & 0.438 \\
-English equivalent / multilingual & 0.617 \tiny[0.607,0.628] & 0.584 \\
-English equivalent / English & 0.733 \tiny[0.724,0.743] & 0.613 \\
-Bangla idiom / English (control) & 0.283 \tiny[0.273,0.292] & 0.390 \\
-\bottomrule
-\end{tabular}
-
-% Confidence is anti-diagnostic
-\begin{tabular}{lrrr}
-\toprule
-Outcome & Share & Mean conf. & $p$(gold) \\
-\midrule
-correct & 0.148 & 0.432 & 0.432 \\
-chose literal & 0.637 & 0.596 & 0.144 \\
-other wrong & 0.217 & 0.421 & 0.182 \\
+Laya-ml & Bangla idiom / multilingual & 0.371 \tiny[0.361,0.382] & 0.438 \\
+Laya-ml & English equiv. / multilingual & 0.617 \tiny[0.607,0.628] & 0.584 \\
+Laya-ml & English equiv. / English & 0.733 \tiny[0.724,0.743] & 0.613 \\
+Laya-ml & Bangla idiom / English (control) & 0.283 \tiny[0.273,0.292] & 0.390 \\
+Lod-lille & Bangla idiom & 0.483 \tiny[0.450,0.515] & 0.447 \\
+Lod-lille & English equivalent & 0.864 \tiny[0.840,0.885] & 0.731 \\
 \bottomrule
 \end{tabular}
 
 % Option-side ablation
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-Option text & Accuracy & $\Delta$ & JSD \\
+& \multicolumn{2}{c}{Laya-ml} & \multicolumn{2}{c}{Lod-lille} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Option text & Acc. & Retained & Acc. & Retained \\
 \midrule
-full Bangla gloss & 0.365 & +0.000 & 0.000 \\
-truncated to 6 words & 0.361 & -0.004 & 0.014 \\
-word-scrambled & 0.357 & -0.008 & 0.031 \\
-English gloss & 0.347 & -0.018 & 0.071 \\
-semantics removed & 0.256 & -0.109 & 0.096 \\
+full Bangla gloss & 0.365 & 1.000 & 0.492 & 1.000 \\
+truncated to 6 words & 0.361 & 0.967 & 0.468 & 0.909 \\
+word-scrambled & 0.357 & 0.925 & 0.479 & 0.948 \\
+English gloss & 0.347 & 0.835 & 0.398 & 0.635 \\
+semantics removed & 0.256 & 0.000 & 0.233 & 0.000 \\
 \bottomrule
 \end{tabular}
 
 % Unit integrity
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-Perturbation & Accuracy & Agreement & JSD \\
+& \multicolumn{2}{c}{Laya-ml ($n{=}1{,}778$)} & \multicolumn{2}{c}{Lod-lille ($n{=}180$)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Perturbation & Acc. & $\Delta$ & Acc. & $\Delta$ \\
 \midrule
-intact & 0.157 & 1.000 & 0.000 \\
-word shuffle & 0.168 & 0.742 & 0.015 \\
-reversed & 0.178 & 0.706 & 0.017 \\
-delete 1 word & 0.158 & 0.747 & 0.014 \\
-substitute 1 word & 0.162 & 0.692 & 0.020 \\
-in carrier sentence & 0.237 & 0.551 & 0.046 \\
+intact & 0.157 & +0.000 & 0.072 & +0.000 \\
+word shuffle & 0.168 & +0.011 & 0.044 & -0.028 \\
+reversed & 0.178 & +0.021 & 0.056 & -0.017 \\
+delete 1 word & 0.158 & +0.001 & 0.089 & +0.017 \\
+substitute 1 word & 0.162 & +0.005 & 0.056 & -0.017 \\
+in carrier sentence & 0.237 & +0.080 & 0.189 & +0.117 \\
 \bottomrule
 \end{tabular}
