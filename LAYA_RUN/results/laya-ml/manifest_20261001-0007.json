@@ -1,0 +1,213 @@
+{
+  "run": "20261001-0007",
+  "model": "laya-ml",
+  "python": "3.13.15",
+  "gpu": "Tesla T4, 15360 MiB",
+  "artifacts": [
+    {
+      "path": "configs/task.json",
+      "bytes": 321,
+      "sha256_16": "cd137a862e5ab1a6"
+    },
+    {
+      "path": "data/bagdhara_raw.jsonl",
+      "bytes": 14206587,
+      "sha256_16": "b61c89b280e91f17"
+    },
+    {
+      "path": "data/splits/dev.jsonl",
+      "bytes": 7220329,
+      "sha256_16": "f3a19afba29f693b"
+    },
+    {
+      "path": "data/splits/full.jsonl",
+      "bytes": 14410542,
+      "sha256_16": "9f244840e6b1f3f0"
+    },
+    {
+      "path": "data/splits/meta.json",
+      "bytes": 133,
+      "sha256_16": "f9767aaebc540af5"
+    },
+    {
+      "path": "data/splits/probe_400.jsonl",
+      "bytes": 661547,
+      "sha256_16": "5e523f74e504bf20"
+    },
+    {
+      "path": "data/splits/test.jsonl",
+      "bytes": 7190213,
+      "sha256_16": "8523cb213126d42a"
+    },
+    {
+      "path": "results/laya-ml/bench_batch.csv",
+      "bytes": 250,
+      "sha256_16": "55cdd0963ed8259a"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_frequency.csv",
+      "bytes": 1409,
+      "sha256_16": "83bfa2d2d6519992"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_gold_pos.csv",
+      "bytes": 1287,
+      "sha256_16": "16cedd16fa42c637"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_hist_sig.csv",
+      "bytes": 644,
+      "sha256_16": "18e04c1937b3d394"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_n_words.csv",
+      "bytes": 2723,
+      "sha256_16": "3d93c5a7cff1edf8"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_relig_sig.csv",
+      "bytes": 666,
+      "sha256_16": "d11f3af4eefe7055"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/by_scape.csv",
+      "bytes": 978,
+      "sha256_16": "717a469e8bf81f44"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/raw.csv",
+      "bytes": 6938429,
+      "sha256_16": "ada05ced9bf109a4"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/raw.jsonl",
+      "bytes": 17636423,
+      "sha256_16": "055b34cc28086bc1"
+    },
+    {
+      "path": "results/laya-ml/e1_ladder/summary.csv",
+      "bytes": 641,
+      "sha256_16": "83ae6664f6f6bca7"
+    },
+    {
+      "path": "results/laya-ml/e2_invariance/raw.csv",
+      "bytes": 455127,
+      "sha256_16": "1d581a4b2e143048"
+    },
+    {
+      "path": "results/laya-ml/e2_invariance/raw.jsonl",
+      "bytes": 1047974,
+      "sha256_16": "0c68f3484eb6111e"
+    },
+    {
+      "path": "results/laya-ml/e2_invariance/summary.csv",
+      "bytes": 228,
+      "sha256_16": "ffc0c6055ba44c93"
+    },
+    {
+      "path": "results/laya-ml/e3_unit/by_length.csv",
+      "bytes": 2385,
+      "sha256_16": "d88d0e971d5fdfc3"
+    },
+    {
+      "path": "results/laya-ml/e3_unit/raw.csv",
+      "bytes": 2096758,
+      "sha256_16": "b8b521f51e75efd5"
+    },
+    {
+      "path": "results/laya-ml/e3_unit/raw.jsonl",
+      "bytes": 3935478,
+      "sha256_16": "da2e5f9a3031fe6f"
+    },
+    {
+      "path": "results/laya-ml/e3_unit/summary.csv",
+      "bytes": 837,
+      "sha256_16": "ad56e2786ab20f4a"
+    },
+    {
+      "path": "results/laya-ml/e4_crosslingual/localisation.csv",
+      "bytes": 134,
+      "sha256_16": "64e9ead4ef959bcf"
+    },
+    {
+      "path": "results/laya-ml/e4_crosslingual/raw.csv",
+      "bytes": 1374178,
+      "sha256_16": "dcde42190da50bf3"
+    },
+    {
+      "path": "results/laya-ml/e4_crosslingual/raw.jsonl",
+      "bytes": 3741736,
+      "sha256_16": "cca117d78e936b21"
+    },
+    {
+      "path": "results/laya-ml/e4_crosslingual/summary.csv",
+      "bytes": 290,
+      "sha256_16": "ed06b18f38393b98"
+    },
+    {
+      "path": "results/laya-ml/e5_calibration/confidence_by_outcome.csv",
+      "bytes": 300,
+      "sha256_16": "2a90c327fe198b4c"
+    },
+    {
+      "path": "results/laya-ml/e5_calibration/reliability.csv",
+      "bytes": 2993,
+      "sha256_16": "b510a44ccda0d36f"
+    },
+    {
+      "path": "results/laya-ml/e5_calibration/risk_coverage.csv",
+      "bytes": 26760,
+      "sha256_16": "6e5e0072758d52cf"
+    },
+    {
+      "path": "results/laya-ml/e5_calibration/temperature.csv",
+      "bytes": 810,
+      "sha256_16": "a926dec3cb1c9f94"
+    },
+    {
+      "path": "results/laya-ml/e6_options/raw.csv",
+      "bytes": 2761456,
+      "sha256_16": "0898042a26e3d171"
+    },
+    {
+      "path": "results/laya-ml/e6_options/raw.jsonl",
+      "bytes": 7253534,
+      "sha256_16": "685530a26b4a05b7"
+    },
+    {
+      "path": "results/laya-ml/e6_options/summary.csv",
+      "bytes": 586,
+      "sha256_16": "ae4947e9c346bdb9"
+    },
+    {
+      "path": "results/laya-ml/e7_order/by_gold_position.csv",
+      "bytes": 209,
+      "sha256_16": "c5dc3bdadc954fc8"
+    },
+    {
+      "path": "results/laya-ml/e7_order/per_item.csv",
+      "bytes": 74314,
+      "sha256_16": "496543d7c8e00918"
+    },
+    {
+      "path": "results/laya-ml/e7_order/raw.csv",
+      "bytes": 2065304,
+      "sha256_16": "65467238919644ef"
+    },
+    {
+      "path": "results/laya-ml/e7_order/raw.jsonl",
+      "bytes": 5018838,
+      "sha256_16": "0837be358ad974f6"
+    },
+    {
+      "path": "results/laya-ml/e7_order/selection_bias.csv",
+      "bytes": 101,
+      "sha256_16": "7ea56a91e3e85fad"
+    },
+    {
+      "path": "results/laya-ml/env.json",
+      "bytes": 285,
+      "sha256_16": "1a8438c9332a40eb"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "k": 4,
+  "families": [
+    "D-rand",
+    "D-lit",
+    "D-surf",
+    "D-sem",
+    "D-hard"
+  ],
+  "instructions": "নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?",
+  "option_keys": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "seed": 20261001
+}
