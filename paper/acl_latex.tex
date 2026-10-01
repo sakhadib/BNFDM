@@ -9,6 +9,13 @@
 \usepackage{microtype}
 %\usepackage{inconsolata}
 \usepackage{graphicx}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
 \usepackage{multirow}
@@ -126,7 +133,7 @@ at scale, with a methodological consequence for anyone evaluating this class
 provably nothing to report (\S\ref{sec:nosignal}).
 \end{enumerate}
 
-\section{Background}
+\section{Related Work}
 
 \paragraph{The decision-model class.} The evaluation literature here is still
 forming: an audit of 28 papers appearing within nine days of the first widely
@@ -192,10 +199,10 @@ benchmarks establish the transfer gap
 \S\ref{sec:crosslingual} localises our failure to the Bangla side rather than to
 figurativeness.
 
-\section{The meaning-choice instrument}
-\label{sec:instrument}
+\section{Dataset}
+\label{sec:dataset}
 
-\paragraph{Data.} We use \emph{Bangla Bagdhara}
+\paragraph{Source corpus.} We use \emph{Bangla Bagdhara}
 \citep{sakhawat2026bagdhara}, a corpus of 10{,}361 Bangla (Bengali) idioms
 annotated under a 19-field schema by expert consensus.\footnote{Our load yields
 10{,}359 rows; the two-row gap is an unresolved parsing discrepancy and affects
@@ -212,19 +219,27 @@ human annotators. Option construction differs, so those figures are not directly
 comparable to ours, but they locate the difficulty in the material rather than
 in our instrument.
 
-\paragraph{Task.} Given an idiom, choose its gold figurative meaning from $k=4$
+\section{Methodology}
+\label{sec:instrument}
+
+\subsection{The meaning-choice task}
+
+Given an idiom, choose its gold figurative meaning from $k=4$
 candidates. Chance is $0.250$ throughout. The \textbf{distractor family is the
 independent variable}; the item, the instruction, $k$, and per-item option-order
 randomisation (seeded by item id) are held fixed across families, so a paired
 test across families is a test on byte-identical questions.
 
-\paragraph{Distractor families.}
+\subsection{Distractor families}
+
 \Drand{} draws other idioms' figurative glosses at random. \Dsurf{} draws glosses
 that share surface tokens with the gold. \Dsem{} draws glosses from idioms
 sharing semantic tags. \Dlit{} replaces one distractor with the idiom's
 \emph{own} expert literal gloss. \Dhard{} combines all three pressures.
 
-\paragraph{Literal Attraction Rate.} For the families containing a literal
+\subsection{Literal Attraction Rate}
+
+For the families containing a literal
 gloss, let $\ell_i$ be the literal option and $g_i$ the gold:
 \[
 \LAR = \frac{1}{N}\sum_{i=1}^{N} \mathbf{1}\!\left[\arg\max_o p_i(o) = \ell_i\right].
@@ -233,7 +248,9 @@ gloss, let $\ell_i$ be the literal option and $g_i$ the gold:
 specific error of reading the idiom literally, and it is bounded below by nothing
 --- a model that never reads literally scores $0$ while still being wrong.
 
-\paragraph{Seven interventions.} E1 is the distractor ladder above. E2 swaps the
+\subsection{Seven interventions}
+
+E1 is the distractor ladder above. E2 swaps the
 idiom for a certified synonymous surface form. E3 perturbs the idiom as a unit
 (shuffle, reverse, delete one word, substitute one word, embed in its carrier
 sentence) with the options held fixed. E4 swaps the task language. E5 measures
@@ -241,7 +258,9 @@ calibration and selective prediction. E6 ablates the option text itself
 (truncate, scramble, translate, strip to bare labels). E7 runs all $4!=24$
 orderings of a fixed option set.
 
-\paragraph{Statistics.} All intervals are 95\% percentile bootstrap over items
+\subsection{Statistics and pairing}
+
+All intervals are 95\% percentile bootstrap over items
 (2{,}000 resamples). Paired comparisons use McNemar's exact test. ECE uses 15
 equal-width bins; we also report AURC against a random-gate baseline.
 
@@ -252,7 +271,7 @@ key, gold position, idiom string and literal-distractor key agree at $1.000$.
 Every paired test below is therefore on identical questions, not on
 re-derivations that happen to look alike.
 
-\section{Models}
+\subsection{Models}
 
 We audit three decision models spanning the design space (Table~\ref{tab:models}).
 \textbf{Laya-ml} is a bidirectional encoder with an option-marker scorer: all
@@ -302,7 +321,10 @@ to the figurative one on the majority of items.}
 \label{fig:ladder}
 \end{figure*}
 
-\section{Literal capture does not decrease with capability}
+\section{Analysis}
+\label{sec:analysis}
+
+\subsection{Literal capture does not decrease with capability}
 \label{sec:capture}
 
 Table~\ref{tab:ladder} and Figure~\ref{fig:ladder} give the ladder for the two
@@ -407,7 +429,7 @@ ordering is the baseline against which the calibration failures in
 \label{fig:threeway}
 \end{figure}
 
-\section{Confidence is anti-diagnostic}
+\subsection{Confidence is anti-diagnostic}
 \label{sec:confidence}
 
 Table~\ref{tab:conf} gives the mean probability assigned to the chosen option,
@@ -479,7 +501,7 @@ the high-confidence tail without review, and on the literal-bearing families
 that tail is where the open models are \emph{least} accurate, so the gate routes
 exactly the wrong items past the escalation step.
 
-\section{A semantics-free control}
+\subsection{A semantics-free control}
 \label{sec:nosignal}
 
 The \textsc{o4} ablation replaces every option's text with a bare label. No
@@ -518,7 +540,7 @@ A side-check comes with it: McNemar between the two open arms under \textsc{o4}
 is not significant ($p = 0.76$), so the instrument's null behaves identically in
 both.
 
-\section{Option order is architecture-specific}
+\subsection{Option order is architecture-specific}
 \label{sec:order}
 
 We run every item under all $4! = 24$ orderings of a fixed option set and record
@@ -561,19 +583,6 @@ the shared state, its question and itself from the same start position --- is
 very nearly borne out. Laya-ml's option-marker scorer is not, confirming an
 upstream issue report at scale.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.90\linewidth]{figures/fig6_order_sensitivity.pdf}
-\caption{Order sensitivity. \emph{Left:} how many distinct glosses each model
-selects across the 24 orderings of one option set; within each group bars run
-\textbf{cyan} Laya-ml, \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13, and
-a value of 1 means perfect stability. \emph{Right:} per model, the
-\textbf{coloured} bar is the share of items whose chosen gloss is unstable and
-the \textbf{grey} bar is the mean within-item range of $p$(gold). Laya-ml is
-unstable on 83.7\% of items with a mean $p$(gold) swing of $0.346$; the other two
-are near-stable.}
-\label{fig:order}
-\end{figure*}
 
 
 The residual positional bias follows (Figure~\ref{fig:position}). With the gold
@@ -587,7 +596,7 @@ item, seeded by item id, and are averages over position rather than measurements
 at one of them; we suggest this as a default for the class, not a robustness
 check.
 
-\section{Options are read as a bag of words}
+\subsection{Options are read as a bag of words}
 \label{sec:bagofwords}
 
 The \textsc{o}-series ablates the option text while holding the idiom fixed
@@ -609,7 +618,7 @@ reading lexical identity rather than composed meaning, and the typed interface
 reports a well-formed, high-confidence answer either way.
 
 
-\section{Neither open model treats the idiom as a unit}
+\subsection{Neither open model treats the idiom as a unit}
 \label{sec:unit}
 
 E3 perturbs the idiom while holding the option list fixed
@@ -638,9 +647,9 @@ A model whose answer improves when helpful context is appended is, by the same
 token, a model whose answer moves when context is appended at all --- and
 nothing in the interface distinguishes the two.
 
-\begin{figure*}[t]
+\begin{figure*}[!tbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures/fig9_unit_integrity.pdf}
+\includegraphics[width=0.80\linewidth]{figures/fig9_unit_integrity.pdf}
 \caption{Unit integrity: the idiom is perturbed, the options held fixed.
 \textbf{Cyan} Laya-ml, \textbf{magenta} Lod-lille; error bars 95\% bootstrap
 CIs, dashed line chance (left panel). \emph{Left:} accuracy. \emph{Right:}
@@ -650,7 +659,7 @@ bag-of-words signature.}
 \label{fig:unit}
 \end{figure*}
 
-\section{The failure localises to Bangla}
+\subsection{The failure localises to Bangla}
 \label{sec:crosslingual}
 
 Holding the model fixed and swapping only the task language
@@ -666,9 +675,9 @@ Bengali script sits at $0.283$, barely above chance, which reproduces a
 documented failure mode and rules out the possibility that the Bangla result is
 an artifact of the scorer rather than of the language.
 
-\begin{figure*}[t]
+\begin{figure*}[!tbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures/fig10_crosslingual.pdf}
+\includegraphics[width=0.80\linewidth]{figures/fig10_crosslingual.pdf}
 \caption{Accuracy by task language, grouped by model: \textbf{cyan} Laya-ml
 (four bars), \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13. \textbf{Solid}
 bars are Bangla input, \textbf{hatched} bars English; Laya-ml's third and fourth
@@ -681,32 +690,45 @@ same idiom presented in English.}
 \section{Discussion}
 
 Three of our four claims are properties of the \emph{class}, established by
-replication across architecturally unrelated models rather than by a single
-model. Literal capture, anti-diagnostic confidence and the no-signal control all
-reproduce across an encoder scorer and a decoder scorer, and the commercial arm
---- which escapes the first two in English --- fails the third most severely of
-the three. Option-order dependence is the exception, and informatively so: it
-tracks the scoring architecture, and the architecture that claims
-order-independence very nearly delivers it.
+replication across architecturally unrelated models. Literal capture,
+anti-diagnostic confidence and the no-signal control all reproduce across an
+encoder scorer and a decoder scorer, and the commercial arm --- which escapes
+the first two in English --- fails the third most severely. Option-order
+dependence is the informative exception: it tracks the scoring architecture, and
+the architecture claiming order-independence very nearly delivers it.
 
 For practitioners: a returned probability should not be thresholded without
-measuring what the model returns on a degenerate option list, since that number
-can be high while accuracy is at chance; a benchmark score is not evidence
-against literal capture, since the two move in opposite directions; and an evaluation that
-fixes option order is partly reporting position.
+measuring what the model returns on a degenerate option list; a benchmark score
+is not evidence against literal capture, since the two move in opposite
+directions; and an evaluation that fixes option order is partly reporting
+position.
 
 Against the current literature this is a boundary condition, not a rebuttal: the
 cost and latency advantages are established \citep{tang2026audit,rao2026rubric},
-and what we add is that the property the cascade designs depend on --- a
-confidence number that means something --- is the one that degrades first, and
-silently. Three concurrent findings now point the same way: the decision follows
-an option's \emph{name} rather than its bound definition
+and what we add is that the property the cascade designs depend on degrades
+first, and silently. Three concurrent findings point the same way --- the
+decision follows an option's \emph{name} rather than its bound definition
 \citep{sun2026typesafe}, benign context flips a majority of correct decisions
 \citep{xu2026jevout}, and here confidence rises as accuracy falls. The typed
 interface guarantees a well-formed answer and nothing about whether it was
 arrived at for a reason, so each failure is invisible to a caller who only
-checks that the output validates. And \S\ref{sec:crosslingual} shows the
-concepts are present but unreachable through Bangla --- not absent.
+checks that the output validates.
+
+\section{Conclusion}
+
+We audited three decision models on Bangla idioms using only interventions on
+the option set, a method that requires no new annotation and that remains
+available when a model emits no text and its weights are closed. Inserting an
+idiom's own expert literal gloss drives all open arms far below chance, and the
+model that is stronger on every other condition is the more captured one, so
+literal capture is not something capability removes. Reported confidence rises
+as accuracy falls under the same shift, and on a semantics-free option list the
+best-calibrated arm reports $0.815$ confidence at chance accuracy --- which puts
+a boundary on the confidence-gated cascade designs now being built on this model
+class. Option-order sensitivity separates the two scoring architectures cleanly,
+$0.837$ against $0.107$, and the failure throughout localises to Bangla rather
+than to figurativeness. We release the instrument, the per-item outputs and the
+analysis code so the same audit can be run on other models and other languages.
 
 \section*{Limitations}
 
@@ -838,7 +860,7 @@ option text cost almost nothing in any of the three models.}
 \label{fig:options}
 \end{figure*}
 
-\section{Position bias}
+\section{Order sensitivity and position bias}
 \label{app:position}
 
 Figure~\ref{fig:position} gives the per-slot selection shares behind the
@@ -853,6 +875,20 @@ uniformly at random, so the black dashed line at $0.25$ is the expectation under
 no positional bias and any departure from it is bias. Laya-ml takes slot B 37.2\%
 of the time and slot A 14.6\%; the other two show only a mild primacy gradient.}
 \label{fig:position}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.90\linewidth]{figures/fig6_order_sensitivity.pdf}
+\caption{Order sensitivity. \emph{Left:} how many distinct glosses each model
+selects across the 24 orderings of one option set; within each group bars run
+\textbf{cyan} Laya-ml, \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13, and
+a value of 1 means perfect stability. \emph{Right:} per model, the
+\textbf{coloured} bar is the share of items whose chosen gloss is unstable and
+the \textbf{grey} bar is the mean within-item range of $p$(gold). Laya-ml is
+unstable on 83.7\% of items with a mean $p$(gold) swing of $0.346$; the other two
+are near-stable.}
+\label{fig:order}
 \end{figure*}
 
 \section{Reproducibility}

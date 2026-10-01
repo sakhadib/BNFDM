@@ -39,15 +39,16 @@ Current mapping (`paper/acl_latex.tex`):
 | fig3_three_way_bangla | Figure 3 | body |
 | fig4_confidence_reliability | Figure 4 | body |
 | fig5_no_signal_control | Figure 5 | body |
-| fig6_order_sensitivity | Figure 6 | body |
-| fig9_unit_integrity | Figure 7 | body |
-| fig10_crosslingual | Figure 8 | body |
+| fig9_unit_integrity | Figure 6 | body |
+| fig10_crosslingual | Figure 7 | body |
+| fig8_option_ablation | Figure 8 | Appendix D, beside Table 7 |
 | fig7_position_bias | Figure 9 | Appendix C |
-| fig8_option_ablation | Figure 10 | Appendix D, beside Table 7 |
+| fig6_order_sensitivity | Figure 10 | Appendix C, beside Table 5 |
 
-Position bias and option ablation were moved to the appendix to bring the body
-inside the eight-page limit; both are fully described in the text and the
-option-ablation numbers also appear as Table 7.
+Three figures sit in the appendix so the body stays inside eight pages. Each
+was chosen because a table in the paper already carries its numbers: option
+ablation duplicates Table 7, order sensitivity duplicates Table 5, and position
+bias is fully stated in the text of the order-sensitivity subsection.
 
 
 ## fig1_literal_capture
