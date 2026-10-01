@@ -1,377 +1,788 @@
 \documentclass[11pt]{article}
 
-% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
-% Change to "preprint" to generate a non-anonymous version with page numbers.
 \usepackage[review]{acl}
 
-% Standard package includes
 \usepackage{times}
 \usepackage{latexsym}
-
-% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
 \usepackage[T1]{fontenc}
-% For Vietnamese characters
-% \usepackage[T5]{fontenc}
-% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
-
-% This assumes your files are encoded as UTF8
 \usepackage[utf8]{inputenc}
-
-% This is not strictly necessary, and may be commented out,
-% but it will improve the layout of the manuscript,
-% and will typically save some space.
 \usepackage{microtype}
-
-% This is also not strictly necessary, and may be commented out.
-% However, it will improve the aesthetics of text in
-% the typewriter font.
-\usepackage{inconsolata}
-
-%Including images in your LaTeX document requires adding
-%additional package(s)
+%\usepackage{inconsolata}
 \usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
-% If the title and author information does not fit in the area allocated, uncomment the following
-%
-%\setlength\titlebox{<dim>}
-%
-% and set <dim> to something 5cm or larger.
+% ── theme ────────────────────────────────────────────────────────────
+\definecolor{cLaya}{HTML}{27EBF5}
+\definecolor{cLod}{HTML}{F127F5}
+\definecolor{cJev}{HTML}{F5C827}
+\definecolor{cNeutral}{HTML}{CCCCCC}
 
-\title{Instructions for *ACL Proceedings}
+\newcommand{\laya}[1]{\cellcolor{cLaya!30}#1}
+\newcommand{\lod}[1]{\cellcolor{cLod!22}#1}
+\newcommand{\jev}[1]{\cellcolor{cJev!35}#1}
+\newcommand{\neu}[1]{\cellcolor{cNeutral!45}#1}
+\newcommand{\layah}[1]{\cellcolor{cLaya!55}\textbf{#1}}
+\newcommand{\lodh}[1]{\cellcolor{cLod!45}\textbf{#1}}
+\newcommand{\jevh}[1]{\cellcolor{cJev!65}\textbf{#1}}
 
-% Author information can be set in various styles:
-% For several authors from the same institution:
-% \author{Author 1 \and ... \and Author n \\
-%         Address line \\ ... \\ Address line}
-% if the names do not fit well on one line use
-%         Author 1 \\ {\bf Author 2} \\ ... \\ {\bf Author n} \\
-% For authors from different institutions:
-% \author{Author 1 \\ Address line \\  ... \\ Address line
-%         \And  ... \And
-%         Author n \\ Address line \\ ... \\ Address line}
-% To start a separate ``row'' of authors use \AND, as in
-% \author{Author 1 \\ Address line \\  ... \\ Address line
-%         \AND
-%         Author 2 \\ Address line \\ ... \\ Address line \And
-%         Author 3 \\ Address line \\ ... \\ Address line}
+\newcommand{\Drand}{\textsc{d-rand}}
+\newcommand{\Dsurf}{\textsc{d-surf}}
+\newcommand{\Dsem}{\textsc{d-sem}}
+\newcommand{\Dlit}{\textsc{d-lit}}
+\newcommand{\Dhard}{\textsc{d-hard}}
+\newcommand{\LAR}{\textsc{lar}}
 
-\author{First Author \\
-  Affiliation / Address line 1 \\
-  Affiliation / Address line 2 \\
-  Affiliation / Address line 3 \\
-  \texttt{email@domain} \\\And
-  Second Author \\
-  Affiliation / Address line 1 \\
-  Affiliation / Address line 2 \\
-  Affiliation / Address line 3 \\
-  \texttt{email@domain} \\}
+\title{Literal Capture: Auditing Non-Generative Decision Models\\on Bangla Idioms}
 
-%\author{
-%  \textbf{First Author\textsuperscript{1}},
-%  \textbf{Second Author\textsuperscript{1,2}},
-%  \textbf{Third T. Author\textsuperscript{1}},
-%  \textbf{Fourth Author\textsuperscript{1}},
-%\\
-%  \textbf{Fifth Author\textsuperscript{1,2}},
-%  \textbf{Sixth Author\textsuperscript{1}},
-%  \textbf{Seventh Author\textsuperscript{1}},
-%  \textbf{Eighth Author \textsuperscript{1,2,3,4}},
-%\\
-%  \textbf{Ninth Author\textsuperscript{1}},
-%  \textbf{Tenth Author\textsuperscript{1}},
-%  \textbf{Eleventh E. Author\textsuperscript{1,2,3,4,5}},
-%  \textbf{Twelfth Author\textsuperscript{1}},
-%\\
-%  \textbf{Thirteenth Author\textsuperscript{3}},
-%  \textbf{Fourteenth F. Author\textsuperscript{2,4}},
-%  \textbf{Fifteenth Author\textsuperscript{1}},
-%  \textbf{Sixteenth Author\textsuperscript{1}},
-%\\
-%  \textbf{Seventeenth S. Author\textsuperscript{4,5}},
-%  \textbf{Eighteenth Author\textsuperscript{3,4}},
-%  \textbf{Nineteenth N. Author\textsuperscript{2,5}},
-%  \textbf{Twentieth Author\textsuperscript{1}}
-%\\
-%\\
-%  \textsuperscript{1}Affiliation 1,
-%  \textsuperscript{2}Affiliation 2,
-%  \textsuperscript{3}Affiliation 3,
-%  \textsuperscript{4}Affiliation 4,
-%  \textsuperscript{5}Affiliation 5
-%\\
-%  \small{
-%    \textbf{Correspondence:} \href{mailto:email@domain}{email@domain}
-%  }
-%}
+\author{Anonymous Submission}
 
 \begin{document}
 \maketitle
+
 \begin{abstract}
-This document is a supplement to the general instructions for *ACL authors. It contains instructions for using the \LaTeX{} style files for ACL conferences.
-The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
-These instructions should be used both for papers submitted for review and for final versions of accepted papers.
+Decision models --- non-autoregressive scorers that return a calibrated
+probability over caller-supplied options and emit no text --- are increasingly
+deployed as routers, classifiers and guardrails. They generate nothing, so the
+usual explainability toolkit of rationales, chain-of-thought and token
+attribution does not apply, and idioms make token-level attribution ill-posed in
+principle: a non-compositional expression has no word whose removal is
+informative. We therefore audit three such models entirely through
+\emph{interventions on the option set}, using 10{,}359 expert-annotated Bangla
+idioms that ship with both a gold figurative gloss and a gold literal gloss. Our
+instrument holds the item, the instruction and $k$ fixed and varies only the
+distractor family, which isolates one failure mode at a time and needs no new
+annotation. Three results hold across an encoder scorer, a decoder scorer and a
+closed commercial API. First, \emph{literal capture} is severe and does not
+decrease with capability: inserting the idiom's own literal gloss drives accuracy
+far below chance, and the model that is better on every other condition is the
+more captured one. Second, confidence is anti-diagnostic under this shift: both open models are more
+confident when captured than when correct, and confidence-gated selective
+prediction is worse than random gating. Third, option-order sensitivity
+dissociates cleanly by architecture:
+83.7\% versus 10.7\% of items change their chosen gloss across the 24 orderings
+of the same four options. A semantics-free control shows the strongest model
+reporting 0.815 mean confidence at 0.254 accuracy. We release all artifacts.
 \end{abstract}
 
 \section{Introduction}
 
-These instructions are for authors submitting papers to *ACL conferences using \LaTeX. They are not self-contained. All authors must follow the general instructions for *ACL proceedings,\footnote{\url{http://acl-org.github.io/ACLPUB/formatting.html}} and this document contains additional instructions for the \LaTeX{} style files.
+A \emph{decision model} is given a question and a list of candidate options and
+returns a probability distribution over exactly those options. It is not
+autoregressive, it does not sample, and it produces no text. This class has
+grown quickly as infrastructure --- routing, intent classification, content
+gating, tool selection --- precisely because it is cheap, bounded and returns a
+number a caller can threshold on.
 
-The templates include the \LaTeX{} source of this document (\texttt{acl\_latex.tex}),
-the \LaTeX{} style file used to format it (\texttt{acl.sty}),
-an ACL bibliography style (\texttt{acl\_natbib.bst}),
-an example bibliography (\texttt{custom.bib}),
-and the bibliography for the ACL Anthology (\texttt{anthology.bib}).
+That bounded interface is also an explainability problem. There is no rationale
+to inspect, no chain of thought to measure for faithfulness
+\citep{jacovi2020faithfulness,turpin2023unfaithful}, and in the commercial case
+no weights at all. What is left is the behavioural surface: the caller controls
+the question and the option list, and sees a probability vector. Any audit of
+this class has to be built out of that.
 
-\section{Engines}
+The obvious fallback --- attributing the decision to input tokens
+\citep{ribeiro2016lime,lundberg2017shap} --- is not merely unreliable here
+\citep{jain2019attention,adebayo2018sanity,hooker2019roar}; for our domain it is
+ill-posed. An idiom is non-compositional by definition
+\citep{nunberg1994idioms}: the words of \emph{kick the bucket} do not carry
+fractions of its meaning, so a Shapley value over them attributes a quantity
+that does not exist. The expression has to be intervened on as a unit, or not at
+all.
 
-To produce a PDF file, pdf\LaTeX{} is strongly recommended (over original \LaTeX{} plus dvips+ps2pdf or dvipdf).
-The style file \texttt{acl.sty} can also be used with
-lua\LaTeX{} and
-Xe\LaTeX{}, which are especially suitable for text in non-Latin scripts.
-The file \texttt{acl\_lualatex.tex} in this repository provides
-an example of how to use \texttt{acl.sty} with either
-lua\LaTeX{} or
-Xe\LaTeX{}.
+We take the option set as the intervention surface instead. Bangla
+\emph{b\=agdh\=ar\=a} (idioms) are well suited to this because the expert
+resource we use ships, for each idiom, both a gold figurative meaning and a gold
+\emph{literal} gloss --- a ready-made, human-certified counterfactual distractor
+that no annotation effort of ours produced. Dropping that gloss into the option
+list turns a benchmark question into a targeted probe: does the model read the
+expression as an idiom, or as its words?
 
-\section{Preamble}
+\paragraph{Contributions.}
+\begin{enumerate}\itemsep1pt
+\item A meaning-choice instrument for decision models in which the
+\emph{distractor family} is the independent variable and everything else is held
+fixed, requiring no new annotation (\S\ref{sec:instrument}).
+\item \textbf{Literal capture does not decrease with capability.} We define the
+Literal Attraction Rate and show a double dissociation: the model that is better
+on every non-literal condition is substantially more captured
+(\S\ref{sec:capture}).
+\item \textbf{Confidence is anti-diagnostic under this shift}, across three
+different calibration philosophies, with confidence-gated selective prediction
+worse than random gating (\S\ref{sec:confidence}).
+\item \textbf{Option-order dependence dissociates by architecture}, cleanly and
+at scale, with a methodological consequence for anyone evaluating this class
+(\S\ref{sec:order}).
+\item A semantics-free control that bounds what each model reports when there is
+provably nothing to report (\S\ref{sec:nosignal}).
+\end{enumerate}
 
-The first line of the file must be
-\begin{quote}
-\begin{verbatim}
-\documentclass[11pt]{article}
-\end{verbatim}
-\end{quote}
+\section{Background}
 
-To load the style file in the review version:
-\begin{quote}
-\begin{verbatim}
-\usepackage[review]{acl}
-\end{verbatim}
-\end{quote}
-For the final version, omit the \verb|review| option:
-\begin{quote}
-\begin{verbatim}
-\usepackage{acl}
-\end{verbatim}
-\end{quote}
+\paragraph{Idioms in NLP.} Idiom resources and tasks are well established
+\citep{haagsma2020magpie,tayyarmadabushi2022semeval,chakrabarty2022flute}, and
+the difficulty of figurative language for distributional models is long-noted
+\citep{shwartz2019pain}. Psycholinguistics frames the phenomenon as competition
+between a literal and a figurative route whose resolution depends on
+decomposability and context
+\citep{cacciari1988comprehension,gibbs1989kick,titone1999compositional}. Our
+\Dlit{} intervention is a deliberate behavioural analogue of that competition:
+we place both routes in the option list and read off which one wins.
 
-To use Times Roman, put the following in the preamble:
-\begin{quote}
-\begin{verbatim}
-\usepackage{times}
-\end{verbatim}
-\end{quote}
-(Alternatives like txfonts or newtx are also acceptable.)
+\paragraph{Evaluating option scorers.} Option-order sensitivity and selection
+bias are documented for prompted generative LMs
+\citep{pezeshkpour2024order,wei2024selection,zheng2024robust,zhao2021calibrate}.
+We are not aware of a comparison of option-marker against independent-option
+scoring in small non-autoregressive models over the full permutation set, which
+is what \S\ref{sec:order} provides.
 
-Please see the \LaTeX{} source of this document for comments on other packages that may be useful.
+\paragraph{Calibration and selective prediction.} Proper scoring and calibration
+measurement are standard
+\citep{brier1950verification,gneiting2007proper,guo2017calibration,nixon2019measuring,kumar2019verified},
+as is the observation that calibration degrades under distribution shift
+\citep{ovadia2019trust,jiang2021know}. Selective prediction gives the operational
+test \citep{geifman2017selective,geifman2019selectivenet,traub2024selective}. We
+report the combination that matters for deployment: accuracy \emph{decreasing}
+with confidence, and a confidence gate underperforming a random one.
 
-Set the title and author using \verb|\title| and \verb|\author|. Within the author list, format multiple authors using \verb|\and| and \verb|\And| and \verb|\AND|; please see the \LaTeX{} source for examples.
+\paragraph{Behavioural testing.} Our design is in the tradition of behavioural
+checklists, contrast sets and counterfactual minimal pairs
+\citep{ribeiro2020checklist,gardner2020contrast,kaushik2020difference,naik2018stress,jia2017adversarial}.
+The contribution is to carry that tradition into a model class with no text
+output, where it is one of the few instruments available.
 
-By default, the box containing the title and author names is set to the minimum of 5 cm. If you need more space, include the following in the preamble:
-\begin{quote}
-\begin{verbatim}
-\setlength\titlebox{<dim>}
-\end{verbatim}
-\end{quote}
-where \verb|<dim>| is replaced with a length. Do not set this length smaller than 5 cm.
+\paragraph{Low-resource evaluation.} Bangla is served by strong encoders and
+corpora \citep{bhattacharjee2022banglabert,kakwani2020indicnlpsuite}, and
+cross-lingual benchmarks establish the transfer gap
+\citep{hu2020xtreme,ruder2021xtremer,adelani2021masakhaner}.
+\S\ref{sec:crosslingual} localises our failure to the Bangla side rather than to
+figurativeness itself.
 
-\section{Document Body}
+\section{The meaning-choice instrument}
+\label{sec:instrument}
 
-\subsection{Footnotes}
+\paragraph{Data.} We use a corpus of 10{,}359 expert-annotated Bangla idioms.
+Each row carries the idiom, a gold figurative meaning in Bangla, an expert
+literal gloss, semantic tags, alternative surface forms certified as
+meaning-preserving, and a gold carrier sentence. We add no annotation; every
+intervention below is assembled from fields that already exist.
 
-Footnotes are inserted with the \verb|\footnote| command.\footnote{This is a footnote.}
+\paragraph{Task.} Given an idiom, choose its gold figurative meaning from $k=4$
+candidates. Chance is $0.250$ throughout. The \textbf{distractor family is the
+independent variable}; the item, the instruction, $k$, and per-item option-order
+randomisation (seeded by item id) are held fixed across families, so a paired
+test across families is a test on byte-identical questions.
 
-\subsection{Tables and figures}
+\paragraph{Distractor families.}
+\Drand{} draws other idioms' figurative glosses at random. \Dsurf{} draws glosses
+that share surface tokens with the gold. \Dsem{} draws glosses from idioms
+sharing semantic tags. \Dlit{} replaces one distractor with the idiom's
+\emph{own} expert literal gloss. \Dhard{} combines all three pressures.
 
-See Table~\ref{tab:accents} for an example of a table and its caption.
-\textbf{Do not override the default caption sizes.}
+\paragraph{Literal Attraction Rate.} For the families containing a literal
+gloss, let $\ell_i$ be the literal option and $g_i$ the gold:
+\[
+\LAR = \frac{1}{N}\sum_{i=1}^{N} \mathbf{1}\!\left[\arg\max_o p_i(o) = \ell_i\right].
+\]
+\LAR{} is not $1-\text{accuracy}$: it isolates the share of errors that are the
+specific error of reading the idiom literally, and it is bounded below by nothing
+--- a model that never reads literally scores $0$ while still being wrong.
 
-\begin{table}
-  \centering
-  \begin{tabular}{lc}
-    \hline
-    \textbf{Command} & \textbf{Output} \\
-    \hline
-    \verb|{\"a}|     & {\"a}           \\
-    \verb|{\^e}|     & {\^e}           \\
-    \verb|{\`i}|     & {\`i}           \\
-    \verb|{\.I}|     & {\.I}           \\
-    \verb|{\o}|      & {\o}            \\
-    \verb|{\'u}|     & {\'u}           \\
-    \verb|{\aa}|     & {\aa}           \\\hline
-  \end{tabular}
-  \begin{tabular}{lc}
-    \hline
-    \textbf{Command} & \textbf{Output} \\
-    \hline
-    \verb|{\c c}|    & {\c c}          \\
-    \verb|{\u g}|    & {\u g}          \\
-    \verb|{\l}|      & {\l}            \\
-    \verb|{\~n}|     & {\~n}           \\
-    \verb|{\H o}|    & {\H o}          \\
-    \verb|{\v r}|    & {\v r}          \\
-    \verb|{\ss}|     & {\ss}           \\
-    \hline
-  \end{tabular}
-  \caption{Example commands for accented characters, to be used in, \emph{e.g.}, Bib\TeX{} entries.}
-  \label{tab:accents}
+\paragraph{Seven interventions.} E1 is the distractor ladder above. E2 swaps the
+idiom for a certified synonymous surface form. E3 perturbs the idiom as a unit
+(shuffle, reverse, delete one word, substitute one word, embed in its carrier
+sentence) with the options held fixed. E4 swaps the task language. E5 measures
+calibration and selective prediction. E6 ablates the option text itself
+(truncate, scramble, translate, strip to bare labels). E7 runs all $4!=24$
+orderings of a fixed option set.
+
+\paragraph{Statistics.} All intervals are 95\% percentile bootstrap over items
+(2{,}000 resamples). Paired comparisons use McNemar's exact test. ECE uses 15
+equal-width bins; we also report AURC against a random-gate baseline.
+
+\paragraph{Pairing verification.} The two open arms were run in separate
+accounts from independent notebooks, each reconstructing the corpus and the task
+instrument from a hardcoded contract. On all 4{,}440 overlapping rows the gold
+key, gold position, idiom string and literal-distractor key agree at $1.000$.
+Every paired test below is therefore on identical questions, not on
+re-derivations that happen to look alike.
+
+\section{Models}
+
+We audit three decision models spanning the design space (Table~\ref{tab:models}).
+\textbf{Laya-ml} is a bidirectional encoder with an option-marker scorer: all
+options are encoded together and scored from marker positions.
+\textbf{Lod-lille} is a decoder backbone with independent-option scoring, where
+each option attends only to the shared state, the question and itself from the
+same start position --- order-independent by construction in \texttt{fp32}.
+\textbf{Jev-1.13} is a closed commercial model behind a decisions API; we know
+its interface and nothing else. It is not multilingual by documentation, which
+we exploit rather than regret: it provides the capability contrast that makes
+\S\ref{sec:capture} a dissociation rather than an anecdote.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lccc}
+\toprule
+& \laya{\textbf{Laya-ml}} & \lod{\textbf{Lod-lille}} & \jev{\textbf{Jev-1.13}} \\
+\midrule
+backbone & \laya{mmBERT} & \lod{Qwen3-0.6B} & \jev{closed} \\
+scoring & \laya{marker} & \lod{independent} & \jev{unknown} \\
+params & \laya{322M} & \lod{0.6B} & \jev{---} \\
+items & \laya{8{,}876} & \lod{888} & \jev{8{,}761} \\
+latency & \laya{27.2\,ms} & \lod{86.1\,ms} & \jev{API} \\
+weights & \laya{open} & \lod{open} & \jev{closed} \\
+\bottomrule
+\end{tabular}
+\caption{The three arms. Cell tint identifies the model throughout the paper:
+cyan Laya-ml, magenta Lod-lille, yellow Jev-1.13. Lod-lille ran a fixed 10\%
+random subset; Appendix~\ref{app:subset} bounds the resulting drift at
+$0.016$.}
+\label{tab:models}
 \end{table}
 
-As much as possible, fonts in figures should conform
-to the document fonts. See Figure~\ref{fig:experiments} for an example of a figure and its caption.
-
-Using the \verb|graphicx| package graphics files can be included within figure
-environment at an appropriate point within the text.
-The \verb|graphicx| package supports various optional arguments to control the
-appearance of the figure.
-You must include it explicitly in the \LaTeX{} preamble (after the
-\verb|\documentclass| declaration and before \verb|\begin{document}|) using
-\verb|\usepackage{graphicx}|.
-
-\begin{figure}[t]
-  \includegraphics[width=\columnwidth]{example-image-golden}
-  \caption{A figure with a caption that runs for more than one line.
-    Example image is usually available through the \texttt{mwe} package
-    without even mentioning it in the preamble.}
-  \label{fig:experiments}
-\end{figure}
-
 \begin{figure*}[t]
-  \includegraphics[width=0.48\linewidth]{example-image-a} \hfill
-  \includegraphics[width=0.48\linewidth]{example-image-b}
-  \caption {A minimal working example to demonstrate how to place
-    two images side-by-side.}
+\centering
+\includegraphics[width=\linewidth]{figures/fig1_literal_capture.pdf}
+\caption{The distractor ladder (left) and literal attraction rate (right) for
+the two open arms. \textbf{Cyan} is Laya-ml ($n=8{,}876$), \textbf{magenta} is
+Lod-lille ($n=888$); the black dashed line is chance ($0.250$) and error bars are
+95\% bootstrap CIs. Surface- and tag-matched distractors cost a few points.
+Inserting the idiom's own literal gloss (\Dlit) collapses both models far below
+chance, and collapses the \emph{stronger} model harder: Lod-lille leads
+Laya-ml by $+0.133$ on random distractors and trails it by $-0.070$ once the
+literal gloss is present. On the right, both models prefer the literal reading
+to the figurative one on the majority of items.}
+\label{fig:ladder}
 \end{figure*}
 
-\subsection{Hyperlinks}
+\section{Literal capture does not decrease with capability}
+\label{sec:capture}
 
-Users of older versions of \LaTeX{} may encounter the following error during compilation:
-\begin{quote}
-\verb|\pdfendlink| ended up in different nesting level than \verb|\pdfstartlink|.
-\end{quote}
-This happens when pdf\LaTeX{} is used and a citation splits across a page boundary. The best way to fix this is to upgrade \LaTeX{} to 2018-12-01 or later.
+Table~\ref{tab:ladder} and Figure~\ref{fig:ladder} give the ladder for the two
+open arms on the 888 shared items. Lod-lille is the stronger model on every
+non-literal condition, by up to $+0.133$. Insert the idiom's own literal gloss
+and the ordering \emph{reverses}: Lod-lille falls to $0.066$, less than half of
+Laya-ml's already-below-chance $0.151$, and barely a quarter of chance. The same
+reversal holds for \Dhard.
 
-\subsection{Citations}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Distractors} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & $\Delta$ \\
+\midrule
+random        & \laya{0.367} & \lodh{0.484} & \neu{$+0.133$$^{***}$} \\
+surface       & \laya{0.338} & \lodh{0.412} & \neu{$+0.073$$^{***}$} \\
+tag           & \laya{0.333} & \lodh{0.446} & \neu{$+0.120$$^{***}$} \\
+\midrule
+$+$ literal   & \layah{0.151} & \lod{0.066} & \neu{$-0.070$$^{***}$} \\
+hard          & \layah{0.144} & \lod{0.063} & \neu{$-0.086$$^{***}$} \\
+\midrule
+\LAR{} (lit.) & \laya{0.644} & \lodh{0.885} & \neu{} \\
+\LAR{} (hard) & \laya{0.631} & \lodh{0.855} & \neu{} \\
+mean $p$(lit.)& \laya{0.464} & \lodh{0.726} & \neu{} \\
+mean $p$(gold)& \laya{0.195} & \lod{0.128} & \neu{} \\
+\bottomrule
+\end{tabular}
+\caption{The distractor ladder and literal attraction, McNemar on the 888 shared
+items ($^{***}$ $p<0.001$). Bold marks the better of the two arms per row. The
+sign of $\Delta$ flips at the horizontal rule: capability on the surrounding task
+does not protect against literal capture, and here is associated with more of
+it.}
+\label{tab:ladder}
+\end{table}
 
-\begin{table*}
-  \centering
-  \begin{tabular}{lll}
-    \hline
-    \textbf{Output}           & \textbf{natbib command} & \textbf{ACL only command} \\
-    \hline
-    \citep{Gusfield:97}       & \verb|\citep|           &                           \\
-    \citealp{Gusfield:97}     & \verb|\citealp|         &                           \\
-    \citet{Gusfield:97}       & \verb|\citet|           &                           \\
-    \citeyearpar{Gusfield:97} & \verb|\citeyearpar|     &                           \\
-    \citeposs{Gusfield:97}    &                         & \verb|\citeposs|          \\
-    \hline
-  \end{tabular}
-  \caption{\label{citation-guide}
-    Citation commands supported by the style file.
-    The style is based on the natbib package and supports all natbib citation commands.
-    It also supports commands defined in previous ACL style files for compatibility.
-  }
-\end{table*}
+This is the central result. Capability on the surrounding task does not protect
+against literal capture. \LAR{} therefore measures something accuracy does not:
+a model can be selected as ``better'' on a conventional benchmark while being
+strictly worse at the thing that benchmark is a proxy for. The error is not
+diffuse either --- the full decomposition under \Dlit{} is gold $0.151$ /
+literal $0.644$ / other $0.207$ for Laya-ml and $0.066$ / $0.885$ / $0.048$ for
+Lod-lille. On the clearest items Laya-ml places $p = 1.000$ on the literal gloss
+and $0.000$ on the gold.
 
-Table~\ref{citation-guide} shows the syntax supported by the style files.
-We encourage you to use the natbib styles.
-You can use the command \verb|\citet| (cite in text) to get ``author (year)'' citations, like this citation to a paper by \citet{Gusfield:97}.
-You can use the command \verb|\citep| (cite in parentheses) to get ``(author, year)'' citations \citep{Gusfield:97}.
-You can use the command \verb|\citealp| (alternative cite without parentheses) to get ``author, year'' citations, which is useful for using citations within parentheses (e.g. \citealp{Gusfield:97}).
+\paragraph{A confound we do not hide.} Jev-1.13 reaches $\LAR = 0.047$, two
+orders of magnitude below the open arms. That number is \emph{English}. The
+shared literal pool exists only for the 3{,}265 items with an English literal
+gloss, and the commercial arm ran it in English while the open arms ran it in
+Bangla. Figure~\ref{fig:matrix} draws the full language $\times$ model matrix
+including the two cells that were never run, so the reader can see the shape of
+the missing experiment rather than infer a clean three-way comparison that we did
+not perform. A second caveat belongs with it: the pool is not neutral. Laya-ml's
+in-pool \LAR{} is $0.747$ against $0.583$ out of pool, while its \Drand{}
+accuracy differs by only $0.008$ --- items that happen to have an English literal
+gloss are the more literally-attracting ones.
 
-A possessive citation can be made with the command \verb|\citeposs|.
-This is not a standard natbib command, so it is generally not compatible
-with other style files.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig2_capture_matrix.pdf}
+\caption{Literal attraction on the shared 3{,}265-item pool, by model and task
+language. Solid bars are Bangla, the hatched \textbf{yellow} bar is Jev-1.13's
+\emph{English} condition, and the light grey hatched blocks running past the top
+of the axis mark cells that were \textbf{never run} --- they are not values of
+$1.0$. Jev-1.13's low attraction cannot be read as a Bangla result; the
+experiment that would resolve the confound is exactly the two missing cells.}
+\label{fig:matrix}
+\end{figure}
 
-\subsection{References}
+\paragraph{The one matched three-way comparison.} Exactly one condition is
+identical across all three arms: Bangla idiom, Bangla gloss, random distractors.
+Figure~\ref{fig:threeway} and Table~\ref{tab:threeway} report it. The commercial
+model is far ahead ($0.736$ against $0.367$ and $0.484$), which is the honest
+capability ordering, and the one against which the calibration results of
+\S\ref{sec:confidence} and \S\ref{sec:nosignal} should be read.
 
-\nocite{Ando2005,andrew2007scalable,rasooli-tetrault-2015}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & $n$ & \textbf{Accuracy} & \textbf{95\% CI} \\
+\midrule
+\laya{Laya-ml}   & \laya{8{,}876} & \laya{0.367} & \laya{[.357, .377]} \\
+\lod{Lod-lille}  & \lod{888}      & \lod{0.484}  & \lod{[.453, .518]} \\
+\jev{Jev-1.13}   & \jev{8{,}761}  & \jevh{0.736} & \jev{[.727, .745]} \\
+\bottomrule
+\end{tabular}
+\caption{The only condition identical across all three arms: Bangla idiom
+$\rightarrow$ Bangla gloss, random distractors. All pairwise McNemar tests on the
+overlapping items are significant: Jev$-$Laya $+0.369$, Jev$-$Lod $+0.259$,
+Lod$-$Laya $+0.133$ (all $p < 10^{-9}$).}
+\label{tab:threeway}
+\end{table}
 
-The \LaTeX{} and Bib\TeX{} style files provided roughly follow the American Psychological Association format.
-If your own bib file is named \texttt{custom.bib}, then placing the following before any appendices in your \LaTeX{} file will generate the references section for you:
-\begin{quote}
-\begin{verbatim}
-\bibliography{custom}
-\end{verbatim}
-\end{quote}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig3_three_way_bangla.pdf}
+\caption{The matched three-way comparison. Bars are, left to right,
+\textbf{cyan} Laya-ml, \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13;
+black dashed line is chance, error bars 95\% bootstrap CIs. This capability
+ordering is the baseline against which the calibration failures in
+\S\ref{sec:confidence}--\S\ref{sec:nosignal} should be read.}
+\label{fig:threeway}
+\end{figure}
 
-You can obtain the complete ACL Anthology as a Bib\TeX{} file from \url{https://aclweb.org/anthology/anthology.bib.gz}.
-To include both the Anthology and your own .bib file, use the following instead of the above.
-\begin{quote}
-\begin{verbatim}
-\bibliography{anthology,custom}
-\end{verbatim}
-\end{quote}
+\section{Confidence is anti-diagnostic}
+\label{sec:confidence}
 
-Please see Section~\ref{sec:bibtex} for information on preparing Bib\TeX{} files.
+Table~\ref{tab:conf} gives the mean probability assigned to the chosen option,
+split by outcome, on the literal-bearing families. Both open models are
+\emph{more confident when captured than when correct}, Lod-lille extremely so
+($0.787$ against $0.453$). The reliability curves in
+Figure~\ref{fig:reliability} slope \emph{downward} under \Dlit{} in both.
 
-\subsection{Equations}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Outcome} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+\midrule
+correct          & \laya{0.432} & \lod{0.453} & \jevh{0.935} \\
+captured         & \layah{0.596} & \lodh{0.787} & \jev{0.737} \\
+other error      & \laya{0.421} & \lod{0.399} & \jev{0.746} \\
+\midrule
+ECE (\Drand)     & \laya{0.071} & \lod{0.073} & \jev{0.005} \\
+ECE (\Dlit)      & \laya{0.385} & \lod{0.679} & \jev{0.014} \\
+AURC (conf.)     & \laya{0.924} & \lod{0.989} & \jev{0.013} \\
+AURC (random)    & \neu{0.849} & \neu{0.933} & \neu{0.069} \\
+\bottomrule
+\end{tabular}
+\caption{Confidence by outcome on the literal-bearing families, and calibration.
+Bold marks, per model, whether the model is more confident when correct or when
+captured. Both open arms are more confident when captured; their
+confidence-gated AURC is \emph{worse} than the random-gate baseline in the grey
+row, which inverts selective prediction. Jev-1.13's English condition does not
+show the inversion.}
+\label{tab:conf}
+\end{table}
 
-An example equation is shown below:
-\begin{equation}
-  \label{eq:example}
-  A = \pi r^2
-\end{equation}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig4_confidence_reliability.pdf}
+\caption{Reliability, 15 equal-width bins, panels left to right \textbf{Laya-ml},
+\textbf{Lod-lille}, \textbf{Jev-1.13}. Dark grey circles are the random-distractor
+condition; model-coloured squares are the $+$literal condition. The grey dashed
+diagonal is perfect calibration. Under \Dlit{} the two open models' curves bend
+\emph{downward} --- higher stated confidence buys lower accuracy --- while
+Jev-1.13, running in English, stays on the diagonal. Reading the left two panels:
+the model is most wrong exactly where it reports being most sure.}
+\label{fig:reliability}
+\end{figure*}
 
-Labels for equation numbers, sections, subsections, figures and tables
-are all defined with the \verb|\label{label}| command and cross references
-to them are made with the \verb|\ref{label}| command.
+Selective prediction therefore inverts. Restricting Laya-ml's \Dlit{} to the most
+confident 5\% of items gives $0.007$ accuracy against $0.151$ at full coverage,
+and the confidence-gated AURC is worse than a random gate for both open arms. The
+failure is not an artifact of one calibration philosophy: Laya-ml ships fitted
+per-bucket temperatures, Lod-lille deliberately ships none, and Lod-lille further
+ships a \emph{separate confidence head} whose documented purpose is estimating
+whether the answer is in the option list at all. The head does not rescue it ---
+mean head confidence is $0.631$ on captured items against $0.295$ on correct
+ones, the same inversion.
 
-This an example cross-reference to Equation~\ref{eq:example}.
+Jev-1.13 is the interesting exception, and it is only an exception in one
+direction. Its reliability is near-ideal in English (ECE $0.005$--$0.047$) and
+its confidence-gated AURC beats random by an order of magnitude. That makes
+\S\ref{sec:nosignal} harder to dismiss, not easier.
 
-\subsection{Appendices}
+\section{A semantics-free control}
+\label{sec:nosignal}
 
-Use \verb|\appendix| before any appendix section to switch the section numbering over to letters. See Appendix~\ref{sec:appendix} for an example.
+The \textsc{o4} ablation replaces every option's text with a bare label. No
+semantic signal remains, so accuracy is pinned at chance by construction. Whatever
+confidence survives is therefore pure overconfidence, with no modelling
+assumption required to interpret it. Figure~\ref{fig:nosignal} reports it.
 
-\section{Bib\TeX{} Files}
-\label{sec:bibtex}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig5_no_signal_control.pdf}
+\caption{The semantics-free control. Per model, the \textbf{grey} bar is accuracy
+(with 95\% CI) and the \textbf{coloured} bar is mean reported confidence; the
+black dashed line is chance. Because the options carry no information, accuracy
+is at chance by construction and the gap between the two bars is pure
+overconfidence: $0.250$ for Laya-ml, $0.049$ for Lod-lille, and $0.561$ for
+Jev-1.13 --- which reports $0.815$ confidence while answering at $0.254$.
+Jev-1.13's condition is English.}
+\label{fig:nosignal}
+\end{figure}
 
-Unicode cannot be used in Bib\TeX{} entries, and some ways of typing special characters can disrupt Bib\TeX's alphabetization. The recommended way of typing special characters is shown in Table~\ref{tab:accents}.
+The ordering reverses against Table~\ref{tab:conf}. The best-calibrated model
+under real options is the worst when the options carry nothing: Jev-1.13 reports
+$0.815$ mean confidence at $0.254$ accuracy, an ECE of $0.561$. Lod-lille, the
+weakest of the three on accuracy, is the only one whose reported confidence
+collapses appropriately ($0.282$). We read this as the operational point of the
+paper: a calibration number measured on in-distribution options says very little
+about what the model will report when the option list is degenerate, and a
+production caller thresholding on a returned probability is exposed to exactly
+that case.
 
-Please ensure that Bib\TeX{} records contain DOIs or URLs when possible, and for all the ACL materials that you reference.
-Use the \verb|doi| field for DOIs and the \verb|url| field for URLs.
-If a Bib\TeX{} entry has a URL or DOI field, the paper title in the references section will appear as a hyperlink to the paper, using the hyperref \LaTeX{} package.
+A useful side-check comes with it. McNemar between the two open arms under
+\textsc{o4} is not significant ($p = 0.76$); the instrument's null behaves
+identically in both, which is evidence that the task is measuring option
+semantics rather than an artifact of either scorer.
+
+\section{Option order is architecture-specific}
+\label{sec:order}
+
+We run every item under all $4! = 24$ orderings of a fixed option set and record
+the identity of the chosen gloss, recovered as $\mathrm{perm}[\mathrm{slot}(\hat{y})]$.\footnote{%
+An earlier version of this analysis counted distinct option \emph{keys} (slot
+letters) and reported near-total instability for Laya-ml. That metric is an
+artifact: a key necessarily changes when the same gloss moves slots. All numbers
+here use the corrected gloss-identity metric; Laya-ml's figure drops from $1.000$
+to $0.837$ and the finding stands.}
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+& \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+\midrule
+answer changes      & \layah{0.837} & \lod{0.107} & \jev{0.133} \\
+correctness varies  & \layah{0.686} & \lod{0.070} & \jev{0.120} \\
+distinct glosses    & \layah{2.83}  & \lod{1.14}  & \jev{1.15}  \\
+perfectly stable    & \laya{0.163} & \lodh{0.893} & \jev{0.867} \\
+$p$(gold) range     & \layah{0.346} & \lod{0.029} & \jev{0.128} \\
+selection spread    & \layah{0.226} & \lod{0.052} & \jev{0.072} \\
+\bottomrule
+\end{tabular}
+\caption{Option-order sensitivity over all 24 orderings of the same four options
+($n = 992$ / $299$ / $300$ items). Bold marks the worst arm per row. The
+marker-based scorer changes its chosen gloss on 83.7\% of items; the
+independent-option scorer, which is order-independent by construction in
+\texttt{fp32}, changes it on 10.7\% and very nearly delivers what its design
+claims.}
+\label{tab:order}
+\end{table}
+
+Table~\ref{tab:order} and Figure~\ref{fig:order} give a clean dissociation: a
+$7.8\times$ difference in answer stability and a $12\times$ difference in
+probability stability, tracking the scoring architecture rather than model size,
+backbone or capability. Lod-lille's design claim --- each option attends only to
+the shared state, its question and itself from the same start position --- is
+very nearly borne out. Laya-ml's option-marker scorer is not, confirming an
+upstream issue report at scale.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig6_order_sensitivity.pdf}
+\caption{Order sensitivity. \emph{Left:} how many distinct glosses each model
+selects across the 24 orderings of one option set; within each group bars run
+\textbf{cyan} Laya-ml, \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13, and
+a value of 1 means perfect stability. \emph{Right:} per model, the
+\textbf{coloured} bar is the share of items whose chosen gloss is unstable and
+the \textbf{grey} bar is the mean within-item range of $p$(gold). Laya-ml is
+unstable on 83.7\% of items with a mean $p$(gold) swing of $0.346$; the other two
+are near-stable.}
+\label{fig:order}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig7_position_bias.pdf}
+\caption{Share of selections falling on each option slot, panels left to right
+\textbf{Laya-ml}, \textbf{Lod-lille}, \textbf{Jev-1.13}. The gold option is placed
+uniformly at random, so the black dashed line at $0.25$ is the expectation under
+no positional bias and any departure from it is bias. Laya-ml takes slot B 37.2\%
+of the time and slot A 14.6\%; the other two show only a mild primacy gradient.}
+\label{fig:position}
+\end{figure*}
+
+The residual positional bias follows (Figure~\ref{fig:position}). With the gold
+placed uniformly, Laya-ml selects slot B 37.2\% of the time against 14.6\% for
+slot A, and its accuracy is $0.152$ when the gold sits in A against $0.403$ in B
+--- a $2.6\times$ swing from position alone.
+
+\paragraph{Methodological consequence.} Any evaluation of this model class that
+fixes option order is partly measuring position. All results in this paper
+randomise order per item, seeded by item id, and are therefore averages over
+position rather than measurements at one of them. We suggest this should be a
+default for the class, not a robustness check.
+
+\section{Options are read as a bag of words}
+
+The \textsc{o}-series ablates the option text while holding the idiom fixed
+(Figure~\ref{fig:options}). Two readings matter. First, truncating each option to
+six words and \emph{scrambling the words inside it} cost almost nothing: Laya-ml
+retains $0.967$ and $0.925$ of its signal, Lod-lille $0.909$ and $0.948$,
+Jev-1.13 is flat to within noise. Whatever all three models are doing on the
+option side is close to order-free lexical matching. Second, the drop to the grey
+semantics-free bar is the only large one in the figure, which is what certifies
+the instrument: the task really is measuring option semantics, it is just
+measuring them as a bag.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig8_option_ablation.pdf}
+\caption{Option-side ablation, panels left to right \textbf{Laya-ml},
+\textbf{Lod-lille}, \textbf{Jev-1.13}. In each panel the fifth, \textbf{grey} bar
+is the semantics-free control of \S\ref{sec:nosignal}; the whole Jev-1.13 panel is
+hatched because its task is in \textbf{English}. Error bars are 95\% bootstrap
+CIs and the black dashed line is chance. Truncating and word-scrambling the
+option text cost almost nothing in any of the three models.}
+\label{fig:options}
+\end{figure*}
+
+\section{Neither open model treats the idiom as a unit}
+
+E3 perturbs the idiom while holding the option list fixed
+(Figure~\ref{fig:unit}). This is the experiment that replaces token attribution:
+since an idiom has no word-level meaning to attribute to, we instead ask whether
+the model behaves as though it stores the expression as a unit. A model that did
+would collapse when the unit is broken.
+
+Neither does. Word-shuffling an idiom leaves Laya-ml's accuracy statistically
+unchanged ($0.158 \rightarrow 0.168$) and reversal actually helps slightly
+($0.180$); Lod-lille moves within noise on its 180 items. Answer agreement with
+the intact form under shuffling is $0.742$ for Laya-ml and $0.917$ for Lod-lille
+--- Lod-lille is more \emph{stable}, consistent with \S\ref{sec:order}, while
+being no more \emph{compositional}.
+
+The one manipulation that clearly helps both is embedding the idiom in its gold
+carrier sentence: $+0.080$ and $+0.117$. Context, not the idiom string, carries
+the usable signal --- which is itself the diagnosis. These models are not
+retrieving a stored figurative entry; they are matching whatever lexical material
+is available, and a carrier sentence simply supplies more of it.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig9_unit_integrity.pdf}
+\caption{Unit integrity: the idiom is perturbed, the options are held fixed.
+\textbf{Cyan} is Laya-ml, \textbf{magenta} is Lod-lille; error bars 95\%
+bootstrap CIs, black dashed line chance (left panel). \emph{Left:} accuracy.
+\emph{Right:} agreement with the answer given on the intact idiom. Scrambling and
+reversing the word order of a non-compositional expression does not meaningfully
+hurt either model, which is the bag-of-words signature. Only the carrier-sentence
+variant clearly helps.}
+\label{fig:unit}
+\end{figure*}
+
+\section{The failure localises to Bangla}
+\label{sec:crosslingual}
+
+Holding the model fixed and swapping only the task language
+(Figure~\ref{fig:crosslingual}) moves every arm by a large margin: Laya-ml
+$+0.246$, Lod-lille $+0.380$, Jev-1.13 $+0.233$ (all McNemar $p < 0.001$).
+Lod-lille reaches $0.864$ in English against $0.484$ in Bangla, so the figurative
+concepts are largely present --- it simply cannot reach them through Bangla. Its
+documentation states that training evaluation was English-only, and this is what
+that looks like from outside the model.
+
+Laya-ml's control arm closes the argument: its English-only checkpoint run on
+Bengali script sits at $0.283$, barely above chance, which reproduces a
+documented failure mode and rules out the possibility that the Bangla result is
+an artifact of the scorer rather than of the language.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig10_crosslingual.pdf}
+\caption{Accuracy by task language, grouped by model: \textbf{cyan} Laya-ml
+(four bars), \textbf{magenta} Lod-lille, \textbf{yellow} Jev-1.13. \textbf{Solid}
+bars are Bangla input, \textbf{hatched} bars are English input; Laya-ml's third
+and fourth bars use the English-only checkpoint, the fourth being the control.
+Error bars 95\% bootstrap CIs, black dashed line chance. Every model gains
+20--45 points from presenting the same idiom in English, and the English
+checkpoint on Bengali script (fourth bar) sits near chance.}
+\label{fig:crosslingual}
+\end{figure*}
+
+\section{Discussion}
+
+Three of our four claims are properties of the \emph{class}, established by
+replication across architecturally unrelated models rather than by a single
+model. Literal capture, anti-diagnostic confidence and the no-signal control all
+reproduce across an encoder scorer and a decoder scorer, and the commercial arm
+--- which escapes the first two in English --- fails the third most severely of
+the three. Option-order dependence is the exception, and informatively so: it
+tracks the scoring architecture, and the architecture that claims
+order-independence very nearly delivers it.
+
+For practitioners the implications are concrete. A returned probability from this
+model class should not be thresholded without a measurement of what the model
+returns on a degenerate option list, because that number can be high while
+accuracy is at chance. A benchmark score should not be read as evidence against
+literal capture, because the two move in opposite directions here. And an
+evaluation that fixes option order is partly reporting position.
+
+For the low-resource story, \S\ref{sec:crosslingual} is the sharpest form of a
+familiar result: these models hold the concepts and cannot reach them through
+Bangla. That is a different problem from not having the concepts, and it suggests
+a different remedy.
 
 \section*{Limitations}
 
-This document does not cover the content requirements for ACL or any
-other specific venue.  Check the author instructions for
-information on
-maximum page lengths, the required ``Limitations'' section,
-and so on.
+All three models are evaluated zero-shot; nothing here speaks to a fine-tuned
+model of any of these families, and the open arms' documentation is explicit that
+base checkpoints are weak on typed-decision benchmarks.
 
-\section*{Acknowledgments}
+Laya-ml's run had its per-bucket temperatures unset, so its ECE figures are raw.
+Lod-lille ships no temperature by design, so both open arms are effectively
+untempered and comparable on that axis; Jev-1.13's internal calibration is
+unknown to us.
 
-This document has been adapted
-by Steven Bethard, Ryan Cotterell and Rui Yan
-from the instructions for earlier ACL and NAACL proceedings, including those for
-ACL 2019 by Douwe Kiela and Ivan Vuli\'{c},
-NAACL 2019 by Stephanie Lukin and Alla Roskovskaya,
-ACL 2018 by Shay Cohen, Kevin Gimpel, and Wei Lu,
-NAACL 2018 by Margaret Mitchell and Stephanie Lukin,
-Bib\TeX{} suggestions for (NA)ACL 2017/2018 from Jason Eisner,
-ACL 2017 by Dan Gildea and Min-Yen Kan,
-NAACL 2017 by Margaret Mitchell,
-ACL 2012 by Maggie Li and Michael White,
-ACL 2010 by Jing-Shin Chang and Philipp Koehn,
-ACL 2008 by Johanna D. Moore, Simone Teufel, James Allan, and Sadaoki Furui,
-ACL 2005 by Hwee Tou Ng and Kemal Oflazer,
-ACL 2002 by Eugene Charniak and Dekang Lin,
-and earlier ACL and EACL formats written by several people, including
-John Chen, Henry S. Thompson and Donald Walker.
-Additional elements were taken from the formatting instructions of the \emph{International Joint Conference on Artificial Intelligence} and the \emph{Conference on Computer Vision and Pattern Recognition}.
+Lod-lille ran a fixed 10\% subset (888 items), so its intervals are roughly
+$\pm 3$ points and its stratified cells are thin. Appendix~\ref{app:subset}
+bounds the subset bias at $0.016$ and shows it changes no sign or ordering. E3
+on the Lod-lille arm is 180 items and several of its perturbation contrasts are
+not individually significant. E7 covers 992 / 299 / 300 items rather than the
+full sets.
 
-% Bibliography entries for the entire Anthology, followed by custom entries
-%\bibliography{custom,anthology-overleaf-1,anthology-overleaf-2}
+The cross-model \LAR{} comparison in \S\ref{sec:capture} is confounded with
+language, as Figure~\ref{fig:matrix} states explicitly; the two missing cells are
+the experiment that would resolve it and we did not run them. The shared literal
+pool is also not a neutral sample of the corpus.
 
-% Custom bibliography entries only
-\bibliography{custom}
+Distractors are drawn from the same corpus, so difficulty is corpus-relative
+rather than absolute. Jev-1.13 is a commercial endpoint and may change without
+notice; our results are a snapshot, and we report the exact call count and cost
+in Appendix~\ref{app:repro} so the snapshot is at least auditable.
+
+Finally, no figure in this paper contains Bangla glyphs: the plotting toolchain
+available to us could not shape Bengali script. All categories are named in Latin
+script and qualitative Bangla examples are confined to the text.
+
+\section*{Ethics Statement}
+
+The corpus is a published, expert-annotated resource of idioms; it contains no
+personal data and no content about identifiable individuals. Our interventions
+rewrite option lists and perturb idiom strings, and produce no new annotation and
+no generated text.
+
+The work audits two openly released models and one commercial API. We report
+failure modes in all three, including the vendor's. We have taken care to
+separate what is measured from what is inferred --- in particular,
+Figure~\ref{fig:matrix} marks the cells we did not run rather than letting a
+favourable contrast stand unqualified, and \S\ref{sec:capture} states the pool
+selection effect against our own cleanest number. Commercial endpoints are
+mutable; readers should treat the Jev-1.13 results as dated rather than as a
+standing property of the product.
+
+Bangla is under-served relative to its speaker population, and we think an audit
+that locates a failure in the language rather than in the task is the more useful
+kind to publish. We release the instrument, all per-item outputs and the analysis
+code so the measurements can be repeated on other models and other languages.
+
+\bibliography{references,custom}
 
 \appendix
 
-\section{Example Appendix}
-\label{sec:appendix}
+\section{Surface invariance}
+\label{app:surface}
 
-This is an appendix.
+The corpus ships alternative surface forms certified by annotators as
+meaning-preserving. A model reading meaning should be invariant across such a
+pair. Laya-ml agrees with itself on $0.657$ of 3{,}143 pairs (2{,}423 items) and
+Lod-lille on $0.677$ of 310 pairs (234 items): about a third of the time, a
+meaning-preserving rewrite changes the answer. Mean Jensen--Shannon divergence
+between the two probability vectors is $0.039$ and $0.085$.
+
+\section{Subset representativeness}
+\label{app:subset}
+
+Lod-lille ran a fixed 10\% random subset. Table~\ref{tab:subset} compares
+Laya-ml's accuracy on those same 888 items against its own full 8{,}876.
+
+\begin{table}[h]
+\centering\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Family} & \neu{\textbf{full}} & \neu{\textbf{subset}} & \textbf{drift} \\
+\midrule
+\Drand & \laya{0.367} & \laya{0.351} & $-0.016$ \\
+\Dsurf & \laya{0.338} & \laya{0.339} & $+0.001$ \\
+\Dsem  & \laya{0.333} & \laya{0.325} & $-0.007$ \\
+\Dlit  & \laya{0.151} & \laya{0.136} & $-0.015$ \\
+\Dhard & \laya{0.144} & \laya{0.149} & $+0.004$ \\
+\bottomrule
+\end{tabular}
+\caption{Laya-ml on the 10\% subset against its own full set. Maximum drift
+$0.016$. Two of five subset estimates fall marginally outside the full-set
+bootstrap CI, which is expected at $n = 888$ and changes no sign or ordering.
+Cite the full-set figures as the precise ones.}
+\label{tab:subset}
+\end{table}
+
+\section{Full option ablation}
+\label{app:options}
+
+Table~\ref{tab:options} gives the numbers behind Figure~\ref{fig:options}.
+
+\begin{table}[h]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Option text} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+\midrule
+full gloss   & \laya{0.365} & \lod{0.492} & \jev{0.970} \\
+truncated    & \laya{0.361} & \lod{0.468} & \jev{0.958} \\
+scrambled    & \laya{0.357} & \lod{0.479} & \jev{0.974} \\
+other lang.  & \laya{0.347} & \lod{0.398} & \jev{0.963} \\
+no semantics & \neu{0.256} & \neu{0.233} & \neu{0.254} \\
+\bottomrule
+\end{tabular}
+\caption{Option-side ablation. The grey row is the semantics-free control, at
+chance by construction in all three arms. Jev-1.13's column is English.}
+\label{tab:options}
+\end{table}
+
+\section{Reproducibility}
+\label{app:repro}
+
+The two open arms ran on a single T4 GPU, Laya-ml in \texttt{bf16} at 27.2\,ms
+per call over 8{,}876 items and Lod-lille in \texttt{fp32} at 86.1\,ms per call
+over a fixed 888-item subset. The commercial arm consumed 56{,}533 API calls at a
+total cost of \$0.93. All intervals are 95\% percentile bootstrap over items with
+2{,}000 resamples at a fixed seed; ECE uses 15 equal-width bins; paired tests are
+McNemar's exact test. Per-item outputs, the analysis code, the figure sources and
+the exact plotted values for every figure are released with the paper.
 
 \end{document}
