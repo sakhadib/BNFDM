@@ -1,0 +1,136 @@
+{
+  "run": "20261001-0815",
+  "model": "jev-1.13",
+  "python": "3.13.15",
+  "runtime": "cpu (API only)",
+  "endpoint": "https://openrouter.ai/api/alpha/decisions",
+  "model_id": "typesafe/jev-1.13",
+  "k": 4,
+  "option_keys": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "seeds": {
+    "j1_order": 17000,
+    "j2_lit_en": 12000,
+    "j3_ceiling_en": 11000,
+    "j4_bn_control": 14000,
+    "j5_options_en": 16000
+  },
+  "instructions_en": "What is the actual figurative meaning of this idiom?",
+  "instructions_bn": "নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?",
+  "n_pool_en": 8761,
+  "n_pool_en_literal": 3265,
+  "literal_overlap_threshold": 0.34,
+  "total_cost_usd": 0.9348230640000097,
+  "total_calls": 56533,
+  "artifacts": [
+    {
+      "path": "configs/task_en.json",
+      "bytes": 529,
+      "sha256_16": "e1f3ef2cea1bf27e"
+    },
+    {
+      "path": "data/splits/meta_en.json",
+      "bytes": 146,
+      "sha256_16": "b69d85874b0cf1a5"
+    },
+    {
+      "path": "data/splits/pool_en_literal.jsonl",
+      "bytes": 713077,
+      "sha256_16": "12d948c727c4673b"
+    },
+    {
+      "path": "results/jev-1.13/env.json",
+      "bytes": 199,
+      "sha256_16": "00d248c5732e7279"
+    },
+    {
+      "path": "results/jev-1.13/j1_order/by_gold_position.csv",
+      "bytes": 189,
+      "sha256_16": "ae8daae9c0d20959"
+    },
+    {
+      "path": "results/jev-1.13/j1_order/per_item.csv",
+      "bytes": 25413,
+      "sha256_16": "93842d19c2c47f05"
+    },
+    {
+      "path": "results/jev-1.13/j1_order/raw.csv",
+      "bytes": 541505,
+      "sha256_16": "4c08f25b799b6206"
+    },
+    {
+      "path": "results/jev-1.13/j1_order/raw.jsonl",
+      "bytes": 1552855,
+      "sha256_16": "909c6c0881483034"
+    },
+    {
+      "path": "results/jev-1.13/j1_order/selection_bias.csv",
+      "bytes": 85,
+      "sha256_16": "320e39d05c315ca0"
+    },
+    {
+      "path": "results/jev-1.13/j2_literal_en/raw.csv",
+      "bytes": 802163,
+      "sha256_16": "5aa5a5336b355154"
+    },
+    {
+      "path": "results/jev-1.13/j2_literal_en/raw.jsonl",
+      "bytes": 2156420,
+      "sha256_16": "069aa71c0f53fb5b"
+    },
+    {
+      "path": "results/jev-1.13/j2_literal_en/summary.csv",
+      "bytes": 449,
+      "sha256_16": "715dd2c768feb74e"
+    },
+    {
+      "path": "results/jev-1.13/j3_ceiling_en/raw.csv",
+      "bytes": 1968217,
+      "sha256_16": "6668841773c6041d"
+    },
+    {
+      "path": "results/jev-1.13/j3_ceiling_en/raw.jsonl",
+      "bytes": 5355393,
+      "sha256_16": "da78ac84a9e33e33"
+    },
+    {
+      "path": "results/jev-1.13/j3_ceiling_en/summary.csv",
+      "bytes": 304,
+      "sha256_16": "cc3aee29257d6768"
+    },
+    {
+      "path": "results/jev-1.13/j4_bn_control/raw.csv",
+      "bytes": 672511,
+      "sha256_16": "048d37585f5e68c4"
+    },
+    {
+      "path": "results/jev-1.13/j4_bn_control/raw.jsonl",
+      "bytes": 1640518,
+      "sha256_16": "8138753c02786642"
+    },
+    {
+      "path": "results/jev-1.13/j4_bn_control/summary.csv",
+      "bytes": 145,
+      "sha256_16": "7c52afe4425fa661"
+    },
+    {
+      "path": "results/jev-1.13/j5_options_en/raw.csv",
+      "bytes": 353929,
+      "sha256_16": "c0db96e5fcef2fc0"
+    },
+    {
+      "path": "results/jev-1.13/j5_options_en/raw.jsonl",
+      "bytes": 912957,
+      "sha256_16": "5df1e3f4f5ac88de"
+    },
+    {
+      "path": "results/jev-1.13/j5_options_en/summary.csv",
+      "bytes": 584,
+      "sha256_16": "6132e4a11e4a0776"
+    }
+  ]
+}

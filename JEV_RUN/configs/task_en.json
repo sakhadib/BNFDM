@@ -1,0 +1,25 @@
+{
+  "k": 4,
+  "option_keys": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "instructions_en": "What is the actual figurative meaning of this idiom?",
+  "instructions_bn": "নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?",
+  "seeds": {
+    "j1_order": 17000,
+    "j2_lit_en": 12000,
+    "j3_ceiling_en": 11000,
+    "j4_bn_control": 14000,
+    "j5_options_en": 16000
+  },
+  "families": [
+    "D-rand",
+    "D-surf",
+    "D-sem",
+    "D-lit",
+    "D-hard"
+  ]
+}

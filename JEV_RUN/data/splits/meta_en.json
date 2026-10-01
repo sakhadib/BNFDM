@@ -1,0 +1,8 @@
+{
+  "n_raw": 10359,
+  "n_usable": 8876,
+  "n_pool_en": 8761,
+  "n_pool_en_literal": 3265,
+  "n_subset": 888,
+  "literal_overlap_threshold": 0.34
+}
