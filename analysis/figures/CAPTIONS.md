@@ -34,7 +34,7 @@ Current mapping (`paper/acl_latex.tex`):
 
 | file | paper | location |
 |---|---|---|
-| (placeholder) | Figure 1 | body, page 1 teaser slot |
+| (TikZ, in acl_latex.tex) | Figure 1 | body, page 1 teaser |
 | (TikZ, in acl_latex.tex) | Figure 2 | body, Methodology pipeline |
 | fig2_capture_matrix | Figure 3 | body |
 | fig3_three_way_bangla | Figure 4 | body |
