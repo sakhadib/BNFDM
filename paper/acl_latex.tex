@@ -80,30 +80,24 @@ in Bangla Idioms}
 \begin{abstract}
 Decision models, non-autoregressive scorers that return a calibrated
 probability over caller-supplied options and emit no text, are increasingly
-deployed as routers, classifiers and guardrails. They generate nothing, so the
-usual explainability toolkit of rationales, chain-of-thought and token
-attribution does not apply, and idioms make token-level attribution ill-posed in
-principle: a non-compositional expression has no word whose removal is
-informative. We therefore audit three such models, an encoder scorer, a decoder
-scorer and a closed commercial API, entirely through \emph{interventions on the
-option set}, using 10{,}361 expert-annotated Bangla idioms that ship with both a
-gold figurative gloss and a gold literal gloss. Our instrument holds the item,
-the instruction and $k$ fixed and varies only the distractor family, which
-isolates one failure mode at a time and needs no new annotation. Replacing one
-distractor with an idiom's own literal gloss captures all three models, and a
-full model $\times$ language matrix on 3{,}265 shared items shows the effect is
-governed by language rather than capability: literal attraction falls from
-$0.731$, $0.918$ and $0.304$ in Bangla to $0.379$, $0.241$ and $0.047$ in
-English. The commercial model's apparent resistance to capture is a property of
-the language it was tested in. Capability does not order the failure either, as
-the strongest arm is the least captured while the middle arm is the most.
-Confidence inverts under the same shift, so confidence-gated selective
-prediction does worse than random gating, and on a semantics-free option list,
-where accuracy is pinned at chance by construction, the three arms still report
-$0.28$ to $0.82$ confidence. Option-order sensitivity, by contrast, separates
-the two scoring architectures rather than the three models: 83.7\% against
-10.7\% of items change their chosen gloss across the 24 orderings of the same
-four options.
+deployed as routers, classifiers and guardrails. Because they generate nothing,
+rationales and chain-of-thought do not apply, and idioms make token attribution
+ill-posed in principle: a non-compositional expression has no word whose removal
+is informative. We therefore audit three such models, an encoder scorer, a
+decoder scorer and a closed commercial API, entirely through interventions on
+the option set, using expert-annotated Bangla idioms that ship with both a gold
+figurative gloss and a gold literal gloss.
+
+Dropping an idiom's own literal gloss into the option list captures all three
+models. Running the full model $\times$ language matrix on a shared item set
+shows the failure is governed by language rather than capability: every arm is
+several times more captured in Bangla than in English on identical items, and
+the commercial model's apparent resistance turns out to be a property of the
+language it was tested in. Confidence inverts under the same shift, so gating on
+it does worse than gating at random, and on a semantics-free option list, where
+accuracy is pinned at chance by construction, the best-calibrated arm still
+reports $0.82$ confidence. Option-order sensitivity, by contrast, separates the
+two scoring architectures rather than the three models.
 \end{abstract}
 
 
@@ -478,22 +472,16 @@ Jev-1.13 reproduces its published value at $0.0472$ $[0.0401, 0.0545]$, which
 is the check that the two constructions measure the same thing.
 
 Two things follow. First, \textbf{every arm is far more captured in Bangla than
-in English on identical items}: Laya-ml $0.731 \rightarrow 0.379$, Lod-lille
-$0.918 \rightarrow 0.241$, Jev-1.13 $0.304 \rightarrow 0.047$, all paired
-McNemar $p < 10^{-100}$. The commercial model's apparent resistance to literal
-capture was a property of the language it was tested in, not of the model.
-Second, \textbf{capture is not monotone in capability}. Ordered by Bangla
-\Drand{} accuracy the arms run Laya-ml $0.367$, Lod-lille $0.484$, Jev-1.13
-$0.736$; ordered by Bangla \LAR{} they run Jev-1.13 $0.304$, Laya-ml $0.731$,
-Lod-lille $0.918$. Lod-lille is better than Laya-ml and more captured, while
-Jev-1.13 is better than both and less captured, so capability neither predicts
-capture nor protects against it.
-
-The two open arms fall below chance on this condition (Laya-ml $0.127$,
-Lod-lille $0.044$); Jev-1.13 does not ($0.536$), but it loses $0.390$ of
-accuracy relative to its own English run on the same items. One caveat stays:
-this pool is not a neutral sample, since items carrying a usable English literal
-gloss are the more literally-attracting ones.
+in English on identical items}: $0.731 \rightarrow 0.379$, $0.918 \rightarrow
+0.241$ and $0.304 \rightarrow 0.047$, all paired McNemar $p < 10^{-100}$. The
+commercial model's apparent resistance to capture was a property of the language
+it was tested in. Second, \textbf{capture is not monotone in capability}:
+Lod-lille is more accurate than Laya-ml and more captured, while Jev-1.13 is more
+accurate than both and less captured, so capability neither predicts capture nor
+protects against it. The two open arms fall below chance here; Jev-1.13 does not,
+but loses $0.390$ of accuracy against its own English run on the same items.
+Appendix~\ref{app:matrix} gives the cells with intervals, and the caveat that the
+pool is not a neutral sample.
 
 
 
@@ -513,12 +501,11 @@ original run, $0.047$. Full numbers in Table~\ref{tab:matrix}.}
 \end{figure}
 
 
-\paragraph{The one matched three-way comparison.} Exactly one condition is
-identical across all three arms: Bangla idiom, Bangla gloss, random distractors.
-Figure~\ref{fig:threeway} and Table~\ref{tab:threeway} report it. The commercial
-model is far ahead ($0.736$ against $0.367$ and $0.484$), which is the honest
-capability ordering, and the one against which the calibration results of
-\S\ref{sec:confidence} and \S\ref{sec:nosignal} should be read.
+\paragraph{The capability ordering.} One condition is identical across all three
+arms, Bangla idiom with random distractors, and on it the commercial model is far
+ahead, $0.736$ against $0.367$ and $0.484$ (Table~\ref{tab:threeway}). That is
+the ordering against which the calibration results below should be read, and it
+is the one capture does not follow.
 
 \begin{table}[t]
 \centering\small
@@ -690,20 +677,17 @@ claims.}
 \label{tab:order}
 \end{table}
 
-Table~\ref{tab:order} and Figure~\ref{fig:order} give a clean dissociation: a
-$7.8\times$ difference in answer stability and a $12\times$ difference in
-probability stability, tracking the scoring architecture rather than model size,
-backbone or capability. Lod-lille's design claim, that each option attends only
-to the shared state, its question and itself from the same start position, is
-very nearly borne out. Laya-ml's option-marker scorer is not, confirming an
-upstream issue report at scale.
+Table~\ref{tab:order} gives a clean dissociation: a $7.8\times$ difference in
+answer stability and a $12\times$ difference in probability stability, tracking
+the scoring architecture rather than model size, backbone or capability.
+Lod-lille's design claim is very nearly borne out; Laya-ml's option-marker scorer
+is not.
 
 
 
-The residual positional bias follows (Figure~\ref{fig:position}). With the gold
-placed uniformly, Laya-ml selects slot B 37.2\% of the time against 14.6\% for
-slot A, and its accuracy is $0.152$ when the gold sits in A against $0.403$ in B,
-a $2.6\times$ swing from position alone.
+Positional bias follows. With the gold placed uniformly, Laya-ml takes slot B
+37.2\% of the time against 14.6\% for slot A, a $2.6\times$ accuracy swing from
+position alone (Appendix~\ref{app:position}).
 
 \paragraph{Methodological consequence.} Any evaluation of this class that fixes
 option order is partly measuring position. All results here randomise order per
@@ -767,15 +751,12 @@ Bengali script sits at $0.283$, barely above chance, which reproduces a
 documented failure mode and makes it unlikely that the Bangla result is an
 artifact of the scorer rather than of the language.
 
-Jev-1.13 complicates the simple reading and then confirms it. It reaches
-$0.736$ on the Bangla \Drand{} task (Table~\ref{tab:threeway}) against $0.367$
-and $0.484$ for the two models documented as multilingual, so a model with no
-multilingual claim outscores both: the Bangla gap is reachable, not intrinsic to
-the script. But \S\ref{sec:capture} shows the same model's literal attraction
-rising from $0.047$ in English to $0.304$ in Bangla on identical items. Being
-better at Bangla is not the same as being robust in it, and on this evidence the
-language penalty reaches every arm we tested, including the one that was never
-advertised as multilingual.
+Jev-1.13 complicates the reading and then confirms it. A model with no
+multilingual claim outscores both that have one on the Bangla task, so the gap is
+reachable rather than intrinsic to the script; yet its own literal attraction
+rises from $0.047$ to $0.304$ when the same items are asked in Bangla. Being
+better at a language is not the same as being robust in it, and the penalty
+reaches every arm we tested.
 
 
 \section{Discussion}
