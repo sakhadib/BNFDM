@@ -1,0 +1,10 @@
+{
+  "run": "20261001-2034",
+  "python": "3.13.15",
+  "gpu": "Tesla T4, 15360 MiB",
+  "seed_matrix": 21000,
+  "n_pool": 3265,
+  "cells": 6,
+  "jev_cost_usd": 0.11516236200000031,
+  "jev_calls": 6531
+}

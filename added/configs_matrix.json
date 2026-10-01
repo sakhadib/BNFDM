@@ -1,0 +1,14 @@
+{
+  "k": 4,
+  "option_keys": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "seed_matrix": 21000,
+  "family": "D-lit",
+  "n_pool": 3265,
+  "instructions_bn": "নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?",
+  "instructions_en": "What is the actual figurative meaning of this idiom?"
+}
