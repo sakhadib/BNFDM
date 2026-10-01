@@ -1,0 +1,36 @@
+\section{Introduction}
+%Sentiment analysis (SA) is defined as the computational study of mining individuals' subjective opinions, emotions, and appraisals towards products and services. A significant amount of research on SA in a variety of languages, including English, Arabic, Chinese, and French, has been conducted across a wide range of domains \citep{bhowmik2021bangla}. In contrast, 
+The resources publicly available for scholarly investigation in the realm of Sentiment Analysis (SA) for the Bangla language are scarce and limited in quantity \citep{khatun2022machine, sazzed2021bengsentilex, rahman2019annotated} despite its literary gravitas as the 6\textsuperscript{th} most spoken language\footnote{\url{https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers}} in the world with approximately 200 million speakers.
+%\\
+%A major drawback of the existing literature on Bangla Text SA is the scarcity of publicly available datasets. 
+In the existing literature on Bangla Text SA, as shown in Table \ref{tab:dataset_comparison}, the largest dataset consists of 20,468 samples \citep{islam2022emonoba} while the smallest has a mere 1,050 samples \citep{tabassum2019design}. Besides these, \citet{islam2020sentiment} created a dataset consisting of 17,852 samples and \citet{islam2021sentnob} utilized a dataset of 15,728 samples. All other datasets apart from these either have $<$15,000 samples or are publicly unavailable.\\
+Another limitation of the existing research works in Bangla Text SA is the deficiency of datasets having product-specific review samples. Most of the available Bangla SA datasets are focused on user-generated textual content from cyberspace. The insights derived from these may not accurately represent sentiment in the context of product reviews, thus hindering their usefulness for businesses. The tonal and linguistic analysis of reviews from product-specific datasets can aid businesses to gain valuable insights into customer attitudes, preferences, and experiences which can then be leveraged to improve products and services, design targeted marketing campaigns, and make more informed business decisions. In this paper, we introduce a large-scale dataset, \textsc{BanglaBook}, consisting of 158,065 samples of book reviews collected from online bookshops written in the Bangla language. This is the largest dataset for Bangla sentiment analysis to the best of our knowledge. We perform an analysis of the dataset's statistical characteristics, employ various ML techniques to establish a performance benchmark for validating the dataset, and also conduct a thorough evaluation of the classification errors.
+% In this paper, our contributions are,
+% \begin{itemize}
+%     \item We introduce a large-scale dataset, \textsc{BanglaBook}, consisting of 1,58,065 samples of book reviews collected from online bookshops written in the Bangla language.
+% \end{itemize}
+\begin{table*}[ht]
+\centering
+\setlength\doublerulesep{0.65pt}
+\scriptsize
+\begin{tabular}{c|c|c|c|c}
+\hline
+\textbf{Source}       & \textbf{Language}        & \textbf{Annotated} & \textbf{Unannotated} & \textbf{Total} \\ \hline
+                      & Bangla                   & 84,672             & 24,806               & 109,478        \\
+Rokomari              & Bangla\textsuperscript{\textdagger} + English         & 56,485             & 15,408               & 71,893         \\
+                      & Bangla + Bangla\textsuperscript{\textdagger} + English                    & 13,144             & 4,114                & 17,258         \\ \cline{2-5} 
+                      & Total                    & 154,301            & 44,328               & 198,629        \\ \hline
+                      & Bangla                   & 4,699              & 59                   & 4,758          \\
+Wafilife             & Bangla\textsuperscript{\textdagger} + English         & 370                & 3                    & 373            \\
+                      & Bangla + Bangla\textsuperscript{\textdagger} + English                    & 896                & 3                    & 899            \\ \cline{2-5} 
+                      & Total                    & 5,965              & 65                   & 6,030          \\ \hline
+                      & Bangla                   & 89,371             & 24,865               & 114,237        \\
+                      & Bangla\textsuperscript{\textdagger} + English         & 56,855             & 15,411               & 72,266         \\
+                      & Bangla + Bangla\textsuperscript{\textdagger} + English                    & 14,040             & 4,117                & 18,157         \\ \cline{2-5}  
+                      & Total                    & 160,266            & 44,393               & 204,659        \\ \hline
+                      & Untranslated Data (Removed)                                      & 2,201                                   &                                           &                \\ \Xcline{1-5}{0.8pt}
+                      & Final Dataset Size                                      & \textbf{158,065}                                   &                                           &                \\ \hline
+\end{tabular}
+\caption{Summary statistics of our dataset. Bangla\textsuperscript{\textdagger} denotes Romanized Bangla text.}
+\label{tab:tab1}
+\end{table*}

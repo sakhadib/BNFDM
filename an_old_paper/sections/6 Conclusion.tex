@@ -1,0 +1,46 @@
+\section{Morphology and Negation Patterns of Bangla}
+% EXAMPLES DEWA LAGBE
+Understanding the morphology and negation patterns of a language holds paramount importance in the realm of sentiment analysis because negation can alter the meaning of words and phrases, thereby affecting the overall sentiment conveyed by a text. We provide a concise yet insightful recapitulation of the topic in the case of Bangla accompanied by review samples from our dataset \textsc{BanglaBook} as the respective examples. From the linguistic typological standpoint, Bangla is categorized as a \textit{subject-object-verb} (SOV) language because the subject, object, and verb generally adhere to said order in its sentential structure \cite{ramchand2004two}. The most common juxtaposition of polarity from positive to negative is the use of \textit{ni} ($\text{\bangla নি}$) as a tensed negative. For example,
+\vspace{-5pt}
+\begin{quote}
+\centering
+    $\text{\smallbangla আমি তাঁর অনুরাগী হওয়ায় আমি এই বইটি কেনা}$\\$\text{\smallbangla থেকে নিজেকে প্রতিরোধ করতে \colorbox{red!30}{পারিনি}!!!!}$\\
+    \small \textbf{Translation:} As I am a fan of his I \colorbox{red!30}{couldn't} resist myself from buying this book!!!!
+\end{quote}
+% \vspace{-3pt}
+Another negational feature is expressed by placing \textit{na} ($\text{\bangla না}$) prior to the non-finite verb and after the finite verb in a sentence (although there are some exceptions). For example,
+\vspace{-7pt}
+\begin{quote}
+\centering
+    $\text{\smallbangla অবশ্য হুমায়ুন আহমেদ লিখেছেন এই বইটার}$\\$\text{\smallbangla উপরে তিনি নিজেও সন্তুষ্ট \colorbox{red!30}{না}।}$\\
+    \small \textbf{Translation:} Of course, Humayun Ahmed wrote that he himself is \colorbox{red!30}{not} satisfied with this book.
+\end{quote}
+The Bangla language consists of no negative adverbs or pronouns \cite{thompson2006negation}. This is why the negative element responsible for the reversal of polarity transcends from the word-level to the sentence-level rendering the occurrences of almost all negations in Bangla manifest on the syntactic level \cite{thompson2006negation}. 
+
+In the cases of double negatives, we see the involvement of lexical negation, a morphological feature that works with negative affixes (prefixes and suffixes) attached to a root word. The prefixes in Bangla have two different phonetic variations or allophones depending on whether the prefix precedes a vowel or a consonant. The same is true for prefixes that imbue a negative connotation to a root word, e.g. \textit{o} ($\text{\bangla অ}$) and \textit{on} ($\text{\bangla অন্‌}$). For example,
+\vspace{-7pt}
+\begin{quote}
+\centering
+    $\text{\smallbangla কিন্তু এই বইটি এই \colorbox{red!30}{অপূর্ণতা} ঢেকে ফেলেছে।}$\\
+    \small \textbf{Translation:} But this book has covered up this \colorbox{red!30}{incompleteness}.\\
+    \vspace{5pt}
+    $\text{\smallbangla ওমর খৈয়ামের ভাষায় কিছু বই \colorbox{red!30}{অনন্ত} যৌবনের বই,}$\\$\text{\smallbangla যাদের কোন ক্ষয় নেই।}$\\
+    \small \textbf{Translation:} In the words of Omar Khayyam, some books are books of \colorbox{red!30}{never-ending} youth, which have no decay.
+\end{quote}
+Another negative prefix that precedes a root word to invert its polarity is \textit{nir} ($\text{\smallbangla নির্‌}$). For example,
+\vspace{-5pt}
+\begin{quote}
+    \centering
+    $\text{\smallbangla লেখকের \colorbox{red!30}{নিরলস} শ্রম লেখায় ফুটে উঠেছে।}$\\
+    \small \textbf{Translation:} The \colorbox{red!30}{relentless} effort of the author is reflected in the writing.
+\end{quote}
+On the contrary, the suffix \textit{hin} ($\text{\bangla হীন}$) succeeds a root word to convert it to the corresponding negative form. For example,
+\vspace{-12pt}
+\begin{quoting}
+\centering
+    $\text{\smallbangla এরকম \colorbox{red!30}{ভিত্তিহীন} কাল্পনিক গল্প শিশুদের না পড়াই ভালো।}$\\
+    \small \textbf{Translation:} It is better for children not to read such \colorbox{red!30}{baseless} fictional stories.
+\end{quoting}
+The expression of negative sentiment is, therefore, very nuanced in the Bangla language as every occurrence of negative is intertwined with features like the tense, hierarchy of syntax, verb status, case-specific issues, and sequential arrangement of words \cite{thompson2006negation}.
+\section{Conclusion}
+This paper introduces \textsc{BanglaBook}, the largest Bangla book review dataset with 158,065 samples, each labeled with 1 of 3 user sentiments. We provide extensive statistical analysis and strong baselines facilitating the utility of the dataset. Given its massive size and fine-grained sentiment distribution, \textsc{BanglaBook} has the potential to alleviate the resource scarcity in Bangla language research.
