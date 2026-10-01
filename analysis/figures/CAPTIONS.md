@@ -36,21 +36,21 @@ Current mapping (`paper/acl_latex.tex`):
 |---|---|---|
 | (TikZ, in acl_latex.tex) | Figure 1 | body, page 1 teaser |
 | (TikZ, in acl_latex.tex) | Figure 2 | body, Methodology pipeline |
-| fig2_capture_matrix | Figure 3 | body |
-| fig3_three_way_bangla | Figure 4 | body |
-| fig4_confidence_reliability | Figure 5 | body |
-| fig5_no_signal_control | Figure 6 | body |
-| fig10_crosslingual | Figure 7 | body |
-| fig1_literal_capture | Figure 8 | Appendix D |
-| fig9_unit_integrity | Figure 9 | Appendix E |
-| fig8_option_ablation | Figure 10 | Appendix H |
-| fig7_position_bias | Figure 11 | Appendix I |
-| fig6_order_sensitivity | Figure 12 | Appendix I |
+| fig1_literal_capture | Figure 3 | body, 5.1 (the central result) |
+| fig4_confidence_reliability | Figure 4 | body, 5.2 |
+| fig5_no_signal_control | Figure 5 | body, 5.3 |
+| fig2_capture_matrix | Figure 6 | Appendix, the language confound |
+| fig10_crosslingual | Figure 7 | Appendix, cross-lingual arms |
+| fig3_three_way_bangla | Figure 8 | Appendix, matched three-way |
+| fig9_unit_integrity | Figure 9 | Appendix, unit integrity |
+| fig8_option_ablation | Figure 10 | Appendix, option ablation |
+| fig7_position_bias | Figure 11 | Appendix, order and position |
+| fig6_order_sensitivity | Figure 12 | Appendix, order and position |
 
-Five figures sit in the appendix so the body stays inside eight pages. Each was
-chosen because a table already carries its numbers: the ladder duplicates
-Table 2, option ablation Table 11, order sensitivity Table 5, and unit integrity
-and position bias are stated in full in the text.
+After the October revision the body keeps the ladder (the central result), the
+reliability curves and the semantics-free control. Everything else moved to the
+appendix, either because a table already carries its numbers or because the
+claim it supports is now explicitly scoped rather than headline.
 
 Captions now carry colour swatches (the swL / swD / swJ / swG / swK macros in
 the LaTeX), so the reader gets the key from the caption itself. Those macros are
