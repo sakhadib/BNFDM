@@ -265,3 +265,57 @@ if __name__ == "__main__":
     fig_examples(dd)
     fig_manipulations(dd)
     print("done ->", OUT)
+
+
+# ── teaser: one item, one model, two languages ────────────────────────
+def fig_teaser(dd, build):
+    rid = 561
+    d = dd.set_index("id").loc[rid]
+    blocks = []
+    for lang, label in (("bn", "asked in Bangla"), ("en", "asked in English")):
+        m = build(rid, lang)
+        r = pd.read_csv(ROOT / f"added/results/jev-1.13/matrix_{lang}/raw.csv"
+                        ).set_index("id").loc[rid]
+        assert m["gold_key"] == r.gold_key and m["lit_key"] == r.lit_key
+        lit_k, gold_k = m["lit_key"], m["gold_key"]
+        items = [("literal", lit_k, m["texts"][OPT.index(lit_k)], CHAR),
+                 ("figurative", gold_k, m["texts"][OPT.index(gold_k)], CYD)]
+        rows = ""
+        for role, k, txt, col in items:
+            p = float(r[f"p_{k}"])
+            chosen = (r.pred == k)
+            cls = "bn" if lang == "bn" else ""
+            mark = ("<span style='color:#111;font-weight:700'>&#10003;</span>"
+                    if chosen and role == "figurative" else
+                    "<span style='color:#111;font-weight:700'>&#10007;</span>"
+                    if chosen else "")
+            rows += f"""
+            <tr>
+              <td style='width:52px'><span class='tag' style='background:{"#4D4D4D" if role=="literal" else CY};
+                  color:{"#fff" if role=="literal" else "#111"}'>{role}</span></td>
+              <td class='{cls}' style='font-size:8.4pt;padding-right:6px'>{txt}</td>
+              <td class='pcell' style='width:92px;text-align:right'>
+                  <span class='bar' style='width:{max(p*56,1.4):.1f}px;background:{col}'></span>
+                  <span class='num'> {p:.2f}</span> {mark}</td>
+            </tr>"""
+        blocks.append(f"""
+        <div class='lbl' style='margin:7px 0 2px 0;letter-spacing:.04em;
+             text-transform:uppercase;font-size:6.9pt;color:#444'>{label}</div>
+        <table>{rows}</table>""")
+
+    html = f"""
+    <div style='text-align:center'>
+      <span class='bn' style='font-size:17pt'>{d.idiom}</span>
+      <span class='lbl' style='font-size:8pt'>&nbsp; abarjana</span>
+    </div>
+    <div class='lbl' style='text-align:center;margin:1px 0 6px 0;font-size:7.4pt'>
+      literally &ldquo;garbage or waste&rdquo; &nbsp;·&nbsp;
+      figuratively &ldquo;an unwanted person&rdquo;</div>
+    <div style='border-top:0.6px solid #ccc'></div>
+    {blocks[0]}
+    <div style='border-top:0.6px solid #eee;margin-top:5px'></div>
+    {blocks[1]}
+    <div style='border-top:0.6px solid #ccc;margin-top:7px'></div>
+    <div class='lbl' style='text-align:center;margin-top:4px;font-size:7.2pt'>
+      one model, one item, the same four options</div>"""
+    render(html, OUT / "fig_bn_teaser.pdf", 3.15, 2.36)
