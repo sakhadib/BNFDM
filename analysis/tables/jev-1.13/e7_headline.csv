@@ -1,0 +1,2 @@
+arm,language,n_items,n_permutations,answer_unstable_share,correctness_varies_share,mean_distinct_options,mean_distinct_keys,mean_p_gold_std,mean_p_gold_range,max_p_gold_range,mean_conf_range,overall_accuracy
+jev-1.13,en,300,24,0.133333,0.12,1.146667,3.986667,0.036488,0.1278,0.55,0.122033,0.835139

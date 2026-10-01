@@ -1,0 +1,2 @@
+note,laya_bn_lar_pool,lod_bn_lar_pool,jev_en_lar
+"Jev LAR is ENGLISH; Laya/Lod LAR is BANGLA. The populations are the same 3,265 items but the language is not, so the cross-model LAR difference is confounded with language. The missing cells (Jev on Bangla literal; Laya/Lod on English literal) are the experiments that would resolve it.",0.7470137825421134,0.9082278481012658,0.04716692189892802

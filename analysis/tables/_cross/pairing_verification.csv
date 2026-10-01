@@ -1,2 +1,2 @@
-n_overlap_rows,n_overlap_items,gold_key_match,gold_pos_match,idiom_match,literal_key_match,n_literal_rows
-4440,888,1.0,1.0,1.0,1.0,1776
+pair,n_overlap_rows,n_overlap_items,gold_key_match,gold_pos_match,idiom_match,literal_key_match
+laya vs lod (Bangla),4440,888,1.0,1.0,1.0,1.0

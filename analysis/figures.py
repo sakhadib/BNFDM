@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""BNFDM figures, both arms.
+"""BNFDM paper figures.
 
-Laya-multilingual is drawn in cyan, Lod-lille in magenta, throughout.
-No titles (captions belong in the paper). No Bangla glyphs — matplotlib cannot
-shape Bengali and no Bengali font is installed; qualitative examples live in
-FINDINGS.md.
+Design rule: the figure carries data, the caption carries description. No
+legends, no series names, no value labels, no in-axes text of any kind.
+Axis labels and tick labels only.
 
-Each save() writes .pdf + .png preview + .csv of exactly the plotted data.
+Colour is the only identifier and it is fixed, undarkened:
+    #27EBF5  Laya-ml
+    #F127F5  Lod-lille
+    #F5C827  Jev-1.13
+    grey     control / neutral / reference series
+    black    dashed chance line, bar edges, error bars
+    hatched  condition not run, or English-language condition
+
+Every mark is documented in analysis/figures/CAPTIONS.md. Bar order inside a
+panel is always the model order Laya, Lod, Jev; panel order left to right is
+the same. That is what the caption keys off.
 """
 import sys
 from pathlib import Path
@@ -25,421 +34,312 @@ FIG.mkdir(parents=True, exist_ok=True)
 S.use_style()
 
 CHANCE = 0.25
-ARMS = ["laya-ml", "lod-lille-0.6b"]
-ALAB = {"laya-ml": "Laya-ml (322M)", "lod-lille-0.6b": "Lod-lille (0.6B)"}
-ACOL = {"laya-ml": S.C, "lod-lille-0.6b": S.M}
-RAW = {"laya-ml": ROOT / "LAYA_RUN" / "results" / "laya-ml",
-       "lod-lille-0.6b": ROOT / "LOD_RUN" / "results" / "lod-lille-0.6b"}
-
 FAM = ["D-rand", "D-surf", "D-sem", "D-lit", "D-hard"]
 FAM_SHORT = {"D-rand": "random", "D-surf": "surface", "D-sem": "tag",
-             "D-lit": "+literal", "D-hard": "hard"}
+             "D-lit": "literal", "D-hard": "hard"}
 VAR = ["V0_intact", "V1_shuffle", "V2_reverse", "V3_delete1",
        "V4_substitute1", "V5_in_sentence"]
 VAR_SHORT = {"V0_intact": "intact", "V1_shuffle": "shuffled", "V2_reverse": "reversed",
-             "V3_delete1": "-1 word", "V4_substitute1": "sub 1 word",
+             "V3_delete1": "$-$1 word", "V4_substitute1": "substituted",
              "V5_in_sentence": "in sentence"}
-FORM = ["O0_full_bn", "O1_trunc6", "O2_scrambled", "O3_english", "O4_labels"]
-FORM_SHORT = {"O0_full_bn": "full BN", "O1_trunc6": "truncated",
-              "O2_scrambled": "scrambled", "O3_english": "English",
-              "O4_labels": "no semantics"}
+HATCH = "////"
 
 
 def T(arm, name):
     return pd.read_csv(TBL / arm / f"{name}.csv")
 
 
-def X(tbl, key, order):
-    return tbl.set_index(key).reindex(order).reset_index()
+def C(name):
+    return pd.read_csv(TBL / "_cross" / f"{name}.csv")
 
 
-def eb(ax, x, d, col, lo, hi, **kw):
-    ax.errorbar(x, d[col], yerr=np.vstack([d[col] - d[lo], d[hi] - d[col]]),
-                fmt="none", ecolor=S.K, elinewidth=0.8, capsize=2, **kw)
+def X(t, key, order):
+    return t.set_index(key).reindex(order).reset_index()
+
+
+def ticks(ax, x, labels, rot=0, fs=7):
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=rot, ha="right" if rot else "center",
+                       fontsize=fs)
+
+
+def bars(ax, x, y, color, width=0.6, hatch=None):
+    return ax.bar(x, y, width=width, color=color, hatch=hatch, zorder=2, **S.EDGE)
 
 
 # ════════════════════════════════════════════════════════════════════
-def f1_ladder():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.3))
-    fig.subplots_adjust(wspace=0.28)
-    x = np.arange(len(FAM)); wd = 0.38
+def fig1_literal_capture():
+    """Bangla ladder (left) and literal attraction rate (right), two arms."""
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.05),
+                                  gridspec_kw={"width_ratios": [1.55, 1]})
+    fig.subplots_adjust(wspace=0.24)
+    x = np.arange(len(FAM))
+    wd = 0.38
     data = []
-    for i, arm in enumerate(ARMS):
+    for i, arm in enumerate(S.ARMS2):
         d = X(T(arm, "e1_summary"), "family", FAM)
         off = (i - 0.5) * wd
-        ax.bar(x + off, d.accuracy, width=wd, color=ACOL[arm], edgecolor=S.K,
-               linewidth=0.6, label=ALAB[arm])
-        eb(ax, x + off, d, "accuracy", "acc_lo", "acc_hi")
-        for xi, v in zip(x + off, d.accuracy):
-            ax.text(xi, v + 0.015, f"{v:.3f}", ha="center", fontsize=6)
-        data.append(d)
-    ax.axhline(CHANCE, color=S.K, ls="--", lw=1.0)
-    ax.text(-0.52, CHANCE + 0.012, "chance", fontsize=7, ha="left")
-    ax.set_xticks(x); ax.set_xticklabels([FAM_SHORT[f] for f in FAM],
-                                         rotation=15, ha="right")
-    ax.set_ylabel("accuracy"); ax.set_ylim(0, 0.58)
+        bars(ax, x + off, d.accuracy, S.ARM_COLOR[arm], wd)
+        S.eb(ax, x + off, d, "accuracy", "acc_lo", "acc_hi")
+        data.append(d.assign(arm=arm))
+    S.chance(ax)
+    ticks(ax, x, [FAM_SHORT[f] for f in FAM])
     ax.set_xlabel("distractor set")
-    ax.legend(loc="upper right", fontsize=7)
+    ax.set_ylabel("accuracy")
+    ax.set_ylim(0, 0.56)
 
     lf = ["D-lit", "D-hard"]
     xl = np.arange(len(lf))
-    for i, arm in enumerate(ARMS):
+    for i, arm in enumerate(S.ARMS2):
         d = X(T(arm, "e1_summary"), "family", lf)
         off = (i - 0.5) * wd
-        ax2.bar(xl + off, d.LAR, width=wd, color=ACOL[arm], edgecolor=S.K,
-                linewidth=0.6, label=ALAB[arm])
-        eb(ax2, xl + off, d, "LAR", "LAR_lo", "LAR_hi")
-        for xi, v in zip(xl + off, d.LAR):
-            ax2.text(xi, v + 0.018, f"{v:.3f}", ha="center", fontsize=7)
-    ax2.axhline(CHANCE, color=S.K, ls="--", lw=0.9)
-    ax2.set_xticks(xl); ax2.set_xticklabels([FAM_SHORT[f] for f in lf])
-    ax2.set_ylabel("Literal Attraction Rate"); ax2.set_ylim(0, 1.0)
+        bars(ax2, xl + off, d.LAR, S.ARM_COLOR[arm], wd)
+        S.eb(ax2, xl + off, d, "LAR", "LAR_lo", "LAR_hi")
+    S.chance(ax2)
+    ticks(ax2, xl, [FAM_SHORT[f] for f in lf])
     ax2.set_xlabel("distractor set")
-    S.save(fig, FIG / "f1_distractor_ladder.pdf", pd.concat(data))
+    ax2.set_ylabel("literal attraction rate")
+    ax2.set_ylim(0, 1.0)
+    S.save(fig, FIG / "fig1_literal_capture.pdf", pd.concat(data))
 
 
-def f2_literal_capture():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.3))
-    fig.subplots_adjust(wspace=0.28)
-    rows, labels = [], []
-    for arm in ARMS:
-        d = T(arm, "e1_outcome_decomposition")
-        for f in ["D-lit", "D-hard"]:
-            r = d[d.family == f].iloc[0]
-            rows.append(r); labels.append(f"{FAM_SHORT[f]}\n{ALAB[arm].split()[0]}")
-    dec = pd.DataFrame(rows)
-    x = np.arange(len(dec)); b = np.zeros(len(dec))
-    for col, c, lab in [("chose_gold", S.C, "gold figurative gloss"),
-                        ("chose_literal", S.M, "own literal gloss"),
-                        ("chose_other", S.Y, "another idiom's gloss")]:
-        ax.bar(x, dec[col], bottom=b, width=0.62, color=c, edgecolor=S.K,
-               linewidth=0.6, label=lab)
-        for xi, (v, bb) in enumerate(zip(dec[col], b)):
-            if v > 0.07:
-                ax.text(xi, bb + v / 2, f"{v:.2f}", ha="center", va="center",
-                        fontsize=6.5, color="white" if c != S.Y else S.K)
-        b = b + dec[col].values
-    ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=7)
-    ax.set_ylabel("share of items"); ax.set_ylim(0, 1)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.30), fontsize=6.5, ncol=1)
-
-    bins = np.linspace(0, 1, 41)
-    for arm, ls in zip(ARMS, ["-", "--"]):
-        g = pd.read_csv(RAW[arm] / "e1_ladder" / "raw.csv")
-        g = g[(g.family == "D-lit") & g.lit_key.notna()]
-        ax2.hist(g.p_gold, bins=bins, histtype="step", lw=1.3, ls=ls,
-                 color=S.C, density=True, label=f"$p$(gold) {ALAB[arm].split()[0]}")
-        ax2.hist(g.p_literal, bins=bins, histtype="step", lw=1.3, ls=ls,
-                 color=S.M, density=True, label=f"$p$(literal) {ALAB[arm].split()[0]}")
-    ax2.axvline(CHANCE, color=S.K, ls=":", lw=0.9)
-    ax2.set_xlabel("probability assigned"); ax2.set_ylabel("density")
-    ax2.legend(loc="upper center", fontsize=6)
-    S.save(fig, FIG / "f2_literal_capture.pdf", dec)
+def fig2_capture_matrix():
+    """LAR by model x task language on the shared English-literal pool.
+    Solid bar = Bangla condition, hatched colour bar = English condition,
+    hatched grey band spanning the panel = that cell was never run."""
+    m = C("literal_capture_matrix")
+    m = m[(m.family == "D-lit") & (m.population == "en_literal_pool")]
+    fig, ax = plt.subplots(figsize=(S.W1, 1.95))
+    wd = 0.34
+    rows = []
+    for ci, arm in enumerate(S.ARMS3):
+        for si, lang in enumerate(["bn", "en"]):
+            xi = ci + (si - 0.5) * wd
+            r = m[(m.arm == arm) & (m.language == lang)]
+            if len(r):
+                v = float(r.LAR.iat[0])
+                bars(ax, [xi], [v], S.ARM_COLOR[arm], wd,
+                     hatch=HATCH if lang == "en" else None)
+                rows.append({"arm": arm, "language": lang, "LAR": v,
+                             "n": int(r.n.iat[0]), "measured": True})
+            else:
+                # drawn past the top of the axis so it cannot read as a bar
+                ax.add_patch(plt.Rectangle((xi - wd / 2, 0), wd, 1.06,
+                                           facecolor="#F4F4F4", edgecolor=S.G2,
+                                           linewidth=0.5, hatch=HATCH, zorder=1,
+                                           clip_on=False))
+                rows.append({"arm": arm, "language": lang, "LAR": np.nan,
+                             "n": 0, "measured": False})
+    S.chance(ax)
+    ax.set_xlim(-0.55, 2.55)
+    ax.set_ylim(0, 1.0)
+    ticks(ax, range(3), [S.ARM_LABEL[a] for a in S.ARMS3])
+    ax.set_ylabel("literal attraction rate")
+    S.save(fig, FIG / "fig2_capture_matrix.pdf", pd.DataFrame(rows))
 
 
-def f3_confidence():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.25))
-    fig.subplots_adjust(wspace=0.28)
-    OUT = ["correct", "chose_literal", "other_wrong"]
-    lab = {"correct": "correct", "chose_literal": "captured", "other_wrong": "other error"}
-    x = np.arange(len(OUT)); wd = 0.38
+def fig3_three_way_bangla():
+    """The one condition identical across all three models."""
+    t = C("three_way_bangla_drand").set_index("arm").reindex(S.ARMS3).reset_index()
+    fig, ax = plt.subplots(figsize=(S.W1, 1.95))
+    x = np.arange(len(t))
+    bars(ax, x, t.accuracy, [S.ARM_COLOR[a] for a in t.arm], 0.58)
+    S.eb(ax, x, t, "accuracy", "acc_lo", "acc_hi")
+    S.chance(ax)
+    ticks(ax, x, [S.ARM_LABEL[a] for a in t.arm])
+    ax.set_ylabel("accuracy")
+    ax.set_ylim(0, 0.82)
+    S.save(fig, FIG / "fig3_three_way_bangla.pdf", t)
+
+
+def fig4_confidence():
+    """Reliability curves, one panel per model, grey diagonal = ideal."""
+    fig, axes = plt.subplots(1, 3, figsize=(S.W2, 2.0), sharey=True)
+    fig.subplots_adjust(wspace=0.08)
     data = []
-    for i, arm in enumerate(ARMS):
-        d = X(T(arm, "e5_confidence_by_outcome"), "outcome", OUT)
-        off = (i - 0.5) * wd
-        ax.bar(x + off, d.mean_conf, width=wd, color=ACOL[arm], edgecolor=S.K,
-               linewidth=0.6, label=ALAB[arm])
-        eb(ax, x + off, d, "mean_conf", "conf_lo", "conf_hi")
-        for xi, v in zip(x + off, d.mean_conf):
-            ax.text(xi, v + 0.015, f"{v:.3f}", ha="center", fontsize=6.5)
-        data.append(d)
-    ax.set_xticks(x); ax.set_xticklabels([lab[o] for o in OUT], rotation=12, ha="right")
-    ax.set_ylabel("confidence in chosen option"); ax.set_ylim(0, 0.95)
-    ax.legend(loc="upper left", fontsize=7)
-
-    for arm, ls in zip(ARMS, ["-", "--"]):
+    for ax, arm in zip(axes, S.ARMS3):
         rel = T(arm, "e5_reliability")
-        for fam, c in [("D-rand", S.C), ("D-lit", S.M)]:
+        ax.plot([0, 1], [0, 1], color=S.G2, ls=(0, (3, 2)), lw=0.8, zorder=1)
+        for fam, col, mk in [("D-rand", S.G1, "o"), ("D-lit", S.ARM_COLOR[arm], "s")]:
             g = rel[rel.family == fam]
-            ax2.plot(g.mean_conf, g.accuracy, "o" + ls, color=c, mfc="white",
-                     mew=1.0, ms=3.2,
-                     label=f"{FAM_SHORT[fam]} · {ALAB[arm].split()[0]}")
-    ax2.plot([0, 1], [0, 1], color=S.K_L, ls=":", lw=0.9, zorder=0)
-    ax2.set_xlabel("reported confidence"); ax2.set_ylabel("empirical accuracy")
-    ax2.set_xlim(0, 1); ax2.set_ylim(0, 1)
-    ax2.legend(loc="upper left", fontsize=6)
-    S.save(fig, FIG / "f3_confidence_anti_diagnostic.pdf", pd.concat(data))
+            if not len(g):
+                continue
+            ax.plot(g.mean_conf, g.accuracy, mk + "-", color=col,
+                    mec=S.K, mew=0.6, mfc=col, ms=3.0, lw=1.1, zorder=3)
+            data.append(g.assign(arm=arm))
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_xticks([0, 0.5, 1.0])
+        ax.set_xticklabels(["0", "0.5", "1"])
+        ax.set_xlabel("reported confidence")
+    axes[0].set_ylabel("empirical accuracy")
+    S.save(fig, FIG / "fig4_confidence_reliability.pdf", pd.concat(data))
 
 
-def f4_position():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.2))
-    fig.subplots_adjust(wspace=0.28)
-    x = np.arange(4); wd = 0.38
+def fig5_no_signal():
+    """Semantics-free options: grey = accuracy, colour = mean confidence."""
+    t = C("no_signal_control").set_index("arm").reindex(S.ARMS3).reset_index()
+    fig, ax = plt.subplots(figsize=(S.W1, 1.95))
+    x = np.arange(len(t))
+    wd = 0.34
+    bars(ax, x - wd / 2, t.accuracy, S.G3, wd)
+    S.eb(ax, x - wd / 2, t, "accuracy", "acc_lo", "acc_hi")
+    bars(ax, x + wd / 2, t.mean_conf, [S.ARM_COLOR[a] for a in t.arm], wd)
+    S.chance(ax)
+    ticks(ax, x, [S.ARM_LABEL[a] for a in t.arm])
+    ax.set_ylabel("accuracy / confidence")
+    ax.set_ylim(0, 0.92)
+    S.save(fig, FIG / "fig5_no_signal_control.pdf", t)
+
+
+def fig6_order():
+    """Left: distinct glosses chosen over 24 orderings. Right: instability
+    (colour) beside mean p(gold) range (grey)."""
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.0),
+                                  gridspec_kw={"width_ratios": [1.25, 1]})
+    fig.subplots_adjust(wspace=0.26)
+    x = np.arange(1, 5)
+    wd = 0.27
     data = []
-    for i, arm in enumerate(ARMS):
-        d = T(arm, "e1_position_bias").sort_values("position")
-        off = (i - 0.5) * wd
-        ax.bar(x + off, d.selection_share, width=wd, color=ACOL[arm],
-               edgecolor=S.K, linewidth=0.6, label=ALAB[arm])
-        for xi, v in zip(x + off, d.selection_share):
-            ax.text(xi, v + 0.008, f"{v:.3f}", ha="center", fontsize=6.5)
-        data.append(d)
-    ax.axhline(0.25, color=S.K, ls="--", lw=0.9)
-    ax.set_xticks(x); ax.set_xticklabels(["A", "B", "C", "D"])
-    ax.set_xlabel("option slot"); ax.set_ylabel("share of selections")
-    ax.set_ylim(0, 0.47); ax.legend(loc="upper right", fontsize=7)
-
-    for i, arm in enumerate(ARMS):
-        d = T(arm, "e7_position_bias").sort_values("position")
-        off = (i - 0.5) * wd
-        ax2.bar(x + off, d.accuracy_when_gold_here, width=wd, color=ACOL[arm],
-                edgecolor=S.K, linewidth=0.6, label=ALAB[arm])
-        eb(ax2, x + off, d, "accuracy_when_gold_here", "acc_lo", "acc_hi")
-        for xi, v in zip(x + off, d.accuracy_when_gold_here):
-            ax2.text(xi, v + 0.006, f"{v:.3f}", ha="center", fontsize=6.5)
-    ax2.set_xticks(x); ax2.set_xticklabels(["A", "B", "C", "D"])
-    ax2.set_xlabel("slot holding the gold gloss"); ax2.set_ylabel("accuracy")
-    ax2.set_ylim(0, 0.27)
-    S.save(fig, FIG / "f4_position_bias.pdf", pd.concat(data))
-
-
-def f5_order_instability():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.2))
-    fig.subplots_adjust(wspace=0.30)
-    x = np.arange(1, 5); wd = 0.38
-    data = []
-    for i, arm in enumerate(ARMS):
+    for i, arm in enumerate(S.ARMS3):
         h = T(arm, "e7_instability_hist").set_index("n_distinct_option")
         h = h.reindex(range(1, 5)).fillna(0).reset_index()
-        off = (i - 0.5) * wd
-        ax.bar(x + off, h.share, width=wd, color=ACOL[arm], edgecolor=S.K,
-               linewidth=0.6, label=ALAB[arm])
-        for xi, v in zip(x + off, h.share):
-            if v > 0.01:
-                ax.text(xi, v + 0.015, f"{v:.2f}", ha="center", fontsize=6.5)
-        h["arm"] = arm; data.append(h)
+        bars(ax, x + (i - 1) * wd, h.share, S.ARM_COLOR[arm], wd)
+        data.append(h.assign(arm=arm))
     ax.set_xticks(x)
-    ax.set_xlabel("distinct glosses chosen / 24 orderings")
-    ax.set_ylabel("share of items"); ax.set_ylim(0, 1.0)
-    ax.legend(loc="upper center", fontsize=7)
+    ax.set_xlabel("distinct glosses chosen across 24 orderings")
+    ax.set_ylabel("share of items")
+    ax.set_ylim(0, 1.0)
 
-    for arm in ARMS:
-        per = T(arm, "e7_per_item")
-        ax2.hist(per.p_gold_range, bins=np.linspace(0, 0.9, 46), histtype="step",
-                 lw=1.3, color=ACOL[arm], density=True, label=ALAB[arm])
-        ax2.axvline(per.p_gold_range.mean(), color=ACOL[arm], ls=":", lw=1.0)
-    ax2.set_xlabel("within-item range of $p$(gold)")
-    ax2.set_ylabel("density"); ax2.legend(loc="upper right", fontsize=7)
-    S.save(fig, FIG / "f5_order_instability.pdf", pd.concat(data))
-
-
-def f6_crosslingual():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.4),
-                                  gridspec_kw={"width_ratios": [1.25, 1]})
-    fig.subplots_adjust(wspace=0.32)
-    rows, labels, cols = [], [], []
-    short = {"bn_ml": "BN\nmulti", "en_ml": "EN\nmulti", "en_en": "EN\nEnglish",
-             "bn_en": "BN\nEnglish", "bn": "BN", "en": "EN"}
-    for arm in ARMS:
-        d = T(arm, "e4_arms")
-        for r in d.itertuples():
-            rows.append(r)
-            labels.append(f"{short[r.condition]}\n{ALAB[arm].split()[0]}")
-            cols.append(ACOL[arm] if r.condition.startswith("bn") else S.C_L
-                        if arm == "laya-ml" else S.M_L)
-    a = pd.DataFrame(rows)
-    x = np.arange(len(a))
-    ax.bar(x, a.accuracy, width=0.65, color=cols, edgecolor=S.K, linewidth=0.6)
-    eb(ax, x, a, "accuracy", "acc_lo", "acc_hi")
-    ax.axhline(CHANCE, color=S.K, ls="--", lw=1.0)
-    ax.text(-0.55, CHANCE + 0.015, "chance", fontsize=7, ha="left")
-    for xi, v in zip(x, a.accuracy):
-        ax.text(xi, v + 0.016, f"{v:.3f}", ha="center", fontsize=6.5)
-    ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=6)
-    ax.set_ylabel("accuracy"); ax.set_ylim(0, 0.99)
-
-    order = ["both_right", "bangla_gap", "english_gap", "both_wrong"]
-    lab = {"both_right": "both right", "bangla_gap": "English only",
-           "english_gap": "Bangla only", "both_wrong": "both wrong"}
-    cols2 = [S.C, S.M, S.Y, S.K_L]
-    xb = np.arange(len(ARMS)); data = []
-    for i, arm in enumerate(ARMS):
-        loc = X(T(arm, "e4_localisation"), "cell", order).fillna(0)
-        b = 0.0
-        for r, c in zip(loc.itertuples(), cols2):
-            ax2.bar(i, r.share, bottom=b, width=0.55, color=c, edgecolor=S.K,
-                    linewidth=0.6, label=lab[r.cell] if i == 0 else None)
-            if r.share > 0.08:
-                ax2.text(i, b + r.share / 2, f"{r.share:.2f}", ha="center",
-                         va="center", fontsize=6.5,
-                         color="white" if c != S.Y else S.K)
-            b += r.share
-        loc["arm"] = arm; data.append(loc)
-    ax2.set_xticks(xb); ax2.set_xticklabels([ALAB[a].split()[0] for a in ARMS],
-                                            fontsize=7.5)
-    ax2.set_ylabel("share of items"); ax2.set_ylim(0, 1)
-    ax2.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), fontsize=7)
-    S.save(fig, FIG / "f6_crosslingual.pdf", a)
+    o = C("order_three_way").set_index("arm").reindex(S.ARMS3).reset_index()
+    xo = np.arange(len(o))
+    wd2 = 0.34
+    bars(ax2, xo - wd2 / 2, o.answer_unstable_share,
+         [S.ARM_COLOR[a] for a in o.arm], wd2)
+    bars(ax2, xo + wd2 / 2, o.mean_p_gold_range, S.G3, wd2)
+    ticks(ax2, xo, [S.ARM_LABEL[a] for a in o.arm])
+    ax2.set_ylabel("share / range")
+    ax2.set_ylim(0, 0.92)
+    S.save(fig, FIG / "fig6_order_sensitivity.pdf", pd.concat(data))
 
 
-def f7_unit_integrity():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.45))
-    fig.subplots_adjust(wspace=0.30)
-    x = np.arange(len(VAR)); wd = 0.38
+def fig7_position():
+    """Selection share by option slot, one panel per model."""
+    fig, axes = plt.subplots(1, 3, figsize=(S.W2, 1.85), sharey=True)
+    fig.subplots_adjust(wspace=0.08)
     data = []
-    for i, arm in enumerate(ARMS):
+    for ax, arm in zip(axes, S.ARMS3):
+        p = T(arm, "e1_position_bias").sort_values("position")
+        x = np.arange(len(p))
+        bars(ax, x, p.selection_share, S.ARM_COLOR[arm], 0.6)
+        S.chance(ax)
+        ticks(ax, x, list(p.key))
+        ax.set_xlabel("option slot")
+        data.append(p.assign(arm=arm))
+    axes[0].set_ylabel("share of selections")
+    axes[0].set_ylim(0, 0.42)
+    S.save(fig, FIG / "fig7_position_bias.pdf", pd.concat(data))
+
+
+def fig8_options():
+    """Option-side ablation. Grey bar = options stripped of all semantics.
+    Jev panel is hatched because its task language is English."""
+    FORM_BN = ["O0_full_bn", "O1_trunc6", "O2_scrambled", "O3_english", "O4_labels"]
+    FORM_EN = ["O0_full_en", "O1_trunc6", "O2_scrambled", "O3_bangla", "O4_labels"]
+    SHORT = ["full", "truncated", "scrambled", "other lang.", "no semantics"]
+    fig, axes = plt.subplots(1, 3, figsize=(S.W2, 2.15), sharey=True)
+    fig.subplots_adjust(wspace=0.08)
+    data = []
+    for ax, arm in zip(axes, S.ARMS3):
+        en = arm == "jev-1.13"
+        d = X(T(arm, "e6_summary"), "form", FORM_EN if en else FORM_BN)
+        x = np.arange(len(d))
+        for xi, (v, lastcol) in enumerate(zip(d.accuracy, [False] * 4 + [True])):
+            bars(ax, [xi], [v], S.G3 if lastcol else S.ARM_COLOR[arm], 0.62,
+                 hatch=HATCH if en else None)
+        S.eb(ax, x, d, "accuracy", "acc_lo", "acc_hi")
+        S.chance(ax)
+        ticks(ax, x, SHORT, rot=35, fs=6.5)
+        data.append(d.assign(arm=arm))
+    axes[0].set_ylabel("accuracy")
+    axes[0].set_ylim(0, 1.05)
+    axes[1].set_xlabel("option text")
+    S.save(fig, FIG / "fig8_option_ablation.pdf", pd.concat(data))
+
+
+def fig9_unit_integrity():
+    """Perturb the idiom, hold options fixed. Left accuracy, right agreement
+    with the intact form."""
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.15))
+    fig.subplots_adjust(wspace=0.24)
+    x = np.arange(len(VAR))
+    wd = 0.38
+    data = []
+    for i, arm in enumerate(S.ARMS2):
         d = X(T(arm, "e3_summary"), "variant", VAR)
         off = (i - 0.5) * wd
-        ax.bar(x + off, d.accuracy, width=wd, color=ACOL[arm], edgecolor=S.K,
-               linewidth=0.6, label=ALAB[arm])
-        eb(ax, x + off, d, "accuracy", "acc_lo", "acc_hi")
-        ax.axhline(d.accuracy.iloc[0], color=ACOL[arm], ls=":", lw=0.8)
-        ax2.bar(x + off, d.answer_agreement_with_intact, width=wd,
-                color=ACOL[arm], edgecolor=S.K, linewidth=0.6, label=ALAB[arm])
-        eb(ax2, x + off, d, "answer_agreement_with_intact", "agree_lo", "agree_hi")
-        data.append(d)
-    for a_, yl, lb in [(ax, 0.33, "accuracy"), (ax2, 1.12, "agreement with intact")]:
-        a_.set_xticks(x); a_.set_xticklabels([VAR_SHORT[v] for v in VAR],
-                                             rotation=28, ha="right", fontsize=7)
-        a_.set_ylim(0, yl); a_.set_ylabel(lb)
-    ax.legend(loc="upper left", fontsize=7)
-    S.save(fig, FIG / "f7_unit_integrity.pdf", pd.concat(data))
+        bars(ax, x + off, d.accuracy, S.ARM_COLOR[arm], wd)
+        S.eb(ax, x + off, d, "accuracy", "acc_lo", "acc_hi")
+        bars(ax2, x + off, d.answer_agreement_with_intact, S.ARM_COLOR[arm], wd)
+        S.eb(ax2, x + off, d, "answer_agreement_with_intact", "agree_lo", "agree_hi")
+        data.append(d.assign(arm=arm))
+    for a_, yl, lb in [(ax, 0.58, "accuracy"), (ax2, 1.05, "agreement with intact")]:
+        ticks(a_, x, [VAR_SHORT[v] for v in VAR], rot=35, fs=6.5)
+        a_.set_ylim(0, yl)
+        a_.set_ylabel(lb)
+    S.chance(ax)
+    S.save(fig, FIG / "fig9_unit_integrity.pdf", pd.concat(data))
 
 
-def f8_options():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.45))
-    fig.subplots_adjust(wspace=0.30)
-    x = np.arange(len(FORM)); wd = 0.38
-    data = []
-    for i, arm in enumerate(ARMS):
-        d = X(T(arm, "e6_summary"), "form", FORM)
-        off = (i - 0.5) * wd
-        ax.bar(x + off, d.accuracy, width=wd, color=ACOL[arm], edgecolor=S.K,
-               linewidth=0.6, label=ALAB[arm])
-        eb(ax, x + off, d, "accuracy", "acc_lo", "acc_hi")
-        for xi, v in zip(x + off, d.accuracy):
-            ax.text(xi, v + 0.012, f"{v:.2f}", ha="center", fontsize=6)
-        ax2.plot(x, d.semantic_signal_retained, "o-", color=ACOL[arm],
-                 mfc="white", mew=1.1, ms=4, label=ALAB[arm])
-        data.append(d)
-    ax.axhline(CHANCE, color=S.K, ls="--", lw=0.9)
-    ax.text(-0.55, CHANCE + 0.008, "chance", fontsize=7, ha="left")
-    for a_ in (ax, ax2):
-        a_.set_xticks(x); a_.set_xticklabels([FORM_SHORT[f] for f in FORM],
-                                             rotation=28, ha="right", fontsize=7)
-    ax.set_ylabel("accuracy"); ax.set_ylim(0, 0.60)
-    ax.set_xlabel("option text"); ax.legend(loc="upper right", fontsize=7)
-    ax2.set_ylabel("semantic signal retained"); ax2.set_ylim(-0.05, 1.1)
-    ax2.axhline(0, color=S.K_L, ls=":", lw=0.8)
-    ax2.set_xlabel("option text")
-    S.save(fig, FIG / "f8_option_ablation.pdf", pd.concat(data))
+def fig10_crosslingual():
+    """Accuracy by task language within each model. Hatched bars are English
+    conditions, solid bars Bangla. Bars are grouped by model, left to right."""
+    rows = []
+    SHORT = {"bn_ml": "BN idiom", "en_ml": "EN idiom", "en_en": "EN idiom\nEN model",
+             "bn_en": "BN idiom\nEN model", "bn": "BN idiom", "en": "EN idiom"}
+    for arm in S.ARMS2:
+        for r in T(arm, "e4_arms").itertuples():
+            rows.append({"arm": arm, "cond": r.condition, "label": r.label,
+                         "accuracy": r.accuracy, "acc_lo": r.acc_lo,
+                         "acc_hi": r.acc_hi})
+    jb = C("three_way_bangla_drand")
+    jb = jb[jb.arm == "jev-1.13"].iloc[0]
+    rows.append({"arm": "jev-1.13", "cond": "bn", "label": "Bangla idiom",
+                 "accuracy": jb.accuracy, "acc_lo": jb.acc_lo, "acc_hi": jb.acc_hi})
+    je = T("jev-1.13", "e1_summary")
+    je = je[je.family == "D-rand"].iloc[0]
+    rows.append({"arm": "jev-1.13", "cond": "en", "label": "English equivalent",
+                 "accuracy": je.accuracy, "acc_lo": je.acc_lo, "acc_hi": je.acc_hi})
+    t = pd.DataFrame(rows)
 
-
-def f9_selective():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.2))
-    fig.subplots_adjust(wspace=0.30)
-    for arm, ls in zip(ARMS, ["-", "--"]):
-        rc = T(arm, "e5_risk_coverage")
-        for fam, c in [("D-rand", S.C), ("D-lit", S.M)]:
-            g = rc[rc.family == fam].sort_values("coverage")
-            ax.plot(g.coverage, g.accuracy, ls, color=c, lw=1.3,
-                    label=f"{FAM_SHORT[fam]} · {ALAB[arm].split()[0]}")
-    ax.set_xlabel("coverage (most confident first)")
-    ax.set_ylabel("accuracy on covered items")
-    ax.set_xlim(0.05, 1.0); ax.legend(loc="upper right", fontsize=6.5)
-
-    x = np.arange(len(FAM)); wd = 0.38
-    data = []
-    for i, arm in enumerate(ARMS):
-        d = X(T(arm, "e5_calibration"), "family", FAM)
-        off = (i - 0.5) * wd
-        ax2.bar(x + off, d.aurc_conf - d.aurc_random, width=wd, color=ACOL[arm],
-                edgecolor=S.K, linewidth=0.6, label=ALAB[arm])
-        data.append(d)
-    ax2.axhline(0, color=S.K, lw=0.9)
-    ax2.set_xticks(x); ax2.set_xticklabels([FAM_SHORT[f] for f in FAM],
-                                           rotation=20, ha="right", fontsize=7)
-    ax2.set_ylabel("AURC $-$ random-gate AURC")
-    ax2.text(0.02, 0.95, "above 0 = gating is worse than not gating",
-             transform=ax2.transAxes, fontsize=6.5, va="top")
-    ax2.legend(loc="lower left", fontsize=7)
-    S.save(fig, FIG / "f9_selective_prediction.pdf", pd.concat(data))
-
-
-def f10_paired():
-    p = pd.read_csv(TBL / "_cross" / "paired_mcnemar.csv")
-    e1 = p[p.experiment == "e1_ladder"].set_index("group").reindex(FAM).reset_index()
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.3),
-                                  gridspec_kw={"width_ratios": [1, 1.15]})
-    fig.subplots_adjust(wspace=0.30)
-    x = np.arange(len(e1))
-    cols = [S.C if v < 0 else S.M for v in e1.delta_lod_minus_laya]
-    ax.bar(x, e1.delta_lod_minus_laya, width=0.6, color=cols, edgecolor=S.K,
-           linewidth=0.6)
-    for xi, (v, pv) in enumerate(zip(e1.delta_lod_minus_laya, e1.mcnemar_p)):
-        star = "***" if pv < 1e-3 else "**" if pv < 1e-2 else "*" if pv < .05 else "n.s."
-        ax.text(xi, v + (0.006 if v > 0 else -0.016), f"{v:+.3f}\n{star}",
-                ha="center", fontsize=6.5,
-                va="bottom" if v > 0 else "top")
-    ax.axhline(0, color=S.K, lw=0.9)
-    ax.set_xticks(x); ax.set_xticklabels([FAM_SHORT[f] for f in FAM],
-                                         rotation=20, ha="right", fontsize=7)
-    ax.set_ylabel("Lod $-$ Laya accuracy"); ax.set_ylim(-0.16, 0.20)
-    ax.set_xlabel("distractor set")
-
-    h = pd.read_csv(TBL / "_cross" / "headline_both_arms.csv")
-    metrics = [("literal_attraction_rate", "literal attraction"),
-               ("order_unstable_share", "order instability"),
-               ("language_gap", "EN $-$ BN gap"),
-               ("bangla_gap_share", "right in EN only")]
-    xm = np.arange(len(metrics)); wd = 0.38
-    for i, arm in enumerate(ARMS):
-        r = h[h.arm == arm].iloc[0]
-        ax2.bar(xm + (i - 0.5) * wd, [r[m] for m, _ in metrics], width=wd,
-                color=ACOL[arm], edgecolor=S.K, linewidth=0.6, label=ALAB[arm])
-        for xi, (m, _) in zip(xm + (i - 0.5) * wd, metrics):
-            ax2.text(xi, r[m] + 0.018, f"{r[m]:.2f}", ha="center", fontsize=6.5)
-    ax2.set_xticks(xm); ax2.set_xticklabels([l for _, l in metrics],
-                                            rotation=22, ha="right", fontsize=7)
-    ax2.set_ylabel("value"); ax2.set_ylim(0, 1.05)
-    ax2.legend(loc="upper right", fontsize=7)
-    S.save(fig, FIG / "f10_cross_model.pdf", p)
-
-
-def f11_stratified():
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(S.W2, 2.2))
-    fig.subplots_adjust(wspace=0.28)
-    nw = T("laya-ml", "e1_by_n_words")
-    for fam, col in zip(FAM, [S.C, S.C_L, S.Y, S.M, S.K]):
-        g = nw[(nw.family == fam) & (nw.n >= 50)].sort_values("n_words")
-        ax.plot(g.n_words, g.accuracy, "o-", color=col, mfc="white", mew=1.0,
-                ms=3.5, label=FAM_SHORT[fam])
-    ax.axhline(CHANCE, color=S.K, ls="--", lw=0.9)
-    ax.set_xlabel("idiom length (words)"); ax.set_ylabel("accuracy")
-    ax.set_ylim(0.10, 0.47)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.02), fontsize=6.5, ncol=3)
-
-    sub = pd.read_csv(TBL / "_cross" / "subset_representativeness.csv")
-    sub = sub.set_index("family").reindex(FAM).reset_index()
-    x = np.arange(len(sub)); wd = 0.38
-    ax2.bar(x - wd / 2, sub.laya_full, width=wd, color=S.C, edgecolor=S.K,
-            linewidth=0.6, label="Laya, full 8,876")
-    ax2.bar(x + wd / 2, sub.laya_subset, width=wd, color=S.C_L, edgecolor=S.K,
-            linewidth=0.6, label="Laya, the 888 subset")
-    eb(ax2, x + wd / 2, sub, "laya_subset", "sub_lo", "sub_hi")
-    for xi, v in zip(x, sub.drift):
-        ax2.text(xi, 0.012, f"{v:+.3f}", ha="center", fontsize=6, color=S.K)
-    ax2.set_xticks(x); ax2.set_xticklabels([FAM_SHORT[f] for f in FAM],
-                                           rotation=20, ha="right", fontsize=7)
-    ax2.set_ylabel("accuracy"); ax2.set_ylim(0, 0.45)
-    ax2.legend(loc="upper right", fontsize=6.5)
-    S.save(fig, FIG / "f11_stratified_and_subset.pdf", sub)
+    fig, ax = plt.subplots(figsize=(S.W2, 2.05))
+    xs, cols, hat, lab = [], [], [], []
+    pos = 0.0
+    for arm in S.ARMS3:
+        for r in t[t.arm == arm].itertuples():
+            xs.append(pos)
+            lab.append(SHORT.get(str(r.cond), str(r.cond)))
+            cols.append(S.ARM_COLOR[arm])
+            hat.append(HATCH if not str(r.cond).startswith("bn") else None)
+            pos += 1
+        pos += 0.75
+    for xi, v, c, h in zip(xs, t.accuracy, cols, hat):
+        bars(ax, [xi], [v], c, 0.74, hatch=h)
+    ax.errorbar(xs, t.accuracy,
+                yerr=np.vstack([t.accuracy - t.acc_lo, t.acc_hi - t.accuracy]),
+                fmt="none", ecolor=S.K, elinewidth=0.7, capsize=1.6, zorder=3)
+    S.chance(ax)
+    ax.set_xticks(xs)
+    ax.set_xticklabels(lab, fontsize=6.3)
+    ax.set_ylabel("accuracy")
+    ax.set_ylim(0, 1.0)
+    S.save(fig, FIG / "fig10_crosslingual.pdf", t)
 
 
 if __name__ == "__main__":
-    for fn in [f1_ladder, f2_literal_capture, f3_confidence, f4_position,
-               f5_order_instability, f6_crosslingual, f7_unit_integrity,
-               f8_options, f9_selective, f10_paired, f11_stratified]:
+    for fn in [fig1_literal_capture, fig2_capture_matrix, fig3_three_way_bangla,
+               fig4_confidence, fig5_no_signal, fig6_order, fig7_position,
+               fig8_options, fig9_unit_integrity, fig10_crosslingual]:
         print(fn.__name__)
         fn()
     print("\nDone ->", FIG)

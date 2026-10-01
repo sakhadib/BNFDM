@@ -1,69 +1,81 @@
-"""BNFDM figure style: CMYK palette, white background, ACL-ready PDF output.
+"""BNFDM figure style.
 
-No titles on any figure (captions carry them in the paper). Every `save()` writes
-a PDF, a PNG preview, and a sibling CSV holding exactly the data that was plotted.
+Palette is used exactly as specified, undarkened:
+    #27ebf5 cyan    Laya-ml
+    #f127f5 magenta Lod-lille
+    #f5c827 yellow  Jev-1.13
+    black           reference lines
+    greys           neutral / control categories
 
-Note on Bangla: matplotlib cannot shape Bengali (no HarfBuzz), and this machine has
-no Bengali font installed, so NO figure here contains Bangla glyphs. Every figure is
-quantitative; qualitative examples live in FINDINGS.md, which renders Bangla natively.
+Figures carry no legends, no value labels, no in-axes annotation. Axis labels
+and tick labels only. Every mark is documented in analysis/figures/CAPTIONS.md
+so captions can be written from that file.
+
+Bright fills get a thin black edge, which is what keeps them legible on white
+without changing the colour.
 """
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
-# ── palette: cyan / magenta / yellow / black, shades tuned for white paper ──
-C = "#0F7F8C"   # cyan, deepened so it reads on white
-M = "#B01C7E"   # magenta
-Y = "#C8971B"   # yellow, darkened for legibility
-K = "#1B1B1B"   # black
-C_L, M_L, Y_L, K_L = "#7FBFC6", "#D98EBF", "#E4CB8D", "#9A9A9A"
-GRID = "#DCDCDC"
+CYAN, MAG, YEL = "#27EBF5", "#F127F5", "#F5C827"
+K = "#000000"
+G1, G2, G3 = "#4D4D4D", "#999999", "#CCCCCC"
 
-PALETTE = [C, M, Y, K]
-PALETTE_WIDE = [C, M, Y, K, C_L, M_L, Y_L, K_L]
+ARM_COLOR = {"laya-ml": CYAN, "lod-lille-0.6b": MAG, "jev-1.13": YEL}
+ARM_LABEL = {"laya-ml": "Laya-ml", "lod-lille-0.6b": "Lod-lille", "jev-1.13": "Jev-1.13"}
+ARMS3 = ["laya-ml", "lod-lille-0.6b", "jev-1.13"]
+ARMS2 = ["laya-ml", "lod-lille-0.6b"]
 
-CMAP_SEQ = LinearSegmentedColormap.from_list("cmyk_seq", ["#FFFFFF", Y, M, K])
-CMAP_DIV = LinearSegmentedColormap.from_list("cmyk_div", [C, "#FFFFFF", M])
+CMAP_SEQ = LinearSegmentedColormap.from_list("bnfdm_seq", ["#FFFFFF", YEL, MAG, K])
 
-# two-column ACL page widths, inches
-W1, W2 = 3.15, 6.50
+W1, W2 = 3.15, 6.50          # ACL single / double column, inches
+EDGE = dict(edgecolor=K, linewidth=0.5)
 
 
 def use_style():
     mpl.rcParams.update({
         "figure.facecolor": "white", "axes.facecolor": "white",
         "savefig.facecolor": "white", "savefig.bbox": "tight",
-        "savefig.pad_inches": 0.02,
+        "savefig.pad_inches": 0.015,
         "pdf.fonttype": 42, "ps.fonttype": 42,
         "font.family": "serif",
         "font.serif": ["DejaVu Serif", "Liberation Serif", "Times New Roman"],
-        "font.size": 9, "axes.labelsize": 9, "axes.titlesize": 9,
-        "xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 8,
-        "axes.edgecolor": K, "axes.linewidth": 0.7,
-        "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.5,
-        "grid.alpha": 1.0, "axes.axisbelow": True,
+        "font.size": 8, "axes.labelsize": 8,
+        "xtick.labelsize": 7, "ytick.labelsize": 7,
+        "axes.edgecolor": K, "axes.linewidth": 0.6,
+        "axes.grid": True, "grid.color": "#E8E8E8", "grid.linewidth": 0.45,
+        "axes.axisbelow": True,
         "axes.spines.top": False, "axes.spines.right": False,
         "xtick.direction": "out", "ytick.direction": "out",
-        "xtick.major.width": 0.7, "ytick.major.width": 0.7,
-        "lines.linewidth": 1.3, "lines.markersize": 4,
-        "legend.frameon": False,
-        "axes.prop_cycle": mpl.cycler(color=PALETTE_WIDE),
+        "xtick.major.width": 0.6, "ytick.major.width": 0.6,
+        "xtick.major.size": 2.5, "ytick.major.size": 2.5,
+        "lines.linewidth": 1.1, "lines.markersize": 3.0,
     })
 
 
 use_style()
 
 
+def chance(ax, y=0.25):
+    ax.axhline(y, color=K, ls=(0, (4, 2)), lw=0.8, zorder=1)
+
+
+def eb(ax, x, d, col, lo, hi):
+    ax.errorbar(x, d[col], yerr=np.vstack([d[col] - d[lo], d[hi] - d[col]]),
+                fmt="none", ecolor=K, elinewidth=0.7, capsize=1.6, zorder=3)
+
+
 def save(fig, path_pdf, data=None, png=True):
-    """PDF + PNG preview + sibling CSV of the plotted data."""
     p = Path(path_pdf)
     p.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(p, format="pdf")
     if png:
-        fig.savefig(p.with_suffix(".png"), format="png", dpi=300)
+        fig.savefig(p.with_suffix(".png"), format="png", dpi=320)
     if data is not None:
         d = data if isinstance(data, pd.DataFrame) else pd.DataFrame(data)
         d.to_csv(p.with_suffix(".csv"), index=False, encoding="utf-8")
@@ -72,9 +84,8 @@ def save(fig, path_pdf, data=None, png=True):
     return p
 
 
-# ── statistics helpers ─────────────────────────────────────────────────────
+# ── statistics ─────────────────────────────────────────────────────────────
 def boot_ci(x, stat=np.mean, n=2000, alpha=0.05, seed=0):
-    """Percentile bootstrap CI for a 1-D sample."""
     x = np.asarray(x, float)
     x = x[~np.isnan(x)]
     if len(x) == 0:
@@ -102,12 +113,7 @@ def ece(conf, correct, bins=15):
 
 
 def aurc(score, correct):
-    """Area under the risk-coverage curve; lower is a better selective signal."""
     score, correct = np.asarray(score, float), np.asarray(correct, float)
     o = np.argsort(-score)
     y = correct[o]
     return float((1 - np.cumsum(y) / np.arange(1, len(y) + 1)).mean())
-
-
-def fmt_ci(m, lo, hi, d=3):
-    return f"{m:.{d}f} [{lo:.{d}f}, {hi:.{d}f}]"
