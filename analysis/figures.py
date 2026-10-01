@@ -63,8 +63,13 @@ def ticks(ax, x, labels, rot=0, fs=7):
                        fontsize=fs)
 
 
-def bars(ax, x, y, color, width=0.6, hatch=None):
-    return ax.bar(x, y, width=width, color=color, hatch=hatch, zorder=2, **S.EDGE)
+def bars(ax, x, y, color, width=0.6, hatch=None, hatch_color=None):
+    """Filled bar with no outline. Hatching is drawn in a saturated version of
+    the same hue, because matplotlib takes the hatch colour from the edge."""
+    kw = dict(width=width, color=color, zorder=2, linewidth=0)
+    if hatch:
+        kw.update(hatch=hatch, edgecolor=hatch_color or S.G1, linewidth=0)
+    return ax.bar(x, y, **kw)
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -119,14 +124,15 @@ def fig2_capture_matrix():
             if len(r):
                 v = float(r.LAR.iat[0])
                 bars(ax, [xi], [v], S.ARM_COLOR[arm], wd,
-                     hatch=HATCH if lang == "en" else None)
+                     hatch=HATCH if lang == "en" else None,
+                     hatch_color=S.ARM_LINE[arm])
                 rows.append({"arm": arm, "language": lang, "LAR": v,
                              "n": int(r.n.iat[0]), "measured": True})
             else:
                 # drawn past the top of the axis so it cannot read as a bar
                 ax.add_patch(plt.Rectangle((xi - wd / 2, 0), wd, 1.06,
                                            facecolor="#F4F4F4", edgecolor=S.G2,
-                                           linewidth=0.5, hatch=HATCH, zorder=1,
+                                           linewidth=0, hatch=HATCH, zorder=1,
                                            clip_on=False))
                 rows.append({"arm": arm, "language": lang, "LAR": np.nan,
                              "n": 0, "measured": False})
@@ -160,12 +166,12 @@ def fig4_confidence():
     for ax, arm in zip(axes, S.ARMS3):
         rel = T(arm, "e5_reliability")
         ax.plot([0, 1], [0, 1], color=S.G2, ls=(0, (3, 2)), lw=0.8, zorder=1)
-        for fam, col, mk in [("D-rand", S.G1, "o"), ("D-lit", S.ARM_COLOR[arm], "s")]:
+        for fam, col, mk in [("D-rand", S.G1, "o"), ("D-lit", S.ARM_LINE[arm], "s")]:
             g = rel[rel.family == fam]
             if not len(g):
                 continue
             ax.plot(g.mean_conf, g.accuracy, mk + "-", color=col,
-                    mec=S.K, mew=0.6, mfc=col, ms=3.0, lw=1.1, zorder=3)
+                    mec=col, mew=0.8, mfc="white", ms=3.2, lw=1.2, zorder=3)
             data.append(g.assign(arm=arm))
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
@@ -256,7 +262,8 @@ def fig8_options():
         x = np.arange(len(d))
         for xi, (v, lastcol) in enumerate(zip(d.accuracy, [False] * 4 + [True])):
             bars(ax, [xi], [v], S.G3 if lastcol else S.ARM_COLOR[arm], 0.62,
-                 hatch=HATCH if en else None)
+                 hatch=HATCH if en else None,
+                 hatch_color=S.G1 if lastcol else S.ARM_LINE[arm])
         S.eb(ax, x, d, "accuracy", "acc_lo", "acc_hi")
         S.chance(ax)
         ticks(ax, x, SHORT, rot=35, fs=6.5)
@@ -323,8 +330,8 @@ def fig10_crosslingual():
             hat.append(HATCH if not str(r.cond).startswith("bn") else None)
             pos += 1
         pos += 0.75
-    for xi, v, c, h in zip(xs, t.accuracy, cols, hat):
-        bars(ax, [xi], [v], c, 0.74, hatch=h)
+    for xi, v, c, h, a in zip(xs, t.accuracy, cols, hat, t.arm):
+        bars(ax, [xi], [v], c, 0.74, hatch=h, hatch_color=S.ARM_LINE[a])
     ax.errorbar(xs, t.accuracy,
                 yerr=np.vstack([t.accuracy - t.acc_lo, t.acc_hi - t.accuracy]),
                 fmt="none", ecolor=S.K, elinewidth=0.7, capsize=1.6, zorder=3)

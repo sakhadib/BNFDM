@@ -22,11 +22,22 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
+# Base hues. Used for lines, markers and hatch strokes, where a light tint
+# would disappear. Bars and other filled areas use the tints below.
 CYAN, MAG, YEL = "#27EBF5", "#F127F5", "#F5C827"
+
+# Fills. These are the same hues at the tint strength the paper's tables use
+# for their cell backgrounds, so figures and tables read as one palette.
+# Bars carry no outline, so the tint is one step up from the plain table cell
+# (a bar on white has no cell rule to define its edge).
+CYAN_F, MAG_F, YEL_F = "#BEF9FC", "#FCCFFD", "#FCECB3"
+
 K = "#000000"
 G1, G2, G3 = "#4D4D4D", "#999999", "#CCCCCC"
+GREY_F = "#DCDCDC"
 
-ARM_COLOR = {"laya-ml": CYAN, "lod-lille-0.6b": MAG, "jev-1.13": YEL}
+ARM_COLOR = {"laya-ml": CYAN_F, "lod-lille-0.6b": MAG_F, "jev-1.13": YEL_F}
+ARM_LINE = {"laya-ml": CYAN, "lod-lille-0.6b": MAG, "jev-1.13": YEL}
 ARM_LABEL = {"laya-ml": "Laya-ml", "lod-lille-0.6b": "Lod-lille", "jev-1.13": "Jev-1.13"}
 ARMS3 = ["laya-ml", "lod-lille-0.6b", "jev-1.13"]
 ARMS2 = ["laya-ml", "lod-lille-0.6b"]
@@ -34,7 +45,7 @@ ARMS2 = ["laya-ml", "lod-lille-0.6b"]
 CMAP_SEQ = LinearSegmentedColormap.from_list("bnfdm_seq", ["#FFFFFF", YEL, MAG, K])
 
 W1, W2 = 3.15, 6.50          # ACL single / double column, inches
-EDGE = dict(edgecolor=K, linewidth=0.5)
+EDGE = dict(linewidth=0)     # fills carry no outline
 
 
 def use_style():

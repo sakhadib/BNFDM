@@ -34,21 +34,27 @@ Current mapping (`paper/acl_latex.tex`):
 
 | file | paper | location |
 |---|---|---|
-| fig1_literal_capture | Figure 1 | body |
-| fig2_capture_matrix | Figure 2 | body |
-| fig3_three_way_bangla | Figure 3 | body |
-| fig4_confidence_reliability | Figure 4 | body |
-| fig5_no_signal_control | Figure 5 | body |
-| fig9_unit_integrity | Figure 6 | body |
+| (placeholder) | Figure 1 | body, page 1 teaser slot |
+| (TikZ, in acl_latex.tex) | Figure 2 | body, Methodology pipeline |
+| fig2_capture_matrix | Figure 3 | body |
+| fig3_three_way_bangla | Figure 4 | body |
+| fig4_confidence_reliability | Figure 5 | body |
+| fig5_no_signal_control | Figure 6 | body |
 | fig10_crosslingual | Figure 7 | body |
-| fig8_option_ablation | Figure 8 | Appendix D, beside Table 7 |
-| fig7_position_bias | Figure 9 | Appendix C |
-| fig6_order_sensitivity | Figure 10 | Appendix C, beside Table 5 |
+| fig1_literal_capture | Figure 8 | Appendix D |
+| fig9_unit_integrity | Figure 9 | Appendix E |
+| fig8_option_ablation | Figure 10 | Appendix H |
+| fig7_position_bias | Figure 11 | Appendix I |
+| fig6_order_sensitivity | Figure 12 | Appendix I |
 
-Three figures sit in the appendix so the body stays inside eight pages. Each
-was chosen because a table in the paper already carries its numbers: option
-ablation duplicates Table 7, order sensitivity duplicates Table 5, and position
-bias is fully stated in the text of the order-sensitivity subsection.
+Five figures sit in the appendix so the body stays inside eight pages. Each was
+chosen because a table already carries its numbers: the ladder duplicates
+Table 2, option ablation Table 11, order sensitivity Table 5, and unit integrity
+and position bias are stated in full in the text.
+
+Captions now carry colour swatches (the swL / swD / swJ / swG / swK macros in
+the LaTeX), so the reader gets the key from the caption itself. Those macros are
+defined in the preamble to the same hex values as the figure fills.
 
 
 ## fig1_literal_capture
