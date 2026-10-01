@@ -377,7 +377,8 @@ The five families are \Drand{} (other idioms' glosses at random), \Dsurf{}
 (glosses sharing surface tokens with the gold), \Dsem{} (glosses from idioms
 sharing semantic tags), \Dlit{} (one distractor replaced by the idiom's
 \emph{own} expert literal gloss) and \Dhard{} (all three pressures at once).
-Appendix~\ref{app:experiments} gives the sampling rule for each.
+Appendix~\ref{app:experiments} gives each sampling rule, and
+Figure~\ref{fig:bnitem} one complete item in the original script.
 
 For the families containing a literal gloss, with $\ell_i$ the literal option
 and $g_i$ the gold, the Literal Attraction Rate is
@@ -390,11 +391,11 @@ scores $0$ while still being wrong.
 
 \subsection{Interventions and statistics}
 
-Seven interventions vary one thing each: the distractor family (E1), the idiom's
-surface form (E2), the idiom as a unit (E3), the task language (E4), nothing
-(E5, derived from E1 for calibration), the option text (E6) and the option order
-(E7). Appendix~\ref{app:experiments} states what each holds fixed, and
-Appendix~\ref{app:payload} gives the typed question they all share.
+Seven interventions vary one thing each: the distractor family (E1), the
+idiom's surface form (E2), the idiom as a unit (E3), the task language (E4),
+nothing (E5, derived from E1), the option text (E6) and the option order (E7).
+Appendices~\ref{app:experiments} and \ref{app:payload} give what each holds
+fixed and the typed question they share.
 
 All intervals are 95\% percentile bootstrap over items (2{,}000 resamples);
 paired comparisons use McNemar's exact test; ECE uses 15 equal-width bins and
@@ -623,15 +624,14 @@ the model is most wrong exactly where it reports being most sure.}
 \label{fig:reliability}
 \end{figure*}
 
-Selective prediction therefore inverts. Restricting Laya-ml's \Dlit{} to the most
-confident 5\% of items gives $0.007$ accuracy against $0.151$ at full coverage,
-and the confidence-gated AURC is worse than a random gate for both open arms. The
-failure is not an artifact of one calibration philosophy: Laya-ml ships fitted
-per-bucket temperatures, Lod-lille deliberately ships none, and Lod-lille further
-ships a \emph{separate confidence head} whose documented purpose is estimating
-whether the answer is in the option list at all. The head does not rescue it:
-mean head confidence is $0.631$ on captured items against $0.295$ on correct
-ones, the same inversion.
+Selective prediction therefore inverts: restricting Laya-ml's \Dlit{} to its
+most confident 5\% gives $0.007$ accuracy against $0.151$ at full coverage, and
+Lod-lille answers every item in its most confident 35\% incorrectly
+(Appendix~\ref{app:selective}). This is not an artifact of one calibration
+philosophy. Laya-ml ships fitted per-bucket temperatures, Lod-lille ships none
+by design, and Lod-lille's \emph{separate confidence head}, meant to estimate
+whether the answer is in the option list at all, shows the same inversion
+($0.631$ on captured items against $0.295$ on correct ones).
 
 Jev-1.13 is the interesting exception, and it is only an exception in one
 direction. Its reliability in English is close to ideal on the two families
@@ -751,14 +751,13 @@ default for this class rather than as a robustness check.
 \label{sec:bagofwords}
 
 The \textsc{o}-series ablates the option text while holding the idiom fixed
-(Figure~\ref{fig:options}). Two readings matter. First, truncating each option to
-six words and \emph{scrambling the words inside it} cost almost nothing: Laya-ml
-retains $0.967$ and $0.925$ of its signal, Lod-lille $0.909$ and $0.948$,
-Jev-1.13 is flat to within noise. Whatever all three models are doing on the
-option side is close to order-free lexical matching. Second, the drop to the grey
-semantics-free bar is the only large one in the figure, which is what certifies
-the instrument: the task really is measuring option semantics, it is just
-measuring them as a bag.
+(Figure~\ref{fig:options}; Figure~\ref{fig:bnmanip} shows the forms applied to
+real Bangla). Truncating each option to six words and \emph{scrambling the words
+inside it} cost almost nothing: Laya-ml retains $0.967$ and $0.925$ of its
+signal, Lod-lille $0.909$ and $0.948$, Jev-1.13 is flat to within noise. What
+all three do on the option side is close to order-free lexical matching. The
+drop to the grey semantics-free bar is the only large one, which certifies the
+instrument: the task measures option semantics, as a bag.
 
 This converges with \citet{sun2026typesafe}, who permute which option name is
 bound to which definition and find the decision follows the name: within an
@@ -774,13 +773,11 @@ since an idiom has no word-level meaning to attribute to, we instead ask whether
 the model behaves as though it stores the expression as a unit. A model that did
 would collapse when the unit is broken.
 
-Neither does. Word-shuffling an idiom leaves Laya-ml's accuracy statistically
-unchanged ($0.158 \rightarrow 0.168$) and reversal actually helps slightly
-($0.180$); Lod-lille moves within noise on its 180 items. Answer agreement with
-the intact form under shuffling is $0.742$ for Laya-ml and $0.917$ for
-Lod-lille, so Lod-lille is more \emph{stable}, consistent with
-\S\ref{sec:order}, while
-being no more \emph{compositional}.
+Neither does. Word-shuffling leaves Laya-ml's accuracy statistically unchanged
+($0.158 \rightarrow 0.168$) and reversal helps slightly ($0.180$); Lod-lille
+moves within noise. Agreement with the intact answer under shuffling is $0.742$
+and $0.917$, so Lod-lille is more \emph{stable} but no more
+\emph{compositional}. Figure~\ref{fig:bnmanip} shows the perturbed strings.
 
 The one manipulation that clearly helps both is embedding the idiom in its gold
 carrier sentence, $+0.080$ and $+0.117$: context, not the idiom string, carries
@@ -915,9 +912,12 @@ rather than absolute. Jev-1.13 is a commercial endpoint and may change without
 notice; our results are a snapshot, and we report the exact call count and cost
 in Appendix~\ref{app:repro} so the snapshot is at least auditable.
 
-Finally, no figure in this paper contains Bangla glyphs: the plotting toolchain
-available to us could not shape Bengali script. All categories are named in Latin
-script and qualitative Bangla examples are confined to the text.
+Finally, a typesetting note. pdf\LaTeX{} cannot shape Bengali, so the plotted
+figures name their categories in Latin script. The stimuli themselves are shown
+in the original script in Figures~\ref{fig:bnitem}, \ref{fig:bnexamples} and
+\ref{fig:bnmanip}, which are rendered outside \LaTeX{} by a shaping engine and
+embedded as vector; transliterations in the running text follow a loose
+convention and are for pronunciation only.
 
 \section*{Ethics Statement}
 
@@ -1116,6 +1116,22 @@ demonstrated gains in latency, cost and cascade placement. Whether any of these
 failure modes survives task-specific fine-tuning is, as far as we can determine,
 unmeasured by anyone so far.
 
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_bn_item.pdf}
+\caption{One item exactly as the two models received it, in the original
+Bengali script. The state is the idiom \emph{ojon}; the four option texts are
+the real ones, reconstructed with the builder and seed the run used and checked
+against the recorded gold and literal keys. The probabilities are the returned
+values. Laya-ml places $0.99$ on the \textbf{literal} option, which names the
+weight of an object, and $0.00$ on the gold figurative gloss; Jev-1.13 places
+$0.82$ on the gold. This figure was rendered outside \LaTeX{} because pdf\LaTeX{}
+cannot shape Bengali; it is vector, with embedded font subsets and selectable
+text.}
+\label{fig:bnitem}
+\end{figure*}
+
 \section{What each experiment changes}
 \label{app:experiments}
 
@@ -1308,6 +1324,23 @@ literal readings are most available.
 The corpus's \texttt{cultural\_significance} field is unusable as a stratifier:
 10{,}337 of 10{,}359 rows carry the same value.
 
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_bn_manipulations.pdf}
+\caption{What the interventions do to real Bangla text, for the idiom
+\emph{agadh joler machh} (\emph{still waters run deep}, literally ``a fish of
+deep water''). \emph{Top:} the six E3 states, which are the exact strings logged
+during the run, with the probability the model gave the gold gloss. Shuffling and
+reversing a non-compositional expression leaves that probability essentially
+unchanged, and only the carrier sentence moves it. \emph{Bottom:} the five E6
+option forms, applied here to the gold option; the other three options are
+rewritten the same way. Truncation and word-scrambling preserve the lexical
+content that the scoring appears to depend on, while the last row removes it
+entirely and is the control of \S\ref{sec:nosignal}.}
+\label{fig:bnmanip}
+\end{figure*}
+
 \section{Output distributions}
 \label{app:dists}
 
@@ -1370,6 +1403,19 @@ its mass on the literal reading. These are not hard or obscure idioms; three of
 the four are single words in everyday use.}
 \label{tab:examples}
 \end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_bn_examples.pdf}
+\caption{Five items on which Laya-ml assigns almost all of its probability to
+the idiom's own literal gloss, shown in Bengali with the English equivalent the
+annotators recorded. These are not obscure expressions:
+\emph{ishwarprapti} is the Bangla \emph{kick the bucket} and is read as
+``attainment of God'', \emph{akasher chand} is \emph{pie in the sky} and is read
+as ``the moon of the sky''. Both glosses were present in the option list, and
+the right-hand column is the mass placed on the literal one.}
+\label{fig:bnexamples}
+\end{figure*}
 
 
 \section{The capture matrix}

@@ -260,3 +260,24 @@ Regenerate with `python analysis/figures.py`. Colours and all shared helpers
 live in `analysis/bnfdm_style.py`; that module deliberately contains **no**
 label, legend or value-annotation helpers, so a figure cannot drift back into
 carrying its own key.
+
+
+## Bangla-script figures
+
+`analysis/bangla_figures.py` produces three vector PDFs that carry the actual
+Bengali text, because pdfLaTeX cannot shape Bengali:
+
+| file | paper | shows |
+|---|---|---|
+| fig_bn_item | Figure 7 | one complete item as the models received it, with real option texts and returned probabilities |
+| fig_bn_manipulations | Figure 8 | the E3 states and E6 option forms applied to real Bangla |
+| fig_bn_examples | Figure 9 | five real literal-capture items with both glosses |
+
+They are rendered by headless Chromium (HarfBuzz) from HTML, and are true
+vector: embedded Noto Sans Bengali subsets, selectable text, no raster. The font
+is fetched via `npm pack @fontsource/noto-sans-bengali` and converted woff2 to
+ttf with fontTools; the script assumes it is installed system-wide.
+
+Option sets are reconstructed with the same builder and seed the runs used, and
+the script asserts the reconstruction matches the recorded gold and literal keys
+before drawing. The E3 strings are the exact ones logged during the run.
