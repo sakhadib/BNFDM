@@ -1,0 +1,6 @@
+form,label,accuracy,semantic_signal_retained
+O0_full_bn,full Bangla gloss,0.36491662911221273,1.0
+O1_trunc6,truncated to 6 words,0.36131140153222174,0.9669762641898865
+O2_scrambled,word-scrambled,0.35669220369535826,0.9246646026831782
+O3_english,English gloss,0.3468904912122578,0.8348813209494323
+O4_labels,semantics removed,0.25574583145561064,0.0

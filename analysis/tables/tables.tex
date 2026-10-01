@@ -1,0 +1,64 @@
+% Main result: distractor ladder
+\begin{tabular}{llrrr}
+\toprule
+Distractor set & & Accuracy & LAR & ECE \\
+\midrule
+random & & 0.367 \tiny[0.357,0.377] & -- & 0.071 \\
+surface-matched & & 0.338 \tiny[0.328,0.347] & -- & 0.099 \\
+tag-matched & & 0.333 \tiny[0.323,0.342] & -- & 0.100 \\
++ own literal gloss & & 0.151 \tiny[0.144,0.159] & 0.644 & 0.385 \\
+literal + surface + tag & & 0.144 \tiny[0.137,0.151] & 0.630 & 0.389 \\
+\midrule
+chance & & 0.250 & -- & -- \\
+\bottomrule
+\end{tabular}
+
+% Cross-lingual localisation
+\begin{tabular}{lrr}
+\toprule
+Input / checkpoint & Accuracy & Conf. \\
+\midrule
+Bangla idiom / multilingual & 0.371 \tiny[0.361,0.382] & 0.438 \\
+English equivalent / multilingual & 0.617 \tiny[0.607,0.628] & 0.584 \\
+English equivalent / English & 0.733 \tiny[0.724,0.743] & 0.613 \\
+Bangla idiom / English (control) & 0.283 \tiny[0.273,0.292] & 0.390 \\
+\bottomrule
+\end{tabular}
+
+% Confidence is anti-diagnostic
+\begin{tabular}{lrrr}
+\toprule
+Outcome & Share & Mean conf. & $p$(gold) \\
+\midrule
+correct & 0.148 & 0.432 & 0.432 \\
+chose literal & 0.637 & 0.596 & 0.144 \\
+other wrong & 0.217 & 0.421 & 0.182 \\
+\bottomrule
+\end{tabular}
+
+% Option-side ablation
+\begin{tabular}{lrrr}
+\toprule
+Option text & Accuracy & $\Delta$ & JSD \\
+\midrule
+full Bangla gloss & 0.365 & +0.000 & 0.000 \\
+truncated to 6 words & 0.361 & -0.004 & 0.014 \\
+word-scrambled & 0.357 & -0.008 & 0.031 \\
+English gloss & 0.347 & -0.018 & 0.071 \\
+semantics removed & 0.256 & -0.109 & 0.096 \\
+\bottomrule
+\end{tabular}
+
+% Unit integrity
+\begin{tabular}{lrrr}
+\toprule
+Perturbation & Accuracy & Agreement & JSD \\
+\midrule
+intact & 0.157 & 1.000 & 0.000 \\
+word shuffle & 0.168 & 0.742 & 0.015 \\
+reversed & 0.178 & 0.706 & 0.017 \\
+delete 1 word & 0.158 & 0.747 & 0.014 \\
+substitute 1 word & 0.162 & 0.692 & 0.020 \\
+in carrier sentence & 0.237 & 0.551 & 0.046 \\
+\bottomrule
+\end{tabular}

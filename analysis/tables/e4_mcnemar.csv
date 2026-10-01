@@ -1,0 +1,2 @@
+comparison,n_paired,bn_only_right,en_only_right,mcnemar_p,delta_accuracy
+"en_ml vs bn_ml (same checkpoint, two languages)",8761,1121,3274,2.6597298871919628e-241,0.24574820226001604
