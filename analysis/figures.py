@@ -109,33 +109,27 @@ def fig1_literal_capture():
 
 
 def fig2_capture_matrix():
-    """LAR by model x task language on the shared English-literal pool.
-    Solid bar = Bangla condition, hatched colour bar = English condition,
-    hatched grey band spanning the panel = that cell was never run."""
-    m = C("literal_capture_matrix")
-    m = m[(m.family == "D-lit") & (m.population == "en_literal_pool")]
-    fig, ax = plt.subplots(figsize=(S.W1, 1.95))
+    """Literal attraction as model x task language, all six cells measured."""
+    m = pd.read_csv(ROOT / "added" / "results" / "matrix_summary.csv")
+    fig, ax = plt.subplots(figsize=(S.W1, 2.05))
     wd = 0.34
     rows = []
     for ci, arm in enumerate(S.ARMS3):
         for si, lang in enumerate(["bn", "en"]):
-            xi = ci + (si - 0.5) * wd
             r = m[(m.arm == arm) & (m.language == lang)]
-            if len(r):
-                v = float(r.LAR.iat[0])
-                bars(ax, [xi], [v], S.ARM_COLOR[arm], wd,
-                     hatch=HATCH if lang == "en" else None,
-                     hatch_color=S.ARM_LINE[arm])
-                rows.append({"arm": arm, "language": lang, "LAR": v,
-                             "n": int(r.n.iat[0]), "measured": True})
-            else:
-                # drawn past the top of the axis so it cannot read as a bar
-                ax.add_patch(plt.Rectangle((xi - wd / 2, 0), wd, 1.06,
-                                           facecolor="#F4F4F4", edgecolor=S.G2,
-                                           linewidth=0, hatch=HATCH, zorder=1,
-                                           clip_on=False))
-                rows.append({"arm": arm, "language": lang, "LAR": np.nan,
-                             "n": 0, "measured": False})
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            xi = ci + (si - 0.5) * wd
+            bars(ax, [xi], [r.LAR], S.ARM_COLOR[arm], wd,
+                 hatch=HATCH if lang == "en" else None,
+                 hatch_color=S.ARM_LINE[arm])
+            ax.errorbar([xi], [r.LAR],
+                        yerr=[[r.LAR - r.LAR_lo], [r.LAR_hi - r.LAR]],
+                        fmt="none", ecolor=S.K, elinewidth=0.7, capsize=1.6,
+                        zorder=3)
+            rows.append(dict(arm=arm, language=lang, LAR=r.LAR,
+                             lo=r.LAR_lo, hi=r.LAR_hi, n=int(r.n)))
     S.chance(ax)
     ax.set_xlim(-0.55, 2.55)
     ax.set_ylim(0, 1.0)

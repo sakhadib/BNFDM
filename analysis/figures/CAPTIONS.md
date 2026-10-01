@@ -39,7 +39,7 @@ Current mapping (`paper/acl_latex.tex`):
 | fig1_literal_capture | Figure 3 | body, 5.1 (the central result) |
 | fig4_confidence_reliability | Figure 4 | body, 5.2 |
 | fig5_no_signal_control | Figure 5 | body, 5.3 |
-| fig2_capture_matrix | Figure 6 | Appendix, the language confound |
+| fig2_capture_matrix | Figure 4 | body, 5.1 (six measured cells) |
 | fig10_crosslingual | Figure 7 | Appendix, cross-lingual arms |
 | fig3_three_way_bangla | Figure 8 | Appendix, matched three-way |
 | fig9_unit_integrity | Figure 9 | Appendix, unit integrity |
