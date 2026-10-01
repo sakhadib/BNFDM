@@ -1,0 +1,8 @@
+{
+  "n_raw": 10359,
+  "n_usable": 8876,
+  "n_subset": 888,
+  "subset_seed": 909,
+  "subset_frac": 0.1,
+  "dataset": "sakhadib/bangla-bagdhara"
+}

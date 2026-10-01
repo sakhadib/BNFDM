@@ -1,0 +1,227 @@
+{
+  "run": "20261001-0616",
+  "model": "lod-lille-0.6b",
+  "python": "3.13.15",
+  "gpu": "Tesla T4, 15360 MiB",
+  "repo": "mrn-dk/lod-lille-0.6B",
+  "dtype": "torch.float32",
+  "n_full": 8876,
+  "n_subset": 888,
+  "subset_seed": 909,
+  "subset_frac": 0.1,
+  "k": 4,
+  "option_keys": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "families": [
+    "D-rand",
+    "D-lit",
+    "D-surf",
+    "D-sem",
+    "D-hard"
+  ],
+  "instructions": "নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?",
+  "seeds": {
+    "e1": 1000,
+    "e2": 2000,
+    "e3": 3000,
+    "e4": 4000,
+    "e6": 6000,
+    "e7": 7000
+  },
+  "artifacts": [
+    {
+      "path": "configs/task.json",
+      "bytes": 414,
+      "sha256_16": "9b2450330efb490c"
+    },
+    {
+      "path": "data/splits/full.jsonl",
+      "bytes": 14410542,
+      "sha256_16": "9f244840e6b1f3f0"
+    },
+    {
+      "path": "data/splits/meta.json",
+      "bytes": 144,
+      "sha256_16": "7a27a361968de5f8"
+    },
+    {
+      "path": "data/splits/sub10.jsonl",
+      "bytes": 1457690,
+      "sha256_16": "b7c32ad2c9adf356"
+    },
+    {
+      "path": "results/lod-lille-0.6b/bench.csv",
+      "bytes": 81,
+      "sha256_16": "af844b79a6c11ff2"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_frequency.csv",
+      "bytes": 1314,
+      "sha256_16": "2a011c53529f4167"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_gold_pos.csv",
+      "bytes": 1256,
+      "sha256_16": "cd12f296abd2be02"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_hist_sig.csv",
+      "bytes": 566,
+      "sha256_16": "6ad9e121304eb40a"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_n_words.csv",
+      "bytes": 1848,
+      "sha256_16": "bf4485e7f2887b6e"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_relig_sig.csv",
+      "bytes": 657,
+      "sha256_16": "978a34d5d0606221"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/by_scape.csv",
+      "bytes": 1044,
+      "sha256_16": "fda12d6cc5ac3572"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/raw.csv",
+      "bytes": 981744,
+      "sha256_16": "d90bc34914cf384a"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/raw.jsonl",
+      "bytes": 2278981,
+      "sha256_16": "288265d0b25b69e9"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e1_ladder/summary.csv",
+      "bytes": 870,
+      "sha256_16": "fd8e5c1efe8e7f4b"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e2_invariance/raw.csv",
+      "bytes": 66627,
+      "sha256_16": "e85f2293351e3075"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e2_invariance/raw.jsonl",
+      "bytes": 141929,
+      "sha256_16": "24d901273de14003"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e2_invariance/summary.csv",
+      "bytes": 230,
+      "sha256_16": "c5fd5c2febbf282c"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e3_unit/by_length.csv",
+      "bytes": 1433,
+      "sha256_16": "4356e26d787c2a4d"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e3_unit/raw.csv",
+      "bytes": 251758,
+      "sha256_16": "81a9cee7952c2cec"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e3_unit/raw.jsonl",
+      "bytes": 467111,
+      "sha256_16": "5df8811d578649db"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e3_unit/summary.csv",
+      "bytes": 691,
+      "sha256_16": "462e5a4a1bce9f94"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e4_language/localisation.csv",
+      "bytes": 134,
+      "sha256_16": "c3c7fa2f9dce1a3d"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e4_language/raw.csv",
+      "bytes": 153461,
+      "sha256_16": "2fa562371eb3cf23"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e4_language/raw.jsonl",
+      "bytes": 317337,
+      "sha256_16": "8fdecb8ae510f46d"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e4_language/summary.csv",
+      "bytes": 209,
+      "sha256_16": "b5e9914b8f47739a"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e5_calibration/confidence_by_outcome.csv",
+      "bytes": 346,
+      "sha256_16": "558ed795803bd23e"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e5_calibration/reliability.csv",
+      "bytes": 6571,
+      "sha256_16": "63bf864236c7886d"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e5_calibration/risk_coverage.csv",
+      "bytes": 57595,
+      "sha256_16": "ccc47f45212b45de"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e5_calibration/temperature.csv",
+      "bytes": 919,
+      "sha256_16": "1065e3b820518799"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e6_options/raw.csv",
+      "bytes": 450960,
+      "sha256_16": "2f72e67736dd2bed"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e6_options/raw.jsonl",
+      "bytes": 1097699,
+      "sha256_16": "821d29096c68eca6"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e6_options/summary.csv",
+      "bytes": 691,
+      "sha256_16": "8185fe12ff1e114e"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e7_order/by_gold_position.csv",
+      "bytes": 207,
+      "sha256_16": "b1dd9509ea4c37bb"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e7_order/per_item.csv",
+      "bytes": 29364,
+      "sha256_16": "c2fd34a2ec293a55"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e7_order/raw.csv",
+      "bytes": 1112894,
+      "sha256_16": "9d926700402e1b51"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e7_order/raw.jsonl",
+      "bytes": 2333979,
+      "sha256_16": "1204d2051a204a54"
+    },
+    {
+      "path": "results/lod-lille-0.6b/e7_order/selection_bias.csv",
+      "bytes": 102,
+      "sha256_16": "d5a71fcd0e877c61"
+    },
+    {
+      "path": "results/lod-lille-0.6b/env.json",
+      "bytes": 226,
+      "sha256_16": "15e6f5282f4d3656"
+    }
+  ]
+}
