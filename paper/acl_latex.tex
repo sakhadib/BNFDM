@@ -1,30 +1,58 @@
+% !TEX program = xelatex
+
 \documentclass[11pt]{article}
 
 \usepackage[review]{acl}
 
+% ── Latin / ACL typography ───────────────────────────────────────────
 \usepackage{times}
 \usepackage{latexsym}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+
+% ── Unicode / XeLaTeX ────────────────────────────────────────────────
+\usepackage{fontspec}
+
+% Explicitly keep the main text in Times.
+\setmainfont{TeX Gyre Termes}
+
+% ── Bangla ────────────────────────────────────────────────────────────
+\newfontface{\bn}{kalpurush.ttf}[
+    Script=Bengali,
+    Language=Bengali
+]
+
+\newcommand{\bangla}[1]{{\bn #1}}
+
+% ── General packages ─────────────────────────────────────────────────
 \usepackage{microtype}
 %\usepackage{inconsolata}
 \usepackage{graphicx}
+
 \renewcommand{\topfraction}{0.92}
 \renewcommand{\bottomfraction}{0.75}
 \renewcommand{\textfraction}{0.08}
 \renewcommand{\floatpagefraction}{0.75}
+
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{4}
+
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
+\usepackage{tabularx}
 
-% ── space discipline (floats and captions) ───────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows.meta,
+    positioning,
+    fit,
+    backgrounds,
+    calc
+}
+
+% ── Space discipline ─────────────────────────────────────────────────
 \setlength{\abovecaptionskip}{3pt}
 \setlength{\belowcaptionskip}{0pt}
 \setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
@@ -33,15 +61,15 @@
 \setlength{\dbltextfloatsep}{9pt plus 2pt minus 2pt}
 \setlength{\dblfloatsep}{8pt plus 2pt minus 2pt}
 
-% ── theme ────────────────────────────────────────────────────────────
-% One palette for tables, figures and caption swatches. The figure fills
-% are these exact values, so a swatch in a caption is the colour in the plot.
+% ── Theme ────────────────────────────────────────────────────────────
 \definecolor{cLaya}{HTML}{27EBF5}
 \definecolor{cLod}{HTML}{F127F5}
 \definecolor{cJev}{HTML}{F5C827}
+
 \definecolor{fLaya}{HTML}{BEF9FC}
 \definecolor{fLod}{HTML}{FCCFFD}
 \definecolor{fJev}{HTML}{FCECB3}
+
 \definecolor{fGrey}{HTML}{CCCCCC}
 \definecolor{fGreyD}{HTML}{4D4D4D}
 
@@ -49,18 +77,23 @@
 \newcommand{\lod}[1]{\cellcolor{fLod}#1}
 \newcommand{\jev}[1]{\cellcolor{fJev}#1}
 \newcommand{\neu}[1]{\cellcolor{fGrey!55}#1}
+
 \newcommand{\layah}[1]{\cellcolor{cLaya!55}\textbf{#1}}
 \newcommand{\lodh}[1]{\cellcolor{cLod!42}\textbf{#1}}
 \newcommand{\jevh}[1]{\cellcolor{cJev!62}\textbf{#1}}
 
-% caption swatch: a filled square in the plotted colour
-\newcommand{\sw}[1]{\textcolor{#1}{\rule[-0.03em]{0.70em}{0.70em}}\,}
+% ── Caption swatches ─────────────────────────────────────────────────
+\newcommand{\sw}[1]{%
+    \textcolor{#1}{\rule[-0.03em]{0.70em}{0.70em}}\,%
+}
+
 \newcommand{\swL}{\sw{fLaya}}
 \newcommand{\swD}{\sw{fLod}}
 \newcommand{\swJ}{\sw{fJev}}
 \newcommand{\swG}{\sw{fGrey}}
 \newcommand{\swK}{\sw{fGreyD}}
 
+% ── Dataset / intervention macros ────────────────────────────────────
 \newcommand{\Drand}{\textsc{d-rand}}
 \newcommand{\Dsurf}{\textsc{d-surf}}
 \newcommand{\Dsem}{\textsc{d-sem}}
@@ -68,11 +101,27 @@
 \newcommand{\Dhard}{\textsc{d-hard}}
 \newcommand{\LAR}{\textsc{lar}}
 
-\title{Captured by the Words: Literal Attraction in Typed Decision Models\\
-Is Governed by Language, Not Capability,\\
-in Bangla Idioms}
+
+% ── Probability cells ────────────────────────────────────────────────
+\newcommand{\pL}[1]{%
+    \cellcolor{fLaya}\textbf{#1}%
+}
+
+\newcommand{\pJ}[1]{%
+    \cellcolor{fJev}\textbf{#1}%
+}
+
+% ── Title ─────────────────────────────────────────────────────────────
+\title{
+    Captured by the Words: Literal Attraction in Typed Decision Models\\
+    Is Governed by Language, Not Capability,\\
+    in Bangla Idioms
+}
 
 \author{Anonymous Submission}
+
+
+
 
 \begin{document}
 \maketitle
@@ -86,31 +135,50 @@ ill-posed in principle: a non-compositional expression has no word whose removal
 is informative. We therefore audit three such models, an encoder scorer, a
 decoder scorer and a closed commercial API, entirely through interventions on
 the option set, using expert-annotated Bangla idioms that ship with both a gold
-figurative gloss and a gold literal gloss.
-
-Dropping an idiom's own literal gloss into the option list captures all three
-models. Running the full model $\times$ language matrix on a shared item set
-shows the failure is governed by language rather than capability: every arm is
-several times more captured in Bangla than in English on identical items, and
-the commercial model's apparent resistance turns out to be a property of the
-language it was tested in. Confidence inverts under the same shift, so gating on
-it does worse than gating at random, and on a semantics-free option list, where
-accuracy is pinned at chance by construction, the best-calibrated arm still
-reports $0.82$ confidence. Option-order sensitivity, by contrast, separates the
-two scoring architectures rather than the three models.
+figurative gloss and a gold literal gloss. Dropping an idiom's own literal gloss
+into the option list captures all three models. Running the full model
+$\times$ language matrix on a shared item set shows the failure is governed by
+language rather than capability: every arm is several times more captured in
+Bangla than in English on identical items, and the commercial model's apparent
+resistance turns out to be a property of the language it was tested in.
+Confidence inverts under the same shift, so gating on it does worse than gating
+at random, and on a semantics-free option list, where accuracy is pinned at
+chance by construction, the best-calibrated arm still reports $0.82$ confidence.
+Option-order sensitivity, by contrast, separates the two scoring architectures
+rather than the three models.
 \end{abstract}
+
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/fig_bn_teaser_2.pdf}
+% \caption{\textbf{The model takes the words.} \emph{Agnibal} is built from the
+% words for \emph{fire} and \emph{strength} and means intense hunger; English says
+% \emph{fire in the belly}. With both readings in the option list, all three
+% models we audit choose the literal one in Bangla, at $p = 1.00$, $0.97$ and
+% $0.36$; asked in English with the same four options, two of the three recover.
+% Across 3{,}265 items literal attraction falls from $0.731$, $0.918$ and $0.304$
+% in Bangla to $0.379$, $0.241$ and $0.047$ in English (\S\ref{sec:capture}).}
+% \label{fig:teaser}
+% \end{figure}
 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/teaser_crop.jpg}
-\caption{\textbf{The model takes the words.} \emph{Agnibal} is built from the
-words for \emph{fire} and \emph{strength} and means intense hunger; English says
-\emph{fire in the belly}. With both readings in the option list, all three
-models we audit choose the literal one in Bangla, at $p = 1.00$, $0.97$ and
-$0.36$; asked in English with the same four options, two of the three recover.
-Across 3{,}265 items literal attraction falls from $0.731$, $0.918$ and $0.304$
-in Bangla to $0.379$, $0.241$ and $0.047$ in English (\S\ref{sec:capture}).}
+\includegraphics[width=\columnwidth]{figures/fig_bn_teaser_2.pdf}
+\caption{\textbf{The model takes the words.}
+\textcolor{cyan}{Laya-ml}, \textcolor{magenta}{Lod-lille}, and
+\textcolor{orange}{Jev-1.13} are shown in cyan, magenta, and orange,
+respectively, throughout the paper. The Bangla idiom
+\bangla{অগ্নিবল} (Agnibal) is composed of \bangla{অগ্নি} (\emph{fire}) and
+\bangla{বল} (\emph{strength}), but means intense hunger; English
+expresses the same concept as \emph{fire in the belly}. When both
+readings are placed in the option list, all three models choose the
+literal gloss in Bangla, at $p=1.00$, $0.97$, and $0.36$,
+respectively; with the same four options in English, two of the three
+recover. Across $3{,}265$ paired items, literal attraction falls from
+$0.731$, $0.918$, and $0.304$ in Bangla to $0.379$, $0.241$, and
+$0.047$ in English (\S\ref{sec:capture}).}
 \label{fig:teaser}
 \end{figure}
 
@@ -240,81 +308,103 @@ in our instrument.
 \section{Methodology}
 \label{sec:instrument}
 
+% \begin{figure*}[t]
+% \centering
+% \footnotesize
+% \begin{tikzpicture}[
+%   node distance=0pt,
+%   box/.style={draw=fGreyD!55, line width=0.35pt, rounded corners=1.6pt,
+%               align=center, inner sep=3pt, font=\footnotesize},
+%   src/.style={box, fill=fGrey!35, text width=1.62cm},
+%   opt/.style={box, text width=1.72cm},
+%   mdl/.style={box, text width=1.48cm},
+%   res/.style={box, fill=white, text width=1.62cm},
+%   ar/.style={-{Stealth[length=3.2pt]}, draw=fGreyD!70, line width=0.4pt},
+%   lbl/.style={font=\scriptsize\itshape, text=fGreyD}
+% ]
+
+% % ---- stage 1: corpus
+% \node[src] (corp) {\textbf{Bangla Bagdhara}\\10{,}361 idioms\\19 expert fields};
+% \node[src, below=3.5pt of corp, text width=1.62cm] (fields)
+%   {gold figurative\\gold literal\\tags, alt forms\\carrier sentence};
+
+% % ---- stage 2: option construction (the independent variable)
+% \node[opt, right=12pt of corp, yshift=20pt, fill=fGrey!18] (drand) {\textsc{d-rand}\\\scriptsize random glosses};
+% \node[opt, below=2.5pt of drand, fill=fGrey!18] (dsurf) {\textsc{d-surf}\\\scriptsize shared tokens};
+% \node[opt, below=2.5pt of dsurf, fill=fGrey!18] (dsem) {\textsc{d-sem}\\\scriptsize shared tags};
+% \node[opt, below=2.5pt of dsem, fill=fLaya!70] (dlit) {\textsc{d-lit}\\\scriptsize $+$ own literal};
+% \node[opt, below=2.5pt of dlit, fill=fLaya!70] (dhard) {\textsc{d-hard}\\\scriptsize all three};
+
+% \begin{scope}[on background layer]
+% \node[draw=fGreyD!35, line width=0.35pt, rounded corners=2pt, fit=(drand)(dhard),
+%       inner sep=4.5pt, fill=white] (fam) {};
+% \end{scope}
+% \node[lbl, above=1.5pt of fam] {independent variable: distractor family};
+
+% % ---- stage 3: the question
+% \node[box, right=12pt of fam, text width=2.25cm, fill=white] (q)
+%   {\textbf{typed question}\\[1pt]\scriptsize
+%    \texttt{type: choice}\\
+%    \texttt{instructions}\\
+%    \texttt{criteria: A B C D}\\[1pt]
+%    order randomised\\per item};
+
+% % ---- stage 4: models
+% \node[mdl, right=12pt of q, yshift=22pt, fill=fLaya] (laya) {\textbf{Laya-ml}\\\scriptsize marker scorer};
+% \node[mdl, below=3pt of laya, fill=fLod] (lod) {\textbf{Lod-lille}\\\scriptsize independent opts};
+% \node[mdl, below=3pt of lod, fill=fJev] (jev) {\textbf{Jev-1.13}\\\scriptsize closed API};
+
+% % ---- stage 5: output
+% \node[res, right=12pt of lod, text width=1.75cm] (resp)
+%   {$p(A..D)$, $\arg\max$,\\confidence\\[1pt]\scriptsize no text emitted};
+
+% % ---- stage 6: measures
+% \node[box, right=11pt of resp, text width=1.75cm, fill=fGrey!25] (meas)
+%   {accuracy \quad \textsc{lar}\\ECE \quad AURC\\agreement\\order stability};
+
+% \draw[ar] (corp.east) -- ++(5pt,0) |- (fam.west);
+% \draw[ar] (fields.east) -- ++(5pt,0) |- (fam.west);
+% \draw[ar] (fam.east) -- (q.west);
+% \draw[ar] (q.east) -- ++(5pt,0) |- (laya.west);
+% \draw[ar] (q.east) -- ++(5pt,0) |- (lod.west);
+% \draw[ar] (q.east) -- ++(5pt,0) |- (jev.west);
+% \draw[ar] (laya.east) -- ++(5pt,0) |- (resp.west);
+% \draw[ar] (lod.east) -- (resp.west);
+% \draw[ar] (jev.east) -- ++(5pt,0) |- (resp.west);
+% \draw[ar] (resp.east) -- (meas.west);
+% \end{tikzpicture}
+% \caption{The instrument in one view. The corpus supplies both a gold figurative
+% gloss and a gold \emph{literal} gloss for each idiom, so the literal-bearing
+% families (\sw{fLaya}\textsc{d-lit} and \textsc{d-hard}) are assembled from expert
+% annotation rather than written by us. Only the distractor family changes across
+% conditions: the idiom, the instruction, $k=4$ and the per-item order seed are
+% held fixed, so any accuracy difference between two families on the same item is
+% caused by the options alone. All three models receive the identical typed
+% question (\sw{fLaya}Laya-ml, \sw{fLod}Lod-lille, \sw{fJev}Jev-1.13) and return a
+% probability over the four option keys and nothing else, which is the surface
+% the audit works with.}
+% \label{fig:pipeline}
+% \end{figure*}
+
+
+
 \begin{figure*}[t]
 \centering
-\footnotesize
-\begin{tikzpicture}[
-  node distance=0pt,
-  box/.style={draw=fGreyD!55, line width=0.35pt, rounded corners=1.6pt,
-              align=center, inner sep=3pt, font=\footnotesize},
-  src/.style={box, fill=fGrey!35, text width=1.62cm},
-  opt/.style={box, text width=1.72cm},
-  mdl/.style={box, text width=1.48cm},
-  res/.style={box, fill=white, text width=1.62cm},
-  ar/.style={-{Stealth[length=3.2pt]}, draw=fGreyD!70, line width=0.4pt},
-  lbl/.style={font=\scriptsize\itshape, text=fGreyD}
-]
-
-% ---- stage 1: corpus
-\node[src] (corp) {\textbf{Bangla Bagdhara}\\10{,}361 idioms\\19 expert fields};
-\node[src, below=3.5pt of corp, text width=1.62cm] (fields)
-  {gold figurative\\gold literal\\tags, alt forms\\carrier sentence};
-
-% ---- stage 2: option construction (the independent variable)
-\node[opt, right=12pt of corp, yshift=20pt, fill=fGrey!18] (drand) {\textsc{d-rand}\\\scriptsize random glosses};
-\node[opt, below=2.5pt of drand, fill=fGrey!18] (dsurf) {\textsc{d-surf}\\\scriptsize shared tokens};
-\node[opt, below=2.5pt of dsurf, fill=fGrey!18] (dsem) {\textsc{d-sem}\\\scriptsize shared tags};
-\node[opt, below=2.5pt of dsem, fill=fLaya!70] (dlit) {\textsc{d-lit}\\\scriptsize $+$ own literal};
-\node[opt, below=2.5pt of dlit, fill=fLaya!70] (dhard) {\textsc{d-hard}\\\scriptsize all three};
-
-\begin{scope}[on background layer]
-\node[draw=fGreyD!35, line width=0.35pt, rounded corners=2pt, fit=(drand)(dhard),
-      inner sep=4.5pt, fill=white] (fam) {};
-\end{scope}
-\node[lbl, above=1.5pt of fam] {independent variable: distractor family};
-
-% ---- stage 3: the question
-\node[box, right=12pt of fam, text width=2.25cm, fill=white] (q)
-  {\textbf{typed question}\\[1pt]\scriptsize
-   \texttt{type: choice}\\
-   \texttt{instructions}\\
-   \texttt{criteria: A B C D}\\[1pt]
-   order randomised\\per item};
-
-% ---- stage 4: models
-\node[mdl, right=12pt of q, yshift=22pt, fill=fLaya] (laya) {\textbf{Laya-ml}\\\scriptsize marker scorer};
-\node[mdl, below=3pt of laya, fill=fLod] (lod) {\textbf{Lod-lille}\\\scriptsize independent opts};
-\node[mdl, below=3pt of lod, fill=fJev] (jev) {\textbf{Jev-1.13}\\\scriptsize closed API};
-
-% ---- stage 5: output
-\node[res, right=12pt of lod, text width=1.75cm] (resp)
-  {$p(A..D)$, $\arg\max$,\\confidence\\[1pt]\scriptsize no text emitted};
-
-% ---- stage 6: measures
-\node[box, right=11pt of resp, text width=1.75cm, fill=fGrey!25] (meas)
-  {accuracy \quad \textsc{lar}\\ECE \quad AURC\\agreement\\order stability};
-
-\draw[ar] (corp.east) -- ++(5pt,0) |- (fam.west);
-\draw[ar] (fields.east) -- ++(5pt,0) |- (fam.west);
-\draw[ar] (fam.east) -- (q.west);
-\draw[ar] (q.east) -- ++(5pt,0) |- (laya.west);
-\draw[ar] (q.east) -- ++(5pt,0) |- (lod.west);
-\draw[ar] (q.east) -- ++(5pt,0) |- (jev.west);
-\draw[ar] (laya.east) -- ++(5pt,0) |- (resp.west);
-\draw[ar] (lod.east) -- (resp.west);
-\draw[ar] (jev.east) -- ++(5pt,0) |- (resp.west);
-\draw[ar] (resp.east) -- (meas.west);
-\end{tikzpicture}
-\caption{The instrument in one view. The corpus supplies both a gold figurative
-gloss and a gold \emph{literal} gloss for each idiom, so the literal-bearing
-families (\sw{fLaya}\textsc{d-lit} and \textsc{d-hard}) are assembled from expert
-annotation rather than written by us. Only the distractor family changes across
-conditions: the idiom, the instruction, $k=4$ and the per-item order seed are
-held fixed, so any accuracy difference between two families on the same item is
-caused by the options alone. All three models receive the identical typed
-question (\sw{fLaya}Laya-ml, \sw{fLod}Lod-lille, \sw{fJev}Jev-1.13) and return a
-probability over the four option keys and nothing else, which is the surface
-the audit works with.}
+\includegraphics[width=\textwidth]{figures/Pipeline_Figure_V2.pdf}
+\caption{\textbf{The instrument in one view.}
+The audit proceeds from the \textbf{Bangla Bagdhara} corpus through six
+stages: \textbf{(1) corpus}, which supplies 10,361 expert-annotated idioms
+with gold figurative and literal glosses; \textbf{(2) distractor family},
+the sole manipulated variable, with $\textsc{d-lit}$ and $\textsc{d-hard}$
+injecting the expert literal gloss; \textbf{(3) item prompt}, which fixes
+the typed question, $k=4$ options, instructions, and per-item order seed;
+\textbf{(4) models}, comprising Laya-ml, Lod-lille, and Jev-1.13;
+\textbf{(5) scoring}, which records the four-option probability vector,
+$\arg\max$, and confidence without requiring generated text; and
+\textbf{(6) metrics}, which evaluate accuracy, LAR, ECE, AURC, agreement,
+and order stability. The figure's visual encoding distinguishes the
+varied distractor family, literal-bearing conditions, models under test,
+and measured outcomes.}
 \label{fig:pipeline}
 \end{figure*}
 
@@ -336,7 +426,7 @@ The five families are \Drand{} (other idioms' glosses at random), \Dsurf{}
 sharing semantic tags), \Dlit{} (one distractor replaced by the idiom's
 \emph{own} expert literal gloss) and \Dhard{} (all three pressures at once).
 Appendix~\ref{app:experiments} gives each sampling rule, and
-Figure~\ref{fig:bnitem} one complete item in the original script.
+Table~\ref{tab:bnitem} one complete item in the original script.
 
 For the families containing a literal gloss, with $\ell_i$ the literal option
 and $g_i$ the gold, the Literal Attraction Rate is
@@ -376,23 +466,20 @@ else. Appendix~\ref{app:payload} gives the call each one receives.
 
 \begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}*{3}{>{\centering\arraybackslash}X}@{}}
 \toprule
-& \laya{\textbf{Laya-ml}} & \lod{\textbf{Lod-lille}} & \jev{\textbf{Jev-1.13}} \\
+& \textbf{\laya{Laya-ml}} & \textbf{\lod{Lod-lille}} & \textbf{\jev{Jev-1.13}} \\
 \midrule
-backbone & \laya{mmBERT} & \lod{Qwen3-0.6B} & \jev{closed} \\
-scoring & \laya{marker} & \lod{independent} & \jev{unknown} \\
-params & \laya{322M} & \lod{0.6B} & \jev{n/a} \\
-items & \laya{8{,}876} & \lod{888} & \jev{8{,}761} \\
-latency & \laya{27.2\,ms} & \lod{86.1\,ms} & \jev{API} \\
-weights & \laya{open} & \lod{open} & \jev{closed} \\
+\textbf{backbone} & mmBERT & Qwen3-0.6B & closed \\
+\textbf{scoring} & marker & independent & unknown \\
+\textbf{parameters} & 322M & 0.6B & n/a \\
+\textbf{items} & 8{,}876 & 888 & 8{,}761 \\
+\textbf{latency} & 27.2\,ms & 86.1\,ms & API \\
+\textbf{weights} & open & open & closed \\
 \bottomrule
-\end{tabular}
-\caption{The three arms. Cell tint identifies the model throughout the paper:
-cyan Laya-ml, magenta Lod-lille, yellow Jev-1.13. Lod-lille ran a fixed 10\%
-random subset; Appendix~\ref{app:subset} bounds the resulting drift at
-$0.016$.}
+\end{tabularx}
+\caption{\textbf{The three model arms.} Laya-ml is a 322M-parameter mmBERT marker scorer, Lod-lille is a 0.6B-parameter Qwen3-based independent-option scorer, and Jev-1.13 is a closed API with an unknown scoring architecture. The item counts and latencies are those used in the reported experiments. Lod-lille was run on a fixed 10\% random subset; Appendix~\ref{app:subset} bounds the resulting drift at $0.016$.}
 \label{tab:models}
 \end{table}
 
@@ -415,42 +502,53 @@ reversal holds for \Dhard.
 \includegraphics[width=0.90\linewidth]{figures/fig1_literal_capture.pdf}
 \caption{The distractor ladder (left) and literal attraction rate (right) for
 the two open arms. \swL Laya-ml ($n=8{,}876$), \swD Lod-lille ($n=888$);
-black dashed line is chance ($0.250$), error bars 95\% bootstrap CIs. Surface- and tag-matched distractors cost a few points.
-Inserting the idiom's own literal gloss (\Dlit) collapses both models far below
-chance, and collapses the \emph{stronger} model harder: Lod-lille leads
-Laya-ml by $+0.133$ on random distractors and trails it by $-0.070$ once the
-literal gloss is present. On the right, both models prefer the literal reading
-to the figurative one on the majority of items.}
+the black dashed horizontal line marks the four-option chance level
+($0.250$) in both panels; error bars are 95\% bootstrap CIs. Surface- and
+tag-matched distractors cost a few points. Inserting the idiom's own literal
+gloss (\Dlit) collapses both models far below chance, and collapses the
+\emph{stronger} model harder: Lod-lille leads Laya-ml by $+0.133$ on random
+distractors and trails it by $-0.070$ once the literal gloss is present.
+On the right, both models select the literal reading over the figurative one
+on the majority of items.}
 \label{fig:ladder}
 \end{figure*}
 
+
+
+
 \begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.25cm}@{}}
 \toprule
-\textbf{Distractors} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & $\Delta$ \\
+\textbf{Distractors} & \textbf{Laya} & \textbf{Lod} & $\boldsymbol{\Delta}$ \\
 \midrule
-random        & \laya{0.367} & \lodh{0.484} & \neu{$+0.133$$^{***}$} \\
-surface       & \laya{0.338} & \lodh{0.412} & \neu{$+0.073$$^{***}$} \\
-tag           & \laya{0.333} & \lodh{0.446} & \neu{$+0.120$$^{***}$} \\
+random & 0.367 & \lodh{0.484} & \neu{$+0.133^{***}$} \\
+surface & 0.338 & \lodh{0.412} & \neu{$+0.073^{***}$} \\
+tag & 0.333 & \lodh{0.446} & \neu{$+0.120^{***}$} \\
 \midrule
-$+$ literal   & \layah{0.151} & \lod{0.066} & \neu{$-0.070$$^{***}$} \\
-hard          & \layah{0.144} & \lod{0.063} & \neu{$-0.086$$^{***}$} \\
+$+$ literal & \layah{0.151} & \lodh{0.066} & $-0.070^{***}$ \\
+hard & \layah{0.144} & \lodh{0.063} & $-0.086^{***}$ \\
 \midrule
-\LAR{} (lit.) & \laya{0.644} & \lodh{0.885} & \neu{} \\
-\LAR{} (hard) & \laya{0.631} & \lodh{0.855} & \neu{} \\
-mean $p$(lit.)& \laya{0.464} & \lodh{0.726} & \neu{} \\
-mean $p$(gold)& \layah{0.195} & \lod{0.128} & \neu{} \\
+\LAR{} (lit.) & 0.644 & \lodh{0.885} & \\
+\LAR{} (hard) & 0.631 & \lodh{0.855} & \\
+mean $p$(lit.) & 0.464 & \lodh{0.726} & \\
+mean $p$(gold) & \layah{0.195} & 0.128 & \\
 \bottomrule
-\end{tabular}
-\caption{The distractor ladder and literal attraction, McNemar on the 888 shared
-items ($^{***}$ $p<0.001$). Bold marks the higher value per row, which is the
-better arm on the accuracy rows and the more captured arm on the \LAR{} and
-$p$(lit.)\ rows. The
-sign of $\Delta$ flips at the horizontal rule: capability on the surrounding task
-does not protect against literal capture, and here is associated with more of
-it.}
+\end{tabularx}
+\caption{\textbf{The distractor ladder and literal attraction.}
+McNemar tests use the 888 shared items ($^{***}$ $p<0.001$).
+\textcolor{cLaya}{\rule[-0.05em]{0.7em}{0.7em}}\,Cyan marks
+Laya-ml, while
+\textcolor{cLod}{\rule[-0.05em]{0.7em}{0.7em}}\,magenta marks
+Lod-lille; darker
+\cellcolor{cLaya!55}\textbf{cyan} and
+\cellcolor{cLod!42}\textbf{magenta}
+fills highlight the higher value within a row.
+The highlighted literal-bearing conditions and capture measures
+expose the central pattern: adding the idiom's own literal gloss
+causes a sharp accuracy drop and strong literal attraction.
+The sign of $\Delta$ reverses at the literal boundary.}
 \label{tab:ladder}
 \end{table}
 
@@ -489,14 +587,16 @@ pool is not a neutral sample.
 \centering
 \includegraphics[width=\columnwidth]{figures/fig2_capture_matrix.pdf}
 \caption{Literal attraction by model and task language, all six cells measured
-on the same 3{,}265 items ($n = 3{,}265$ each, error bars 95\% bootstrap CIs,
-black dashed line chance). \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13; solid
-bars are the Bangla condition, hatched bars the English one. Every arm is far
-more captured in Bangla than in English on identical items, and the Bangla
-ordering does not follow capability: Jev-1.13 is the most accurate of the three
-and the least captured, while Lod-lille is more accurate than Laya-ml and the
-most captured. Jev-1.13's English value reproduces the figure reported from its
-original run, $0.047$. Full numbers in Table~\ref{tab:matrix}.}
+on the same 3{,}265 items ($n=3{,}265$ each; error bars are 95\% bootstrap
+CIs). The black dashed horizontal line marks the four-option chance level
+($0.250$). \swL Laya-ml, \swD Lod-lille, and \swJ Jev-1.13; solid bars are
+the Bangla condition, while hatched bars are the English condition. Every arm
+is far more captured in Bangla than in English on identical items, and the
+Bangla ordering does not follow capability: Jev-1.13 is the most accurate of
+the three and the least captured, while Lod-lille is more accurate than
+Laya-ml and the most captured. Jev-1.13's English value reproduces the figure
+reported from its original run, $0.047$. Full numbers are given in
+Table~\ref{tab:matrix}.}
 \label{fig:matrix}
 \end{figure}
 
@@ -514,9 +614,9 @@ is the one capture does not follow.
 \toprule
 \textbf{Model} & $n$ & \textbf{Accuracy} & \textbf{95\% CI} \\
 \midrule
-\laya{Laya-ml}   & \laya{8{,}876} & \laya{0.367} & \laya{[.357, .377]} \\
-\lod{Lod-lille}  & \lod{888}      & \lod{0.484}  & \lod{[.453, .518]} \\
-\jev{Jev-1.13}   & \jev{8{,}761}  & \jevh{0.736} & \jev{[.727, .745]} \\
+Laya-ml   & 8{,}876  & 0.367 & [0.357, 0.377] \\
+Lod-lille & 888      & 0.484 & [0.453, 0.518] \\
+Jev-1.13  & 8{,}761  & 0.736 & [0.727, 0.745] \\
 \bottomrule
 \end{tabular}
 \caption{The only condition identical across all three arms: Bangla idiom
@@ -541,16 +641,16 @@ Figure~\ref{fig:reliability} slope \emph{downward} under \Dlit{} in both.
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Outcome} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+\textbf{Outcome} & \textbf{Laya} & \textbf{Lod} & \textbf{Jev} \\
 \midrule
-correct          & \laya{0.432} & \lod{0.453} & \jevh{0.935} \\
-captured         & \layah{0.596} & \lodh{0.787} & \jev{0.737} \\
-other error      & \laya{0.421} & \lod{0.399} & \jev{0.746} \\
+correct          & 0.432 & 0.453 & \textbf{0.935} \\
+captured         & \textbf{0.596} & \textbf{0.787} & 0.737 \\
+other error      & 0.421 & 0.399 & 0.746 \\
 \midrule
-ECE (\Drand)     & \laya{0.071} & \lod{0.073} & \jev{0.005} \\
-ECE (\Dlit)      & \laya{0.385} & \lod{0.679} & \jev{0.014} \\
-AURC (conf.)     & \laya{0.924} & \lod{0.989} & \jev{0.013} \\
-AURC (random)    & \neu{0.849} & \neu{0.933} & \neu{0.069} \\
+ECE (\Drand)     & 0.071 & 0.073 & 0.005 \\
+ECE (\Dlit)      & 0.385 & 0.679 & 0.014 \\
+AURC (conf.)     & 0.924 & 0.989 & 0.013 \\
+AURC (random)    & 0.849 & 0.933 & 0.069 \\
 \bottomrule
 \end{tabular}
 \caption{Confidence by outcome on the literal-bearing families, and calibration.
@@ -612,16 +712,18 @@ no shared language, so the language confound that scopes
 \S\ref{sec:capture}--\S\ref{sec:confidence} to the two open arms does not
 arise here. Figure~\ref{fig:nosignal} reports it.
 
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig5_no_signal_control.pdf}
-\caption{The semantics-free control. Per model, the \swG bar is accuracy (with
-95\% CI) and the coloured bar is mean reported confidence (\swL Laya-ml,
-\swD Lod-lille, \swJ Jev-1.13); black dashed line is chance. Because the options carry no information, accuracy
-is at chance by construction and the gap between the two bars is pure
-overconfidence: $0.250$ for Laya-ml, $0.049$ for Lod-lille, and $0.561$ for
-Jev-1.13, which reports $0.815$ confidence while answering at $0.254$.
-Jev-1.13's condition is English.}
+\caption{The semantics-free control. Per model, the \swG bar is accuracy
+(with 95\% bootstrap CI) and the coloured bar is mean reported confidence
+(\swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13). The black dashed horizontal
+line marks the four-option chance level ($0.250$). Because the options carry
+no information, accuracy is at chance by construction and the gap between
+confidence and accuracy is pure overconfidence: $0.250$ for Laya-ml,
+$0.049$ for Lod-lille, and $0.561$ for Jev-1.13, which reports $0.815$
+confidence while answering at $0.254$. Jev-1.13's condition is English.}
 \label{fig:nosignal}
 \end{figure}
 
@@ -655,25 +757,31 @@ to $0.837$ and the finding stands.}
 
 \begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}@{}}
 \toprule
-& \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+& \textbf{Laya} & \textbf{Lod} & \textbf{Jev} \\
 \midrule
-answer changes      & \layah{0.837} & \lod{0.107} & \jev{0.133} \\
-correctness varies  & \layah{0.686} & \lod{0.070} & \jev{0.120} \\
-distinct glosses    & \layah{2.83}  & \lod{1.14}  & \jev{1.15}  \\
-perfectly stable    & \layah{0.163} & \lod{0.893} & \jev{0.867} \\
-$p$(gold) range     & \layah{0.346} & \lod{0.029} & \jev{0.128} \\
-selection spread    & \layah{0.226} & \lod{0.052} & \jev{0.072} \\
+answer changes      & \textbf{0.837} & 0.107 & 0.133 \\
+correctness varies  & \textbf{0.686} & 0.070 & 0.120 \\
+distinct glosses    & \textbf{2.83}  & 1.14  & 1.15  \\
+perfectly stable    & 0.163 & \textbf{0.893} & 0.867 \\
+$p$(gold) range     & \textbf{0.346} & 0.029 & 0.128 \\
+selection spread    & \textbf{0.226} & 0.052 & 0.072 \\
 \bottomrule
-\end{tabular}
-\caption{Option-order sensitivity over all 24 orderings of the same four options
-($n = 992$ / $299$ / $300$ items). Bold marks the least order-stable arm per row. The
-marker-based scorer changes its chosen gloss on 83.7\% of items; the
-independent-option scorer, which is order-independent by construction in
-\texttt{fp32}, changes it on 10.7\% and very nearly delivers what its design
-claims.}
+\end{tabularx}
+\caption{\textbf{Option-order sensitivity.}
+Each item is evaluated under all 24 orderings of the same four options
+($n=992/299/300$ items for Laya, Lod, and Jev, respectively).
+\textcolor{cLaya}{\rule[-0.05em]{0.7em}{0.7em}}\,Laya,
+\textcolor{cLod}{\rule[-0.05em]{0.7em}{0.7em}}\,Lod, and
+\textcolor{cJev}{\rule[-0.05em]{0.7em}{0.7em}}\,Jev identify the three
+model arms. Bold marks the largest value in each row. The marker-based
+scorer changes its chosen gloss on 83.7\% of items, while the
+independent-option scorer changes it on 10.7\%. Despite being
+order-independent by construction in \texttt{fp32}, Lod still exhibits
+limited residual variation, whereas Laya shows substantially greater
+sensitivity across the order-stability measures.}
 \label{tab:order}
 \end{table}
 
@@ -699,7 +807,7 @@ default for this class rather than as a robustness check.
 \label{sec:bagofwords}
 
 The \textsc{o}-series ablates the option text while holding the idiom fixed
-(Figure~\ref{fig:options}; Figure~\ref{fig:bnmanip} shows the forms applied to
+(Figure~\ref{fig:options}; Table~\ref{tab:bnmanip} shows the forms applied to
 real Bangla). Truncating each option to six words and \emph{scrambling the words
 inside it} cost almost nothing: Laya-ml retains $0.967$ and $0.925$ of its
 signal, Lod-lille $0.909$ and $0.948$, Jev-1.13 is flat to within noise. What
@@ -725,7 +833,7 @@ Neither does. Word-shuffling leaves Laya-ml's accuracy statistically unchanged
 ($0.158 \rightarrow 0.168$) and reversal helps slightly ($0.180$); Lod-lille
 moves within noise. Agreement with the intact answer under shuffling is $0.742$
 and $0.917$, so Lod-lille is more \emph{stable} but no more
-\emph{compositional}. Figure~\ref{fig:bnmanip} shows the perturbed strings.
+\emph{compositional}. Table~\ref{tab:bnmanip} shows the perturbed strings.
 
 The one manipulation that clearly helps both is embedding the idiom in its gold
 carrier sentence, $+0.080$ and $+0.117$: context, not the idiom string, carries
@@ -857,12 +965,6 @@ rather than absolute. Jev-1.13 is a commercial endpoint and may change without
 notice; our results are a snapshot, and we report the exact call count and cost
 in Appendix~\ref{app:repro} so the snapshot is at least auditable.
 
-Finally, a typesetting note. pdf\LaTeX{} cannot shape Bengali, so the plotted
-figures name their categories in Latin script. The stimuli themselves are shown
-in the original script in Figures~\ref{fig:bnitem}, \ref{fig:bnexamples} and
-\ref{fig:bnmanip}, which are rendered outside \LaTeX{} by a shaping engine and
-embedded as vector; transliterations in the running text follow a loose
-convention and are for pronunciation only.
 
 \section*{Ethics Statement}
 
@@ -954,24 +1056,24 @@ name carries meaning of its own, which is the failure
 \citet{sun2026typesafe} document. Keeping every experiment in one answer type
 also means the five distractor families differ in nothing but their option text.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{ll}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}>{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{Arm} & \textbf{Instruction string} \\
 \midrule
-\laya{Laya-ml} & \laya{Bangla, see note} \\
-\lod{Lod-lille} & \lod{Bangla, identical to above} \\
-\jev{Jev-1.13} & \jev{``What is the actual figurative} \\
-\jev{} & \jev{meaning of this idiom?''} \\
+Laya-ml &
+Bangla, see note \\
+Lod-lille &
+Bangla, identical to above \\
+Jev-1.13 &
+``What is the actual figurative meaning of this idiom?'' \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{The instruction is one sentence and is byte-identical across families,
 experiments and the two Bangla arms. The Bangla string is the direct equivalent
-of the English one; it is not reproduced here because the typesetting toolchain
-used for this paper cannot shape Bengali script. It is released verbatim in
-\texttt{configs/task.json}.}
+of the English one.}
 \label{tab:instr}
 \end{table}
 
@@ -1062,20 +1164,95 @@ failure modes survives task-specific fine-tuning is, as far as we can determine,
 unmeasured by anyone so far.
 
 
-\begin{figure*}[t]
+% \begin{figure*}[t]
+% \centering
+% \includegraphics[width=\linewidth]{figures/fig_bn_item.pdf}
+% \caption{One item exactly as the two models received it, in the original
+% Bengali script. The state is the idiom \emph{ojon}; the four option texts are
+% the real ones, reconstructed with the builder and seed the run used and checked
+% against the recorded gold and literal keys. The probabilities are the returned
+% values. Laya-ml places $0.99$ on the \textbf{literal} option, which names the
+% weight of an object, and $0.00$ on the gold figurative gloss; Jev-1.13 places
+% $0.82$ on the gold. This figure was rendered outside \LaTeX{} because pdf\LaTeX{}
+% cannot shape Bengali; it is vector, with embedded font subsets and selectable
+% text.}
+% \label{fig:bnitem}
+% \end{figure*}
+
+
+\begin{table*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_bn_item.pdf}
-\caption{One item exactly as the two models received it, in the original
-Bengali script. The state is the idiom \emph{ojon}; the four option texts are
-the real ones, reconstructed with the builder and seed the run used and checked
-against the recorded gold and literal keys. The probabilities are the returned
-values. Laya-ml places $0.99$ on the \textbf{literal} option, which names the
-weight of an object, and $0.00$ on the gold figurative gloss; Jev-1.13 places
-$0.82$ on the gold. This figure was rendered outside \LaTeX{} because pdf\LaTeX{}
-cannot shape Bengali; it is vector, with embedded font subsets and selectable
-text.}
-\label{fig:bnitem}
-\end{figure*}
+\small
+
+\begin{tabularx}{\textwidth}{
+    @{}
+    c
+    >{\raggedright\arraybackslash}X
+    >{\centering\arraybackslash}p{1.45cm}
+    >{\centering\arraybackslash}p{1.55cm}
+    >{\centering\arraybackslash}p{1.55cm}
+    @{}
+}
+\toprule
+
+&
+\textbf{option text, as supplied}
+&
+\textbf{role}
+&
+\textbf{Laya-ml $p$}
+&
+\textbf{Jev-1.13 $p$}
+\\
+\midrule
+
+A &
+\bangla{একগর্ভা; এক সন্তানের জননী; যে নারী একবার মাত্র গর্ভ ধারণ করে} &
+\textit{distractor} &
+0.00 &
+0.02
+\\[3pt]
+
+B &
+\bangla{ওজন} (\emph{physical weight}) &
+\textbf{literal} &
+\pL{0.99} &
+\pJ{0.15}
+\\[3pt]
+
+C &
+\bangla{ক্ষমতা, গুরুত্ব, মর্যাদা} &
+\textbf{gold} &
+0.00 &
+\pJ{0.82}
+\\[3pt]
+
+D &
+\bangla{হালকাভাবে পড়া} &
+\textit{distractor} &
+0.01 &
+0.01
+\\
+
+\bottomrule
+\end{tabularx}
+
+\caption{\textbf{One item exactly as received by the models.}
+The state is the Bangla idiom \bangla{ওজন} (\emph{ojon}), literally
+``physical weight,'' with the English equivalent \emph{carry weight}.
+The instruction is identical across items and distractor families.
+The four option texts are the actual strings reconstructed with the
+builder and seed used for the run and checked against the recorded gold
+and literal keys. The probabilities are the returned values. Laya-ml
+places $0.99$ on the literal option, which denotes the physical weight
+of an object, and $0.00$ on the gold figurative gloss; Jev-1.13 places
+$0.82$ on the gold option.}
+\label{tab:bnitem}
+
+\end{table*}
+
+
+
 
 \section{What each experiment changes}
 \label{app:experiments}
@@ -1190,24 +1367,24 @@ commercial column: its numbers are English, and its \Dsurf{} and \Dsem{} rows
 run on the larger 8{,}761-item English pool rather than the 3{,}265-item
 literal pool, because those families need no literal gloss.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.35cm}>{\centering\arraybackslash}p{1.35cm}>{\centering\arraybackslash}p{1.35cm}@{}}
 \toprule
-\textbf{Family} & \laya{\textbf{Laya-ml}} & \lod{\textbf{Lod-lille}} & \jev{\textbf{Jev-1.13}} \\
- & \laya{bn} & \lod{bn} & \jev{en} \\
+\textbf{Family} & \textbf{Laya-ml} & \textbf{Lod-lille} & \textbf{Jev-1.13} \\
+& bn & bn & en \\
 \midrule
-\Drand & \laya{0.367} & \lod{0.484} & \jev{0.968} \\
-\Dsurf & \laya{0.338} & \lod{0.412} & \jev{0.915} \\
-\Dsem  & \laya{0.333} & \lod{0.446} & \jev{0.829} \\
-\Dlit  & \laya{0.151} & \lod{0.066} & \jev{0.931} \\
-\Dhard & \laya{0.144} & \lod{0.063} & \jev{0.854} \\
+\Drand & 0.367 & 0.484 & 0.968 \\
+\Dsurf & 0.338 & 0.412 & 0.915 \\
+\Dsem  & 0.333 & 0.446 & 0.829 \\
+\Dlit  & 0.151 & 0.066 & 0.931 \\
+\Dhard & 0.144 & 0.063 & 0.854 \\
 \midrule
-\LAR{} \Dlit  & \laya{0.644} & \lod{0.885} & \jev{0.047} \\
-\LAR{} \Dhard & \laya{0.630} & \lod{0.855} & \jev{0.043} \\
+\LAR{} \Dlit  & 0.644 & 0.885 & 0.047 \\
+\LAR{} \Dhard & 0.630 & 0.855 & 0.043 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Accuracy by distractor family, and literal attraction on the two
 families that contain a literal gloss. Chance is $0.250$. The commercial column
 is English and is the reason \S\ref{sec:capture} runs the matrix: compare it
@@ -1225,12 +1402,16 @@ coverage falls. Table~\ref{tab:riskcov} reports accuracy at low coverage for the
 two open arms, on the random-distractor condition and on the literal-bearing
 one.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lcccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.05cm}*{4}{>{\centering\arraybackslash}X}@{}}
 \toprule
-\textbf{coverage} & \laya{\Drand} & \laya{\Dlit} & \lod{\Drand} & \lod{\Dlit} \\
+\textbf{Coverage} &
+\laya{\textbf{\Drand}} &
+\laya{\textbf{\Dlit}} &
+\lod{\textbf{\Drand}} &
+\lod{\textbf{\Dlit}} \\
 \midrule
 0.05 & \laya{0.669} & \laya{0.007} & \lod{0.977} & \lodh{0.000} \\
 0.10 & \laya{0.597} & \laya{0.007} & \lod{0.989} & \lodh{0.000} \\
@@ -1239,13 +1420,19 @@ one.
 \midrule
 full & \laya{0.367} & \laya{0.151} & \lod{0.484} & \lod{0.066} \\
 \bottomrule
-\end{tabular}
-\caption{Accuracy under a confidence gate. On random distractors both arms
-behave as a caller would hope: restricting to the most confident 5\% roughly
-doubles accuracy. On the literal-bearing condition the curve inverts. Laya-ml
-falls from $0.151$ at full coverage to $0.007$ in its most confident 5\%, and
+\end{tabularx}
+\caption{\textbf{Accuracy under a confidence gate.}
+\textcolor{cLaya}{\rule[-0.05em]{0.7em}{0.7em}}\,Cyan identifies
+Laya-ml, while
+\textcolor{cLod}{\rule[-0.05em]{0.7em}{0.7em}}\,magenta identifies
+Lod-lille; the corresponding cell tints are used consistently to distinguish
+the two model arms. On random distractors, both arms behave as a caller would
+hope: restricting to the most confident 5\% roughly doubles accuracy.
+On the literal-bearing condition, the curve inverts. Laya-ml falls from
+$0.151$ at full coverage to $0.007$ in its most confident 5\%, while
 Lod-lille answers \textbf{every one} of its most confident 35\% incorrectly.
-Gating on confidence is worse than not gating, and worse than gating at random.}
+Gating on confidence is therefore worse than not gating, and worse than
+gating at random.}
 \label{tab:riskcov}
 \end{table}
 
@@ -1270,21 +1457,156 @@ The corpus's \texttt{cultural\_significance} field is unusable as a stratifier:
 10{,}337 of 10{,}359 rows carry the same value.
 
 
-\begin{figure*}[t]
+% \begin{figure*}[t]
+% \centering
+% \includegraphics[width=\linewidth]{figures/fig_bn_manipulations.pdf}
+% \caption{What the interventions do to real Bangla text, for the idiom
+% \emph{agadh joler machh} (\emph{still waters run deep}, literally ``a fish of
+% deep water''). \emph{Top:} the six E3 states, which are the exact strings logged
+% during the run, with the probability the model gave the gold gloss. Shuffling and
+% reversing a non-compositional expression leaves that probability essentially
+% unchanged, and only the carrier sentence moves it. \emph{Bottom:} the five E6
+% option forms, applied here to the gold option; the other three options are
+% rewritten the same way. Truncation and word-scrambling preserve the lexical
+% content that the scoring appears to depend on, while the last row removes it
+% entirely and is the control of \S\ref{sec:nosignal}.}
+% \label{fig:bnmanip}
+% \end{figure*}
+
+
+
+\begin{table*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_bn_manipulations.pdf}
-\caption{What the interventions do to real Bangla text, for the idiom
-\emph{agadh joler machh} (\emph{still waters run deep}, literally ``a fish of
-deep water''). \emph{Top:} the six E3 states, which are the exact strings logged
-during the run, with the probability the model gave the gold gloss. Shuffling and
-reversing a non-compositional expression leaves that probability essentially
-unchanged, and only the carrier sentence moves it. \emph{Bottom:} the five E6
-option forms, applied here to the gold option; the other three options are
-rewritten the same way. Truncation and word-scrambling preserve the lexical
-content that the scoring appears to depend on, while the last row removes it
-entirely and is the control of \S\ref{sec:nosignal}.}
-\label{fig:bnmanip}
-\end{figure*}
+\small
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabularx}{\textwidth}{
+    @{}
+    >{\raggedright\arraybackslash}p{2.05cm}
+    >{\raggedright\arraybackslash}X
+    >{\centering\arraybackslash}p{1.15cm}
+    @{}
+}
+\toprule
+
+\textbf{manipulation}
+&
+\textbf{string sent to the model}
+&
+\textbf{$p(\text{gold})$}
+\\
+\midrule
+
+\multicolumn{3}{@{}l}{
+    \textbf{E3: the state changes}
+    \quad
+    \textit{idiom: \bangla{অগাধ জলের মাছ}
+    (\emph{Still waters run deep})}
+}
+\\[-1pt]
+
+\textit{intact}
+&
+\cellcolor{fLaya}\bangla{অগাধ জলের মাছ}
+&
+\textbf{0.21}
+\\
+
+\textit{word shuffle}
+&
+\bangla{মাছ জলের অগাধ}
+&
+\textbf{0.19}
+\\
+
+\textit{reversed}
+&
+\bangla{মাছ জলের অগাধ}
+&
+\textbf{0.19}
+\\
+
+\textit{delete one word}
+&
+\bangla{অগাধ জলের}
+&
+\textbf{0.24}
+\\
+
+\textit{substitute one word}
+&
+\bangla{অগাধ জলের ফ্যা}
+&
+\textbf{0.24}
+\\
+
+\textit{in its carrier sentence}
+&
+\bangla{সে অগাধ জলের মাছ, কখনো বুঝতে পারি না তার পরিকল্পনা কী।}
+&
+\textbf{0.07}
+\\[4pt]
+
+\midrule
+
+\multicolumn{3}{@{}l}{
+    \textbf{E6: the options change}
+    \quad
+    \textit{gold option rewritten; the other three are rewritten identically}
+}
+\\[-1pt]
+
+\textit{full gloss}
+&
+\cellcolor{fLaya}\bangla{খুব চালাক লোক; সুচতুর ব্যক্তি; যার মনোভাব বোঝা যায় না}
+&
+\\
+
+\textit{truncated to 6 words}
+&
+\bangla{খুব চালাক লোক; সুচতুর ব্যক্তি; যার}
+&
+\\
+
+\textit{words scrambled}
+&
+\bangla{যার সুচতুর চালাক ব্যক্তি; বোঝা খুব না মনোভাব লোক; যার}
+&
+\\
+
+\textit{English gloss}
+&
+A very clever person; a shrewd individual; someone whose mindset or intentions are hard to fathom
+&
+\\
+
+\textit{semantics removed}
+&
+\cellcolor{fGrey}\texttt{A}
+&
+\\
+
+\bottomrule
+\end{tabularx}
+
+\caption{\textbf{What the interventions do to real Bangla text.}
+The table shows the exact strings used for the idiom
+\bangla{অগাধ জলের মাছ} (\emph{still waters run deep}, literally
+``a fish of deep water''). \emph{E3} changes the state supplied to the
+model; the reported probabilities are those assigned to the gold
+figurative gloss. Shuffling and reversing the non-compositional
+expression leave the probability essentially unchanged, whereas the
+carrier sentence changes it. \emph{E6} changes the option text while
+holding its role fixed; the five rows show increasingly reduced or
+rearranged lexical content, ending with the semantics-free control.
+The other three options undergo the same transformation as the gold
+option.}
+
+\label{tab:bnmanip}
+\end{table*}
+
+
+
 
 \section{Output distributions}
 \label{app:dists}
@@ -1294,23 +1616,26 @@ mass very differently, and the shape of that mass is what makes the confidence
 results of \S\ref{sec:confidence} possible. Table~\ref{tab:dist} summarises the
 returned vectors.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{llcccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}ll*{4}{>{\centering\arraybackslash}X}@{}}
 \toprule
-& & \textbf{mean} & \textbf{med.} & $\mathbf{>}$\textbf{.95} & \textbf{ent.} \\
+& & \textbf{Mean} & \textbf{Med.} & $\mathbf{>}\textbf{.95}$ & \textbf{Ent.} \\
 \midrule
-\multirow{2}{*}{\laya{Laya}} & \laya{\Drand} & \laya{0.438} & \laya{0.408} & \laya{0.001} & \laya{0.892} \\
- & \laya{\Dlit} & \laya{0.536} & \laya{0.479} & \laya{0.039} & \laya{0.778} \\
-\multirow{2}{*}{\lod{Lod}} & \lod{\Drand} & \lod{0.447} & \lod{0.391} & \lod{0.002} & \lod{0.881} \\
- & \lod{\Dlit} & \lod{0.745} & \lod{0.819} & \lod{0.171} & \lod{0.497} \\
-\multirow{2}{*}{\jev{Jev}} & \jev{\Drand} & \jev{0.967} & \jev{1.000} & \jev{0.852} & \jev{0.068} \\
- & \jev{\Dlit} & \jev{0.931} & \jev{0.990} & \jev{0.708} & \jev{0.131} \\
+\multirow{2}{*}{Laya} &
+\Drand & 0.438 & 0.408 & 0.001 & 0.892 \\
+& \Dlit & 0.536 & 0.479 & 0.039 & 0.778 \\
+\multirow{2}{*}{Lod} &
+\Drand & 0.447 & 0.391 & 0.002 & 0.881 \\
+& \Dlit & 0.745 & 0.819 & 0.171 & 0.497 \\
+\multirow{2}{*}{Jev} &
+\Drand & 0.967 & 1.000 & 0.852 & 0.068 \\
+& \Dlit & 0.931 & 0.990 & 0.708 & 0.131 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Distribution of the returned maximum probability, and normalised
-entropy of the full vector ($1 =$ uniform). The literal-bearing family makes
+entropy of the full vector ($1=$ uniform). The literal-bearing family makes
 both open arms \emph{sharper}, not flatter: Lod-lille's mean peak rises from
 $0.447$ to $0.745$ and the share of near-deterministic answers from $0.002$ to
 $0.171$, while its accuracy falls from $0.484$ to $0.066$. The model is not
@@ -1349,18 +1674,141 @@ the four are single words in everyday use.}
 \label{tab:examples}
 \end{table}
 
-\begin{figure*}[t]
+% \begin{figure*}[t]
+% \centering
+% \includegraphics[width=\linewidth]{figures/fig_bn_examples.pdf}
+% \caption{Five items on which Laya-ml assigns almost all of its probability to
+% the idiom's own literal gloss, shown in Bengali with the English equivalent the
+% annotators recorded. These are not obscure expressions:
+% \emph{ishwarprapti} is the Bangla \emph{kick the bucket} and is read as
+% ``attainment of God'', \emph{akasher chand} is \emph{pie in the sky} and is read
+% as ``the moon of the sky''. Both glosses were present in the option list, and
+% the right-hand column is the mass placed on the literal one.}
+% \label{fig:bnexamples}
+% \end{figure*}
+
+
+
+\begin{table*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_bn_examples.pdf}
-\caption{Five items on which Laya-ml assigns almost all of its probability to
-the idiom's own literal gloss, shown in Bengali with the English equivalent the
-annotators recorded. These are not obscure expressions:
-\emph{ishwarprapti} is the Bangla \emph{kick the bucket} and is read as
-``attainment of God'', \emph{akasher chand} is \emph{pie in the sky} and is read
-as ``the moon of the sky''. Both glosses were present in the option list, and
-the right-hand column is the mass placed on the literal one.}
-\label{fig:bnexamples}
-\end{figure*}
+\small
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabularx}{\textwidth}{
+    @{}
+    >{\raggedright\arraybackslash}p{2.15cm}
+    >{\raggedright\arraybackslash}p{3.0cm}
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}p{2.55cm}
+    >{\centering\arraybackslash}p{1.35cm}
+    @{}
+}
+\toprule
+
+\textbf{idiom}
+&
+\textbf{expert literal gloss}
+&
+\textbf{gold figurative gloss}
+&
+\textbf{English equivalent}
+&
+\textbf{$p(\text{literal})$}
+\\
+\midrule
+
+\bangla{ঈশ্বরপ্রাপ্তি}
+&
+\bangla{ঈশ্বরকে অধিগ্রহণ}
+\newline
+\emph{(attainment of God)}
+&
+\bangla{মৃত্যু}
+\newline
+\emph{(death)}
+&
+\emph{kick the bucket}
+&
+\cellcolor{fLaya}\textbf{0.97}
+\\
+
+\bangla{আকাশের চাঁদ}
+&
+\bangla{আকাশের চাঁদ}
+\newline
+\emph{(sky's moon)}
+&
+\bangla{অজন্তর বা দুর্লভ বস্তু; বহ কল্পিত বস্তু}
+\newline
+\emph{(an unattainable or rare object; an imagined object)}
+&
+\emph{pie in the sky}
+&
+\cellcolor{fLaya}\textbf{0.99}
+\\
+
+\bangla{অল্প জলের মাছ}
+&
+\bangla{অল্প জলের মাছ}
+\newline
+\emph{(little water's fish)}
+&
+\bangla{সামান্য পুঁজির বা সম্পদের মালিক; অল্প ধন নিয়ে দরিদ্র ব্যক্তি}
+\newline
+\emph{(a person with limited capital or resources; a poor person with little wealth)}
+&
+\emph{big frog in a small puddle}
+&
+\cellcolor{fLaya}\textbf{0.97}
+\\
+
+\bangla{ওজন}
+&
+\bangla{ওজন}
+\newline
+\emph{(physical weight)}
+&
+\bangla{ক্ষমতা, গুরুত্ব, মর্যাদা}
+\newline
+\emph{(power, importance, status)}
+&
+\emph{carry weight}
+&
+\cellcolor{fLaya}\textbf{0.99}
+\\
+
+\bangla{অগ্নিপরীক্ষা}
+&
+\bangla{আগুনের পরীক্ষা}
+\newline
+\emph{(fire test)}
+&
+\bangla{কঠিন পরীক্ষা; কঠিন পরিস্থিতির সম্মুখীন}
+\newline
+\emph{(a difficult test; facing a difficult situation)}
+&
+\emph{trial by fire}
+&
+\cellcolor{fLaya}\textbf{0.96}
+\\
+
+\bottomrule
+\end{tabularx}
+
+\caption{\textbf{Items where Laya-ml places almost all probability on the literal gloss.}
+Each item contains the Bangla idiom, the expert-provided literal gloss,
+the gold figurative gloss, and the English equivalent recorded by the
+annotators. English translations in parentheses are provided for
+readability; the underlying Bangla strings are the original dataset
+content. Both literal and figurative glosses were present in the option
+list. The rightmost column reports the probability assigned to the
+literal gloss. These are not obscure expressions: \emph{ishwarprapti}
+corresponds to \emph{kick the bucket} and is read literally as
+``attainment of God,'' while \emph{akasher chand} corresponds to
+\emph{pie in the sky} and is read literally as ``the moon of the sky.''}
+
+\label{tab:bnexamples}
+\end{table*}
 
 
 \section{The capture matrix}
@@ -1378,21 +1826,21 @@ constructions as measuring the same thing.
 
 \begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lcccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
 \toprule
 & \multicolumn{2}{c}{\textbf{Bangla}} & \multicolumn{2}{c}{\textbf{English}} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
 & \textbf{acc} & \textbf{\LAR} & \textbf{acc} & \textbf{\LAR} \\
 \midrule
-\laya{Laya-ml}  & \laya{0.127} & \layah{0.731} & \laya{0.417} & \laya{0.379} \\
-\lod{Lod-lille} & \lod{0.044}  & \lodh{0.918}  & \lod{0.684}  & \lod{0.241} \\
-\jev{Jev-1.13}  & \jev{0.536}  & \jev{0.304}   & \jev{0.926}  & \jev{0.047} \\
+Laya-ml  & 0.127 & \textbf{0.731} & 0.417 & 0.379 \\
+Lod-lille & 0.044 & \textbf{0.918} & 0.684 & 0.241 \\
+Jev-1.13  & 0.536 & 0.304 & 0.926 & 0.047 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{The literal condition as a model $\times$ language matrix, all six
 cells measured on the same 3{,}265 items with one construction and one seed
-($n = 3{,}265$ per cell; 95\% CIs in Appendix~\ref{app:matrix}). Bold marks the
+($n=3{,}265$ per cell; 95\% CIs in Appendix~\ref{app:matrix}). Bold marks the
 highest \LAR{} per language. Every arm is far more captured in Bangla than in
 English, and the Bangla ordering does not follow capability: Jev-1.13 is the
 most accurate and the least captured, while Lod-lille is more accurate than
@@ -1401,17 +1849,265 @@ Laya-ml and more captured.}
 \end{table}
 
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_bn_teaser.pdf}
-\caption{The same contrast on a second item, with the returned probabilities.
-\emph{Abarjana} means an unwanted person; its words mean garbage. Jev-1.13 is
-asked the identical question with the same four options in both languages: in
-Bangla it puts $0.85$ on the literal reading and $0.09$ on the gold, in English
-$0.96$ on the gold. Colour marks the option's role, not the model. This is
-Figure~\ref{fig:teaser}'s claim with the numbers attached.}
-\label{fig:bnteaser}
-\end{figure}
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=\columnwidth]{figures/fig_bn_teaser.pdf}
+% \caption{The same contrast on a second item, with the returned probabilities.
+% \emph{Abarjana} means an unwanted person; its words mean garbage. Jev-1.13 is
+% asked the identical question with the same four options in both languages: in
+% Bangla it puts $0.85$ on the literal reading and $0.09$ on the gold, in English
+% $0.96$ on the gold. Colour marks the option's role, not the model. This is
+% Figure~\ref{fig:teaser}'s claim with the numbers attached.}
+% \label{fig:bnteaser}
+% \end{figure}
+
+
+
+
+% \begin{figure}[t]
+% \centering
+
+% \begin{tikzpicture}[
+%     x=1cm,
+%     y=1cm,
+%     line cap=round,
+%     line join=round
+% ]
+
+% \definecolor{figCyan}{HTML}{27EBF5}
+% \definecolor{figCyanLight}{HTML}{BEF9FC}
+% \definecolor{figGray}{HTML}{4D4D4D}
+% \definecolor{figRule}{HTML}{D0D0D0}
+
+% % ─────────────────────────────────────────────────────────────────────
+% % Header
+% % ─────────────────────────────────────────────────────────────────────
+
+% \node[
+%     anchor=north,
+%     font=\fontsize{20}{22}\selectfont
+% ] at (0,0)
+% {\bangla{আবর্জনা}};
+
+% \node[
+%     anchor=west,
+%     font=\scriptsize\itshape,
+%     text=gray
+% ] at (1.25,-0.05)
+% {abarjana};
+
+% \node[
+%     anchor=north,
+%     font=\scriptsize,
+%     text=gray
+% ] at (0,-0.72)
+% {literally ``garbage or waste''};
+
+% \node[
+%     anchor=north,
+%     font=\scriptsize,
+%     text=gray
+% ] at (0,-1.02)
+% {figuratively ``an unwanted person''};
+
+% \draw[
+%     figRule,
+%     line width=0.5pt
+% ] (-3.65,-1.32) -- (3.65,-1.32);
+
+% % ─────────────────────────────────────────────────────────────────────
+% % ASKED IN BANGLA
+% % ─────────────────────────────────────────────────────────────────────
+
+% \node[
+%     anchor=west,
+%     font=\bfseries\scriptsize,
+%     text=figGray
+% ] at (-3.55,-1.62)
+% {ASKED IN BANGLA};
+
+% % Literal label
+% \node[
+%     anchor=west,
+%     rounded corners=1.5pt,
+%     fill=figGray,
+%     text=white,
+%     inner xsep=4pt,
+%     inner ysep=2pt,
+%     font=\fontsize{6.5}{7}\selectfont
+% ] at (-3.50,-2.08)
+% {literal};
+
+% % Figurative label
+% \node[
+%     anchor=west,
+%     rounded corners=1.5pt,
+%     fill=figCyanLight,
+%     text=black,
+%     inner xsep=4pt,
+%     inner ysep=2pt,
+%     font=\fontsize{6.5}{7}\selectfont
+% ] at (-3.50,-2.78)
+% {figurative};
+
+% % Bangla options
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (-2.25,-2.08)
+% {\bangla{আবর্জনা} (garbage or waste)};
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (-2.25,-2.78)
+% {\bangla{অবাঞ্ছিত ব্যক্তি}};
+
+% % Probability bars
+% \draw[
+%     figGray,
+%     line width=4pt
+% ] (0.35,-2.08) -- (2.65,-2.08);
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (2.85,-2.08)
+% {0.85};
+
+% \node[
+%     anchor=west,
+%     font=\bfseries\small
+% ] at (3.35,-2.08)
+% {\texttimes};
+
+% \draw[
+%     figCyan,
+%     line width=4pt
+% ] (0.35,-2.78) -- (0.59,-2.78);
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (2.85,-2.78)
+% {0.09};
+
+% % ─────────────────────────────────────────────────────────────────────
+% % Separator
+% % ─────────────────────────────────────────────────────────────────────
+
+% \draw[
+%     figRule,
+%     line width=0.4pt
+% ] (-3.50,-3.30) -- (3.50,-3.30);
+
+% % ─────────────────────────────────────────────────────────────────────
+% % ASKED IN ENGLISH
+% % ─────────────────────────────────────────────────────────────────────
+
+% \node[
+%     anchor=west,
+%     font=\bfseries\scriptsize,
+%     text=figGray
+% ] at (-3.55,-3.62)
+% {ASKED IN ENGLISH};
+
+% % Literal label
+% \node[
+%     anchor=west,
+%     rounded corners=1.5pt,
+%     fill=figGray,
+%     text=white,
+%     inner xsep=4pt,
+%     inner ysep=2pt,
+%     font=\fontsize{6.5}{7}\selectfont
+% ] at (-3.50,-4.08)
+% {literal};
+
+% % Figurative label
+% \node[
+%     anchor=west,
+%     rounded corners=1.5pt,
+%     fill=figCyanLight,
+%     text=black,
+%     inner xsep=4pt,
+%     inner ysep=2pt,
+%     font=\fontsize{6.5}{7}\selectfont
+% ] at (-3.50,-4.78)
+% {figurative};
+
+% % English options
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (-2.25,-4.08)
+% {garbage or waste};
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (-2.25,-4.78)
+% {Unwanted person};
+
+% % Probability bars
+% \draw[
+%     figGray,
+%     line width=4pt
+% ] (0.35,-4.08) -- (0.46,-4.08);
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (2.85,-4.08)
+% {0.04};
+
+% \draw[
+%     figCyan,
+%     line width=4pt
+% ] (0.35,-4.78) -- (2.95,-4.78);
+
+% \node[
+%     anchor=west,
+%     font=\small
+% ] at (2.85,-4.78)
+% {0.96};
+
+% \node[
+%     anchor=west,
+%     font=\bfseries\small
+% ] at (3.35,-4.78)
+% {\checkmark};
+
+% % ─────────────────────────────────────────────────────────────────────
+% % Bottom rule
+% % ─────────────────────────────────────────────────────────────────────
+
+% \draw[
+%     figRule,
+%     line width=0.5pt
+% ] (-3.65,-5.30) -- (3.65,-5.30);
+
+% \end{tikzpicture}
+
+% \caption{\textbf{The same contrast on a second item, with the returned
+% probabilities.}
+% The Bangla idiom \bangla{আবর্জনা} (\emph{abarjana}) means ``an unwanted
+% person'' figuratively, although its words mean ``garbage or waste''
+% literally. Jev-1.13 is asked the identical question with the same four
+% options in both languages: in Bangla it places $0.85$ on the literal
+% reading and $0.09$ on the figurative gloss, whereas in English it places
+% $0.96$ on the figurative gloss. Color marks the option's role, not the
+% model.}
+
+% \label{fig:bncontrast}
+% \end{figure}
+
+
+
+
+
+
+
 
 \section{Cross-lingual arms}
 \label{app:crossling}
@@ -1482,24 +2178,24 @@ between the two probability vectors is $0.039$ and $0.085$.
 Lod-lille ran a fixed 10\% random subset. Table~\ref{tab:subset} compares
 Laya-ml's accuracy on those same 888 items against its own full 8{,}876.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.35cm}>{\centering\arraybackslash}p{1.35cm}>{\centering\arraybackslash}p{1.15cm}@{}}
 \toprule
-\textbf{Family} & \neu{\textbf{full}} & \neu{\textbf{subset}} & \textbf{drift} \\
+\textbf{Family} & \textbf{Full} & \textbf{Subset} & \textbf{Drift} \\
 \midrule
-\Drand & \laya{0.367} & \laya{0.351} & $-0.016$ \\
-\Dsurf & \laya{0.338} & \laya{0.339} & $+0.001$ \\
-\Dsem  & \laya{0.333} & \laya{0.325} & $-0.007$ \\
-\Dlit  & \laya{0.151} & \laya{0.136} & $-0.015$ \\
-\Dhard & \laya{0.144} & \laya{0.149} & $+0.004$ \\
+\Drand & 0.367 & 0.351 & $-0.016$ \\
+\Dsurf & 0.338 & 0.339 & $+0.001$ \\
+\Dsem  & 0.333 & 0.325 & $-0.007$ \\
+\Dlit  & 0.151 & 0.136 & $-0.015$ \\
+\Dhard & 0.144 & 0.149 & $+0.004$ \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Laya-ml on the 10\% subset against its own full set. Maximum drift
-$0.016$. Two of five subset estimates fall marginally outside the full-set
-bootstrap CI, which is expected at $n = 888$ and changes no sign or ordering.
-Cite the full-set figures as the precise ones.}
+is $0.016$. Two of five subset estimates fall marginally outside the full-set
+bootstrap CI, which is expected at $n=888$ and changes no sign or ordering.
+The full-set figures are therefore reported as the precise estimates.}
 \label{tab:subset}
 \end{table}
 
@@ -1508,22 +2204,23 @@ Cite the full-set figures as the precise ones.}
 
 Table~\ref{tab:options} gives the numbers behind Figure~\ref{fig:options}.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}@{}}
 \toprule
-\textbf{Option text} & \laya{\textbf{Laya}} & \lod{\textbf{Lod}} & \jev{\textbf{Jev}} \\
+\textbf{Option text} & \textbf{Laya} & \textbf{Lod} & \textbf{Jev} \\
 \midrule
-full gloss   & \laya{0.365} & \lod{0.492} & \jev{0.970} \\
-truncated    & \laya{0.361} & \lod{0.468} & \jev{0.958} \\
-scrambled    & \laya{0.357} & \lod{0.479} & \jev{0.974} \\
-other lang.  & \laya{0.347} & \lod{0.398} & \jev{0.963} \\
-no semantics & \neu{0.256} & \neu{0.233} & \neu{0.254} \\
+full gloss   & 0.365 & 0.492 & 0.970 \\
+truncated    & 0.361 & 0.468 & 0.958 \\
+scrambled    & 0.357 & 0.479 & 0.974 \\
+other lang.  & 0.347 & 0.398 & 0.963 \\
+no semantics & 0.256 & 0.233 & 0.254 \\
 \bottomrule
-\end{tabular}
-\caption{Option-side ablation. The grey row is the semantics-free control, at
-chance by construction in all three arms. Jev-1.13's column is English.}
+\end{tabularx}
+\caption{\textbf{Option-side ablation.}
+The semantics-free row removes meaningful option content and yields
+near-chance accuracy in all three arms. Jev-1.13's column is English.}
 \label{tab:options}
 \end{table}
 
