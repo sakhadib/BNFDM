@@ -1,0 +1,32 @@
+{
+  "laya-ml_e3_changed": {
+    "V1_shuffle": 0.999437570303712,
+    "V2_reverse": 0.9971878515185602,
+    "V3_delete1": 1.0,
+    "V4_substitute1": 1.0,
+    "V5_in_sentence": 1.0
+  },
+  "laya-ml_e3_oneword": 0.0,
+  "laya-ml_e3_collision": 0.16029246344206974,
+  "laya-ml_e3_multiword": {
+    "n": 1778,
+    "intact": 0.15691788526434194,
+    "shuffle": 0.16760404949381327
+  },
+  "lod-lille-0.6b_e3_changed": {
+    "V1_shuffle": 1.0,
+    "V2_reverse": 0.9944444444444445,
+    "V3_delete1": 1.0,
+    "V4_substitute1": 1.0,
+    "V5_in_sentence": 1.0
+  },
+  "lod-lille-0.6b_e3_oneword": 0.0,
+  "lod-lille-0.6b_e3_collision": 0.1388888888888889,
+  "lod-lille-0.6b_e3_multiword": {
+    "n": 180,
+    "intact": 0.07222222222222222,
+    "shuffle": 0.044444444444444446
+  },
+  "trunc_figurative_meaning_bn": 0.222397476340694,
+  "trunc_figurative_meaning_en": 0.5802163136547994
+}
