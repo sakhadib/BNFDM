@@ -129,20 +129,20 @@
 Decision models, non-generative scorers that report a probability over
 caller-supplied options and emit no text, are increasingly deployed as routers,
 classifiers and guardrails. Because they generate nothing, rationales and
-chain-of-thought do not apply. We therefore audit three of them, an encoder
-scorer, a decoder scorer and a closed commercial API, entirely through
-interventions on the option set, using expert-annotated Bangla idioms that carry
-both a gold figurative and a gold literal gloss. Dropping an idiom's own literal
+chain-of-thought do not apply. We audit three of them, an encoder scorer, a
+decoder scorer and a closed API, entirely through interventions on the option set,
+using expert-annotated Bangla idioms carrying both a gold figurative and a gold
+literal gloss. Dropping an idiom's own literal
 gloss into the option list draws every arm toward it: in Bangla it takes $66\%$ to
 $96\%$ of each model's remaining errors. A full model $\times$ language matrix over
-one shared item set shows how far this depends on the test language. Every arm is
+one shared item set shows how far this depends on the test language: every arm is
 $1.9$ to $6.4$ times more captured in Bangla than in English on the same paired
-entries, and the commercial model's apparent resistance is a property of the
-language it was tested in; capability does not order the failure. Calibration
+entries, the commercial model's apparent resistance is a property of the language
+it was tested in, and capability does not order the failure. Calibration
 degrades in all three arms under the same shift, and on the two open arms
 confidence inverts, so gating on it is worse than gating at random. On a
-semantics-free option list, where no option carries information, the
-best-calibrated arm still reports $0.82$.
+semantics-free option list, where accuracy is at chance, the best-calibrated arm
+still reports mean confidence $0.82$.
 \end{abstract}
 
 
@@ -169,10 +169,13 @@ throughout the paper. The Bangla idiom \bangla{অগ্নিবল} (\emph{agn
 from \bangla{অগ্নি} (\emph{fire}) and \bangla{বল} (\emph{strength}) and means
 intense hunger. With both readings in the option list, all three models select the
 literal gloss in Bangla, at $p=1.00$, $0.97$ and $0.36$. Asked as the paired
-English entry, with the English glosses of the same four items, Lod-lille and
+English entry, with the English glosses of the same four options, Lod-lille and
 Jev-1.13 recover and Laya-ml does not. Across the $3{,}265$ paired items literal
 attraction falls from $0.731$, $0.918$ and $0.304$ in Bangla to $0.379$, $0.241$
-and $0.047$ in English (\S\ref{sec:capture}).}
+and $0.047$ in English (\S\ref{sec:capture}). Every item in that pool carries an
+English parenthetical inside its Bangla literal option by construction, this one
+included; \S\ref{sec:construction} measures what that cue is worth and shows
+capture without it.}
 \label{fig:teaser}
 \end{figure}
 
@@ -219,7 +222,7 @@ list turns a benchmark question into a targeted probe: does the model read the
 expression as an idiom, or as its words? Figure~\ref{fig:teaser} shows one item
 answered both ways.
 
-We contribute (i) a meaning-choice instrument for decision models in which the \emph{distractor family} is the independent variable and everything else is held fixed, requiring no new annotation (\S\ref{sec:instrument}); (ii) the Literal Attraction Rate, measured as a full model $\times$ language matrix, which shows how far capture depends on the test language and that capability does not order it (\S\ref{sec:capture}); (iii) evidence that calibration degrades under this shift in all three arms, and that on the two open arms confidence becomes anti-diagnostic, with confidence-gated selective prediction worse than random gating (\S\ref{sec:confidence}); (iv) a large dissociation in option-order dependence between the two scoring designs, with a methodological consequence for anyone evaluating this class (\S\ref{sec:order}); and (v) a semantics-free control, run on all three arms with the same option list and no annotation of any kind, bounding what each model reports when the options carry no information at all (\S\ref{sec:nosignal}).
+We contribute (i) a meaning-choice instrument for decision models in which the \emph{distractor family} is the independent variable and everything else is held fixed, requiring no new annotation (\S\ref{sec:instrument}); (ii) the Literal Attraction Rate, measured as a full model $\times$ language matrix, which shows how far capture depends on the test language and that capability does not order it (\S\ref{sec:capture}); (iii) evidence that calibration degrades under this shift in all three arms, and that on the two open arms confidence becomes anti-diagnostic, with confidence-gated selective prediction worse than random gating (\S\ref{sec:confidence}); (iv) a large dissociation in option-order dependence between the two scoring designs, with a methodological consequence for anyone evaluating this class (\S\ref{sec:order}); and (v) a semantics-free control, run on all three arms and needing no annotation of any kind, bounding what each model reports when the options carry no information at all (\S\ref{sec:nosignal}).
 
 \section{Related Work}
 
@@ -260,11 +263,13 @@ wins in one that emits no text and, in one arm, exposes no weights
 \paragraph{Evaluating option scorers.} Option-order sensitivity and selection
 bias are documented for prompted generative LMs
 \citep{pezeshkpour2024order,wei2024selection,zheng2024robust,zhao2021calibrate}.
-Option-order sensitivity in Laya-ml specifically is reported by
-\citet{sun2026typesafe}. What \S\ref{sec:order} adds is the comparison of
-option-marker against independent-option scoring over the full permutation set,
-and the caveat that permuting a list also relabels it, which that literature shows
-is itself a source of bias \citep{zheng2024robust}.
+\citet{sun2026typesafe} relay an independent evaluation harness reporting
+option-order sensitivity in Laya; that report is not theirs and does not state
+which checkpoint it covers, so we do not read it as establishing the behavior of
+the multilingual checkpoint we audit. What \S\ref{sec:order} adds is the
+comparison of option-marker against independent-option scoring over the full
+permutation set, and the caveat that permuting a list also relabels it, which
+that literature shows is itself a source of bias \citep{zheng2024robust}.
 
 \paragraph{Calibration and selective prediction.} Proper scoring and calibration
 measurement are standard
@@ -478,29 +483,6 @@ documentation names English as its primary and best-supported language; we know
 its interface and nothing else. Appendix~\ref{app:payload} gives the call each one
 receives.
 
-\begin{table}[t]
-\centering\small
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}*{3}{>{\centering\arraybackslash}X}@{}}
-\toprule
-& \textbf{\laya{Laya-ml}} & \textbf{\lod{Lod-lille}} & \textbf{\jev{Jev-1.13}} \\
-\midrule
-\textbf{backbone} & mmBERT & Qwen3-0.6B & closed \\
-\textbf{scoring} & marker & independent & unknown \\
-\textbf{parameters} & 322M & 0.6B & n/a \\
-\textbf{items} & 8{,}876 & 888 & 8{,}761 \\
-\textbf{latency} & 27.2\,ms & 86.1\,ms & API \\
-\textbf{weights} & open & open & closed \\
-\bottomrule
-\end{tabularx}
-\caption{\textbf{The three model arms.} Item counts and latencies are those used
-in the reported experiments. Parameter counts are the model cards'. Lod-lille was
-run on a fixed 10\% random subset; Appendix~\ref{app:subset} bounds the resulting
-drift at $0.016$.}
-\label{tab:models}
-\end{table}
-
-
 \section{Analysis}
 \label{sec:analysis}
 
@@ -538,7 +520,7 @@ chance, and the \emph{stronger} model harder.}
 \midrule
 random & 0.351 & \lodh{0.484} & \neu{$+0.133^{***}$} \\
 surface & 0.339 & \lodh{0.412} & \neu{$+0.073^{***}$} \\
-tag & 0.326 & \lodh{0.446} & \neu{$+0.120^{***}$} \\
+tag & 0.325 & \lodh{0.446} & \neu{$+0.120^{***}$} \\
 \midrule
 $+$ literal & \layah{0.136} & \lod{0.066} & $-0.070^{***}$ \\
 hard & \layah{0.149} & \lod{0.063} & $-0.086^{***}$ \\
@@ -565,9 +547,11 @@ Within this pair, then, \LAR{} measures something accuracy does not: a model
 can be selected as ``better'' on a conventional benchmark while being worse at
 what that benchmark proxies for. Laya-ml and Lod-lille answer byte-identical questions in the same language, so
 the crossover between them is a paired result. The error is not diffuse:
-the decomposition under \Dlit{} is gold / literal / other $= 0.151$ / $0.644$ /
-$0.207$ for Laya-ml and $0.066$ / $0.885$ / $0.050$ for Lod-lille, and on the
-clearest items Laya-ml places $p = 1.000$ on the literal gloss.
+the decomposition under \Dlit{} is gold / literal / other $= 0.136$ / $0.658$ /
+$0.206$ for Laya-ml and $0.066$ / $0.885$ / $0.050$ for Lod-lille, both on those
+888 items, and on the clearest of them Laya-ml places $p = 1.000$ on the literal
+gloss. Laya-ml's full-set decomposition, $0.151$ / $0.644$ / $0.207$, is in
+Appendix~\ref{app:ladder}.
 
 \paragraph{Capture tracks the language, not capability.} The arms above ran the
 literal condition in Bangla, while the commercial arm's headline $\LAR = 0.047$ is
@@ -581,15 +565,14 @@ thing.
 
 Two things follow. First, \textbf{every arm is far more captured in Bangla than in
 English on the same paired entries}: $0.731 \rightarrow 0.379$, $0.918 \rightarrow
-0.241$ and $0.304 \rightarrow 0.047$, all paired McNemar $p < 10^{-100}$, so the
-commercial model's apparent resistance was a property of its test language.
-Second, \textbf{capture is not monotone in capability}: Lod-lille is more accurate
-than Laya-ml and more captured, Jev-1.13 more accurate than both and less captured.
-The open arms fall below chance here; Jev-1.13 does not, but loses $0.390$ of
-accuracy against its own English run. The pool is not neutral and its Bangla
-literal option carries a cue the English one lacks; on the $5{,}485$ corpus items
-with no such cue, Bangla capture is still $0.581$ and $0.871$ on the open arms
-(Appendices~\ref{app:matrix}, \ref{app:construction}).
+0.241$ and $0.304 \rightarrow 0.047$, all paired McNemar $p < 10^{-100}$. Second,
+\textbf{capture is not monotone in capability}: Lod-lille is more accurate than
+Laya-ml and more captured, Jev-1.13 more accurate than both and less captured. The
+open arms fall below chance here; Jev-1.13 does not, but loses $0.390$ of accuracy
+against its own English run. The pool is not neutral and its Bangla literal option
+carries a cue the English one lacks; on the $5{,}485$ corpus items without it,
+Bangla capture is still $0.581$ and $0.871$ (Appendices~\ref{app:matrix},
+\ref{app:construction}).
 
 
 
@@ -640,10 +623,10 @@ Appendix~\ref{app:selective} adds Brier, equal-mass ACE and the AUGRC of
 \end{table}
 
 ECE depends on the binning \citep{nixon2019measuring}, so we also report the
-binning-free multiclass Brier score: $1.030$ and $1.391$ for the two open arms
-under \Dlit{} against $0.750$ for a uniform four-way distribution, so their
-reported probabilities are worse than declining to choose. Equal-mass bins move no
-ECE by more than $0.010$ (Appendix~\ref{app:selective}).
+binning-free multiclass Brier score: $1.030$ and $1.391$ for the open arms under
+\Dlit{} against $0.750$ for a uniform four-way distribution, so their reported
+probabilities are worse than declining to choose. Equal-mass bins move no ECE by
+more than $0.010$ (Appendix~\ref{app:selective}).
 
 Selective prediction therefore inverts on both open arms: restricting Laya-ml's
 \Dlit{} to its most confident 5\% gives $0.007$ accuracy against $0.151$ at full
@@ -651,16 +634,20 @@ coverage, and Lod-lille answers every item in its most confident 35\% incorrectl
 (Appendix~\ref{app:selective}). It is not an artifact of one confidence signal:
 Lod-lille's \emph{separate confidence head}, which estimates whether the answer is
 in the option list at all, shows the same inversion ($0.631$ against $0.295$), and
-it survives the AUGRC of
-\citet{traub2024selective}, which we report alongside AURC because they show AURC
-can favor a system that accepts almost nothing.
+it survives AUGRC
+\citep{traub2024selective}, which matters here because AURC aggregates risk
+conditioned on the accepted set and so over-weights failures made at high
+confidence, which is exactly where our inversion lives. For a random confidence
+signal AUGRC is half the error rate, so the baseline needs no simulation: under
+\Dlit{} the open arms score $0.448$ and $0.491$ against $0.425$ and $0.467$, worse
+than random on that measure as on AURC.
 
 Calibration degrades in all three arms; only the inversion is two-arm. Jev-1.13
 looks well calibrated in English (ECE $0.014$, Brier $0.110$) and is not on the
-same items in Bangla (ECE $0.135$, Brier $0.604$), where its AURC advantage over
-random falls from $5.2\times$ to $1.4\times$. It is not inverted, though: it stays
-more confident when correct ($0.724$) than when captured ($0.644$), so the sign of
-the effect depends on the arm. This does not contradict \citet{ibrahim2026evaluating}:
+same items in Bangla (ECE $0.135$, Brier $0.604$), where its advantage over a
+random gate falls from $5.2\times$ to $1.4\times$. It is not inverted, though,
+staying more confident when correct ($0.724$) than when captured ($0.644$), so the
+sign depends on the arm. This does not contradict \citet{ibrahim2026evaluating}:
 in-distribution calibration need not survive a targeted distractor shift, and it
 fails in the costly direction, since a confidence-gated cascade
 \citep{li2026jevjudge} accepts without review exactly the tail where the open arms
@@ -671,8 +658,8 @@ are \emph{least} accurate
 \label{sec:nosignal}
 
 The \textsc{o4} ablation replaces every option's text with a bare ordinal label,
-\bangla{অর্থ}~$j$ for the Bangla arms and \texttt{meaning}~$j$ for the commercial
-one, so the four options are distinguishable but carry no meaning. With the gold
+\bangla{অর্থ}~\texttt{1}--\texttt{4} for the Bangla arms and
+\texttt{meaning}~\texttt{1}--\texttt{4} for the commercial one, so the four options are distinguishable but carry no meaning. With the gold
 position randomized and no option carrying information, expected accuracy is
 $0.25$ and whatever confidence survives is overconfidence, with no modeling
 assumption needed to read it. It needs no gloss and no literal annotation, so it
@@ -689,17 +676,18 @@ we give as a gap rather than a binned ECE because the gap is a lower bound on EC
 and needs no binning choice to defend. Lod-lille, the weakest of the three on
 accuracy, is the only one whose confidence collapses appropriately ($0.282$).
 
-Jev-1.13 exposes a second field intended for exactly this case, a confidence that
-the answer is present in the option list at all. It does not rescue the reading:
-on \textsc{o4} that field reports $0.754$, against $0.946$ when the options carry
-their full glosses. It falls, but nowhere near the level the condition warrants,
-and it stays far above the $0.25$ an informed signal would approach. This matches
-\citet{zhong2026rejection}, who find Jev selects a correct option almost perfectly
-when one is present yet rejects option sets containing none at around $7\%$, and
-it is why we read the control as the most portable finding here: it needs no
-annotation and no matched language, a calibration number measured on
-in-distribution options says little about what a model reports when the list is
-degenerate, and a degenerate list is an ordinary consequence of an upstream bug or
+Jev-1.13 exposes a second field meant for exactly this case, a confidence that the
+answer is present in the option list at all, and it does not rescue the reading:
+on \textsc{o4} it reports $0.754$ against $0.946$ with full glosses. The reference
+is not the $0.25$ chance level of the top probability, since this field reports
+presence, so on a list where the answer provably is not present an informed value
+is near zero. The pattern matches \citet{zhong2026rejection} on a different task,
+with a scope condition that cuts both ways and that
+Appendix~\ref{app:positioning} sets out: a \emph{verification}-typed call recovers
+what the choice type does not, and we have not tested whether that holds here.
+What the control shows is what a caller of this answer type is told, which is why
+we read it as the most portable finding: it needs no annotation and no matched
+language, and a degenerate list is an ordinary consequence of an upstream bug or
 an empty retrieval rather than an adversarial construction. McNemar between the two
 open arms under \textsc{o4} is not significant ($p = 0.76$), so the instrument's
 null behaves alike in both.
@@ -759,30 +747,30 @@ as a default rather than a robustness check.
 \label{sec:bagofwords}
 
 Two interventions probe how each side of the item is read, and both carry scope
-conditions that we state with the result rather than in a footnote.
+conditions we state with the result.
 
 On the option side, scrambling the words inside every option costs almost nothing:
 writing \emph{signal} for accuracy above chance as a fraction of the full-gloss
 condition's, the three arms retain $0.928$, $0.944$ and $1.005$ of it. The
-companion truncation is weaker evidence than it looks, since the median Bangla
-gloss is four words and truncation to six is a no-op on $77.8\%$ of options. The
-scramble is the result, and it converges with \citet{sun2026typesafe} from the
-other direction; the scope condition is that the series runs on random
-distractors, where recognizing the right words already suffices, so it shows
-composition is not \emph{required} here rather than that these models cannot
-compose (Appendix~\ref{app:options}).
+companion truncation is weaker than it looks, since the median Bangla gloss is
+four words and truncation to six is a no-op on $77.8\%$ of options. The scramble
+is the result, and it converges with \citet{sun2026typesafe} from the other
+direction; the scope condition is that the series runs on random distractors,
+where recognizing the right words already suffices, so it shows composition is not
+\emph{required} here rather than that these models cannot compose
+(Appendix~\ref{app:options}).
 
 On the idiom side, E3 perturbs the expression while holding the option list fixed.
-It runs only on idioms of three words or more, so every manipulation changes the
-string on $99.7\%$ of items or better. Accuracy cannot carry the argument here,
-because the condition is \Dlit{} and the intact accuracies on E3's own items,
-$0.157$ and $0.072$, already sit below chance. Agreement with the intact answer has no such floor, and
-it is where the claim rests: under word-shuffling the open arms return the same
-option on $0.742$ and $0.917$ of items, so breaking the expression is close to
-invisible to them. The one manipulation that moves both is the gold carrier
-sentence, $+0.080$ and $+0.117$, so context rather than the idiom string carries
-the usable signal. That cuts both ways, since \citet{xu2026jevout} flip 61.4\% of
-correct decisions with short fluent additions chosen to redirect them
+It covers only idioms of three words or more, so every manipulation changes the
+string on $99.7\%$ of items or better. Accuracy cannot carry the argument, because
+the condition is \Dlit{} and the intact accuracies on E3's own items, $0.157$ and
+$0.072$, already sit below chance. Agreement with the intact answer has no such
+floor, and that is where the claim rests: under word-shuffling the open arms
+return the same option on $0.742$ and $0.917$ of items, so breaking the expression
+is close to invisible to them. The one manipulation that moves both is the gold
+carrier sentence, $+0.080$ and $+0.117$, so context rather than the idiom string
+carries the usable signal. That cuts both ways, since \citet{xu2026jevout} flip
+61.4\% of correct decisions with short fluent additions chosen to redirect them
 (Appendix~\ref{app:unit}).
 
 \subsection{What the item construction could explain}
@@ -790,21 +778,28 @@ correct decisions with short fluent additions chosen to redirect them
 
 The literal gloss is an annotated field rather than a string we wrote, and in this
 corpus it is often lexically close to the idiom. Three properties could let a
-lexical matcher select it without reading anything. The idiom is a single word on $42.3\%$ of items, and on $18.0\%$ the
-literal gloss contains the idiom verbatim. In the matrix pool the Bangla literal
-option is the only one written partly in Latin script, since no Bangla figurative
-gloss in the corpus contains a Latin character. And it is the longest of the four
-options on $67\%$ of items.
+lexical matcher select it without reading anything. The idiom is a single word on
+$42.3\%$ of items, and on $18.0\%$ the literal gloss contains the idiom verbatim.
+In the matrix pool it is the only option written partly in Latin script, since no
+Bangla figurative gloss in the corpus contains a Latin character. And it is longer
+than the gold gloss on $67\%$ of items, though longest of all four on only
+$40.2\%$.
 
-Each is worth real capture, and we report that rather than only the controls:
-verbatim overlap is worth $+0.151$ and $+0.120$ of \LAR{} on the two open arms, and
-the Latin-script cue $+0.165$ and $+0.037$. None of them produces the result.
-Table~\ref{tab:construction} keeps only the $2{,}480$ items that are multiword,
-whose gloss does not contain the idiom and carries no parenthetical, so all three
-cues are absent at once: \LAR{} is still $0.560$ and $0.891$ against a chance level
-of $0.250$. Appendix~\ref{app:items} gives the full breakdown, including \LAR{} by
-idiom length, which peaks on two-word idioms rather than on the single-word ones
-where idiom and gloss most often coincide.
+Two of the three buy measurable capture (Table~\ref{tab:construction}): verbatim
+overlap on both arms, and the Latin-script cue on Laya-ml, with Lod-lille's
+interval covering zero. Length is the exception and needs separate handling, since
+the subset below does not remove it. Splitting on whether the literal option is
+the longest of the four moves \LAR{} by $-0.034$ $[-0.055,-0.013]$ on Laya-ml and
+$+0.020$ $[-0.024,+0.064]$ on Lod-lille, so the larger arm is slightly \emph{less}
+captured when it is: a real asymmetry in the material, not a route to capture.
+
+Restricting to the $2{,}480$ items that are multiword, whose gloss does not
+contain the idiom and carries no parenthetical, removes both lexical cues and
+narrows the length gap to $36.6$ against $32.4$ characters. \LAR{} is still
+$0.560$ and $0.891$ against a chance level of $0.250$, and the length split stays
+null. Appendix~\ref{app:items} has the rest, including \LAR{} by idiom length,
+which peaks on two-word idioms rather than the single-word ones where idiom and
+gloss most often coincide.
 
 \begin{table}[t]
 \centering\small
@@ -822,19 +817,22 @@ no Latin-script cue     & 0.581 & 0.871 \\
 Latin-script cue        & 0.746 & 0.909 \\
 \quad difference        & $+0.165$ & $+0.037$ \\
 \addlinespace
-\multicolumn{3}{@{}l}{\emph{all three cues absent} ($n=2{,}480/266$)} \\
+\multicolumn{3}{@{}l}{\emph{both lexical cues absent} ($n=2{,}480/266$)} \\
 \LAR                    & \textbf{0.560} & \textbf{0.891} \\
 accuracy                & 0.187 & 0.079 \\
 \bottomrule
 \end{tabularx}
-\caption{\textbf{The construction cues are real and do not carry the result.}
+\caption{\textbf{Two lexical cues are real; neither carries the result.}
 \swL Laya-ml, \swD Lod-lille. Each cue would let a lexical matcher pick the
-literal option without reading it, and each is worth real capture. The last block
-keeps only items that are multiword, whose literal gloss does not contain the
-idiom, and whose gloss carries no English parenthetical, so no cue is available:
-\LAR{} stays far above the $0.250$ chance level on both arms. The commercial arm
-cannot be split this way, since its only Bangla literal run is the matrix pool,
-where every item carries a parenthetical by construction.}
+literal option without reading it. Verbatim overlap moves \LAR{} on both arms and
+the Latin-script cue on Laya-ml only, its Lod-lille interval covering zero. The
+last block keeps items that are multiword, whose literal gloss does not contain
+the idiom and carries no English parenthetical, so neither lexical cue is
+available: \LAR{} stays far above the $0.250$ chance level on both arms. Length is
+not removed by that subset and is reported separately in \S\ref{sec:construction},
+where it does not predict capture. The commercial arm cannot be split this way,
+since its only Bangla literal run is the matrix pool, where every item carries a
+parenthetical by construction.}
 \label{tab:construction}
 \end{table}
 
@@ -848,28 +846,24 @@ Lod-lille $+0.380$ and Jev-1.13 $+0.230$, each paired on that arm's own shared
 items (all McNemar $p<0.001$). Lod-lille reaches $0.864$ in English against
 $0.484$ in Bangla, so the figurative concepts appear largely available to it and
 the Bangla route is where the loss occurs, consistent with its documented
-English-only training evaluation. Laya-ml's control supports the reading: its
-English-only checkpoint on Bengali script sits at $0.283$, barely above chance,
-which makes it unlikely the Bangla result is an artifact of the scorer rather than
-of the language. As in the matrix, the English condition presents the annotator's
-nearest English idiom rather than a translation, so these are paired entries
-(Appendices~\ref{app:crossling}, \ref{app:construction}).
+English-only training evaluation. Laya-ml's English-only checkpoint on Bengali
+script sits at $0.283$, barely above chance, which makes it unlikely the Bangla
+result is an artifact of the scorer rather than of the language. Here too the
+English condition presents the annotator's nearest English idiom rather than a
+translation (Appendices~\ref{app:crossling}, \ref{app:construction}).
 
 \section{Discussion}
 
-Three cautions follow for anyone deploying this class, as cautions rather than
-recommendations. A returned probability is worth little without a
-measurement of what the model returns on a degenerate option list, since that case
-arrives from an upstream bug or an empty retrieval rather than from an adversary.
-A benchmark score is not by itself evidence against literal capture: on our open
-arms the two move in opposite directions, and the most accurate arm is the least
-captured while the middle arm is the most. And an evaluation
-that fixes option order is partly reporting position and labeling, which
-\S\ref{sec:order} shows cannot be separated in this design.
-
-None of this rebuts the cascade designs, whose cost and latency advantages are
-established \citep{tang2026audit,rao2026rubric}; it bounds them, since the
-property they rest on degrades first and silently.
+Three cautions follow for anyone deploying this class. A returned probability is
+worth little without a measurement of what the model returns on a degenerate
+option list, a case that arrives from an upstream bug or an empty retrieval rather
+than from an adversary. A benchmark score is not by itself evidence against
+literal capture, since on our open arms the two move in opposite directions. And
+an evaluation that fixes option order is partly reporting position and labeling,
+which \S\ref{sec:order} shows cannot be separated here. None of this rebuts the
+cascade designs, whose cost and latency advantages are established
+\citep{tang2026audit,rao2026rubric}; it bounds them, since the property they rest
+on degrades first and silently.
 
 \section{Conclusion}
 
@@ -881,24 +875,19 @@ is in that list and reading the probability vector back, which needs no new
 annotation and works unchanged on a closed, text-free model.
 
 One substituted option is enough. The idiom's own expert literal gloss draws all
-three arms toward the literal reading, which in Bangla takes $66\%$ to $96\%$ of
-what each arm gets wrong, and the model $\times$ language matrix separates two
+three arms toward the literal reading, taking $66\%$ to $96\%$ of what each arm
+gets wrong in Bangla, and the model $\times$ language matrix separates two
 explanations that are easy to conflate: capture falls by $0.26$ to $0.68$ in every
 arm when the paired entries are asked in English, so the commercial model's
 apparent resistance belongs to its test language rather than to the model.
 Capability does not order the failure, the most accurate arm being the least
-captured and the middle arm the most. Nor is any of this visible to the caller:
-confidence inverts on the open arms under the same shift, calibration degrades on
-all three, and on an option list stripped of semantics the arms still report
-between $0.28$ and $0.82$.
+captured. Nor is any of this visible to the caller: confidence inverts on the open
+arms under the same shift, calibration degrades on all three, and on an option
+list stripped of semantics the arms still report between $0.28$ and $0.82$.
 
-We have tried to be equally clear about what the design cannot settle. The two
-language cells are paired entries rather than translations; the literal option
-carries lexical, script and length cues, each worth real capture, which we measure
-before showing capture survives their removal; permuting an option list relabels
-it as well as reordering it; and one corpus with two small open models and a
-mutable endpoint is a narrow base. We release the instrument and the per-item
-outputs.
+What the design cannot settle is set out in Limitations, and the cues that could
+have produced this result are measured in \S\ref{sec:construction} rather than
+assumed away. We release the instrument and the per-item outputs.
 
 \section*{Limitations}
 
@@ -917,8 +906,9 @@ Laya-ml's run had its per-bucket temperatures unset, so its ECE figures are raw
 and we do not describe the arms as representing distinct calibration philosophies:
 both open arms are effectively untempered and comparable on that axis, and
 Jev-1.13's internal calibration is unknown to us. Laya-ml also ran with
-\texttt{bf16} requested on a Turing card, which has no native \texttt{bf16} path,
-so its arithmetic is emulated (Appendix~\ref{app:repro}); a reader reproducing on
+\texttt{bf16} requested on a Turing card, which has no \texttt{bf16} tensor-core
+path, so the arithmetic falls back to \texttt{fp32} CUDA cores
+(Appendix~\ref{app:repro}); a reader reproducing on
 later hardware is not reproducing the same numerics.
 
 Lod-lille ran a fixed 10\% subset (888 items), so its intervals are roughly
@@ -952,7 +942,9 @@ in-pool elevation. The language comparison is paired within item and within mode
 so the selection affects the levels rather than the direction. The matrix also covers
 the literal condition only; we did not run the other distractor families in both
 languages. The confidence results in \S\ref{sec:confidence} remain two-arm,
-since the commercial arm's reliability was measured on its English run.
+because the commercial arm never shows the inversion, not because it was
+unmeasured: \S\ref{sec:confidence} reports its Bangla calibration from the matrix
+outputs.
 
 The two language cells are also not symmetric in construction, and this is the
 limitation we would flag hardest. They are paired entries rather than identical
@@ -1018,6 +1010,28 @@ one probability vector. Nothing else is exchanged: there is no prompt template,
 no system message, no sampling parameter and no generated text. This is the
 whole interface, which is why the option set is the only intervention surface
 available.
+
+\begin{table}[t]
+\centering\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}*{3}{>{\centering\arraybackslash}X}@{}}
+\toprule
+& \textbf{\laya{Laya-ml}} & \textbf{\lod{Lod-lille}} & \textbf{\jev{Jev-1.13}} \\
+\midrule
+\textbf{backbone} & mmBERT & Qwen3-0.6B & closed \\
+\textbf{scoring} & marker & independent & unknown \\
+\textbf{parameters} & 322M & 0.6B & n/a \\
+\textbf{items} & 8{,}876 & 888 & 8{,}761 \\
+\textbf{latency} & 27.2\,ms & 86.1\,ms & API \\
+\textbf{weights} & open & open & closed \\
+\bottomrule
+\end{tabularx}
+\caption{\textbf{The three model arms.} Item counts and latencies are those used
+in the reported experiments. Parameter counts are the model cards'. Lod-lille was
+run on a fixed 10\% random subset; Appendix~\ref{app:subset} bounds the resulting
+drift at $0.016$.}
+\label{tab:models}
+\end{table}
 
 \paragraph{Request.} For the commercial arm the body posted to
 \texttt{/api/alpha/decisions} is
@@ -1155,6 +1169,20 @@ same sensitivity with opposite signs, and the uncomfortable implication is that
 a caller cannot tell them apart from the interface. A model whose answer
 improves when helpful context is appended is, necessarily, a model whose answer
 moves when context is appended at all.
+
+\paragraph{Rejection, and the answer type.} \citet{zhong2026rejection} report the
+failure closest to our \textsc{o4} control: asked to choose among candidates that
+contain no correct answer, Jev rejects on about $7\%$ of cases, while selecting a
+correct candidate almost perfectly when one is present. Two scope conditions
+matter. Their items are paired arithmetic problems with an explicit rejection
+option, which ours are not, so the agreement is between a reading and a result
+rather than a replication. And they find the same model rejects correctly on about
+$99\%$ of those cases when asked for a Boolean verification of a single candidate
+instead. That is a different answer type from the choice type we hold fixed
+throughout (Appendix~\ref{app:payload}), and it is a genuine possibility that a
+verification-typed call would recover what the choice type does not. Our claim is
+about what the choice interface reports, which is the interface these systems are
+deployed behind; it is not a claim that the underlying model cannot tell.
 
 \paragraph{Calibration and cascades.} \citet{ibrahim2026evaluating} evaluate
 decision models against 19 language models on 18 computational social science
@@ -1571,24 +1599,25 @@ contains the literal gloss.
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.5cm}>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.15cm}*{5}{>{\centering\arraybackslash}X}@{}}
 \toprule
-\textbf{Family} & \textbf{acc} & \textbf{ECE} & \textbf{ACE} & \textbf{Brier} \\
+\textbf{Family} & \textbf{acc} & \textbf{ECE} & \textbf{ACE} & \textbf{Brier} &
+\textbf{AUGRC} \\
 \midrule
-\multicolumn{5}{@{}l}{\laya{\emph{Laya-ml} ($n=8{,}876$)}} \\
-\Drand & 0.367 & 0.071 & 0.073 & 0.728 \\
-\Dlit  & 0.151 & 0.385 & 0.385 & \textbf{1.030} \\
-\Dhard & 0.144 & 0.389 & 0.389 & \textbf{1.030} \\
+\multicolumn{6}{@{}l}{\laya{\emph{Laya-ml} ($n=8{,}876$)}} \\
+\Drand & 0.367 & 0.071 & 0.073 & 0.728 & 0.294 \textit{(.316)} \\
+\Dlit  & 0.151 & 0.385 & 0.385 & \textbf{1.030} & \textbf{0.448} \textit{(.425)} \\
+\Dhard & 0.144 & 0.389 & 0.389 & \textbf{1.030} & \textbf{0.450} \textit{(.428)} \\
 \addlinespace
-\multicolumn{5}{@{}l}{\lod{\emph{Lod-lille} ($n=888$)}} \\
-\Drand & 0.484 & 0.073 & 0.084 & 0.608 \\
-\Dlit  & 0.066 & 0.679 & 0.681 & \textbf{1.391} \\
-\Dhard & 0.063 & 0.673 & 0.674 & \textbf{1.390} \\
+\multicolumn{6}{@{}l}{\lod{\emph{Lod-lille} ($n=888$)}} \\
+\Drand & 0.484 & 0.073 & 0.084 & 0.608 & 0.193 \textit{(.258)} \\
+\Dlit  & 0.066 & 0.679 & 0.681 & \textbf{1.391} & \textbf{0.491} \textit{(.467)} \\
+\Dhard & 0.063 & 0.673 & 0.674 & \textbf{1.390} & \textbf{0.490} \textit{(.468)} \\
 \addlinespace
-\multicolumn{5}{@{}l}{\jev{\emph{Jev-1.13}, English ($n=3{,}265$)}} \\
-\Drand & 0.968 & 0.005 & 0.003 & 0.048 \\
-\Dlit  & 0.931 & 0.014 & 0.013 & 0.107 \\
-\Dhard & 0.854 & 0.047 & 0.047 & 0.220 \\
+\multicolumn{6}{@{}l}{\jev{\emph{Jev-1.13}, English ($n=3{,}265$)}} \\
+\Drand & 0.968 & 0.005 & 0.003 & 0.048 & 0.002 \textit{(.016)} \\
+\Dlit  & 0.931 & 0.014 & 0.013 & 0.107 & 0.010 \textit{(.035)} \\
+\Dhard & 0.854 & 0.047 & 0.047 & 0.220 & 0.034 \textit{(.073)} \\
 \bottomrule
 \end{tabularx}
 \caption{\textbf{Three calibration metrics on the same recorded
@@ -1596,12 +1625,14 @@ distributions.} \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13. ECE uses 15
 equal-width bins, ACE the adaptive equal-mass variant of
 \citet{nixon2019measuring}; the largest gap between them across these nine cells
 is $0.010$, so the ECE figures elsewhere in the paper are not artifacts of the
-binning. Brier is
-the multiclass score and needs no bins. Bold marks cells above $0.750$, the
-Brier score of a uniform four-way distribution: in those cells the model's full
-reported distribution is less useful to a caller than no preference at all. No
-new model calls were made; all three metrics are re-readings of the released
-per-item probabilities.}
+binning. Brier is the multiclass score and needs no bins; bold marks cells above $0.750$,
+its value for a uniform four-way distribution, where the model's reported
+distribution is less useful to a caller than no preference at all. AUGRC is the
+generalized risk-coverage area of \citet{traub2024selective}, which does not
+condition risk on the accepted set and so does not over-weight high-confidence
+failures; the parenthesized value is its analytic random baseline, half the error
+rate, and bold marks the cells that are worse than it. No new model calls were
+made; every metric here is a re-reading of the released per-item probabilities.}
 \label{tab:calib}
 \end{table}
 
@@ -1755,7 +1786,7 @@ A very clever person; a shrewd individual; someone whose mindset or intentions a
 
 \textit{semantics removed}
 &
-\cellcolor{fGrey}\texttt{A}
+\cellcolor{fGrey}\bangla{অর্থ} 1
 &
 \\
 
@@ -1851,8 +1882,8 @@ original script with the annotators' own glosses and English equivalents. They a
 drawn from the extreme tail rather than sampled, items where the mass on the
 literal gloss is at or near $1.000$, and we flag the selection because the tail is
 what an aggregate \LAR{} of $0.644$ does not convey. All five also come from the
-$2{,}480$ items of \S\ref{sec:construction} on which none of the construction cues
-is available, so none of them is a case where the idiom and its literal gloss are
+$2{,}480$ items of \S\ref{sec:construction} on which neither lexical cue is
+available, so none of them is a case where the idiom and its literal gloss are
 the same string or where the literal option is the only one in Latin script. What
 they add is the \emph{kind} of expression involved: \bangla{জলের দাম}
 (\emph{joler dam}), the price of water, means dirt cheap, and \bangla{দু কথা}
@@ -1920,10 +1951,10 @@ annotators' own rather than one we wrote.
 \end{tabularx}
 \caption{\textbf{Items where Laya-ml places almost all probability on the literal
 gloss.} All five are drawn from the $2{,}480$ items on which none of the
-construction cues of \S\ref{sec:construction} is available: each idiom is
+lexical construction cues of \S\ref{sec:construction} is available: each idiom is
 multiword, its literal gloss does not contain the idiom string, and the gloss
 carries no English parenthetical, so the literal option is not the only
-Latin-bearing or the obviously longest one. Glosses and English equivalents are
+Latin-bearing one. Glosses and English equivalents are
 the corpus's own; the English in parentheses is ours, for readability. Both the
 literal and the figurative gloss were in the option list, and the last column is
 the mass placed on the literal one under \Dlit{} on the full Bangla run. On every
@@ -2464,7 +2495,8 @@ corpus it is often lexically close to the idiom. Of $8{,}876$ items, $3{,}752$
 or more. On $1{,}303$ items ($14.7\%$) the Bangla part of the literal gloss is
 identical to the idiom, and on $1{,}599$ ($18.0\%$) it contains the idiom string
 verbatim. The literal option averages $41.1$ characters against $31.7$ for the
-gold gloss and is the longer of the two on $67\%$ of items. Some entries are also
+gold gloss and is the longer of the two on $67\%$ of items, although against all
+three alternatives it is the longest on only $40.2\%$. Some entries are also
 better described as polysemous words than as idioms: for \bangla{চারপায়া}
 (\emph{charpaya}), ``four-legged'' and ``rope cot'' are two senses of one word
 rather than a literal and a figurative reading of a phrase. We did not filter
@@ -2479,10 +2511,24 @@ single-word items where the idiom and its gloss are most often the same string.
 Verbatim overlap does matter: \LAR{} is $0.767$ where the gloss contains the
 idiom against $0.616$ where it does not ($+0.151$, bootstrap
 $[+0.128, +0.175]$), and $0.986$ against $0.866$ on Lod-lille
-($+0.120$, $[+0.089, +0.150]$). Removing every cue at once, which leaves the
+($+0.120$, $[+0.089, +0.150]$). Removing both lexical cues at once, which leaves the
 $2{,}480$ items that are multiword, carry no verbatim overlap and carry no
 English parenthetical, leaves \LAR{} at $0.560$ and $0.891$ and accuracy at
-$0.187$ and $0.079$ (Table~\ref{tab:construction}). The worked examples in
+$0.187$ and $0.079$ (Table~\ref{tab:construction}).
+
+Length is not removed by that subset, so we test it on its own. Reconstructing each
+\Dlit{} option list under the run's own seed, the literal option is the longest of
+the four on $40.2\%$ of all items and averages $41.1$ characters against $31.5$ for
+the other three. Inside the cue-free subset both gaps narrow, to $30.6\%$ and
+$36.6$ against $32.4$ characters, so the subset does attenuate length without
+eliminating it. It does not need to: splitting on whether the literal option is the
+longest gives \LAR{} $0.623$ against $0.657$ on Laya-ml, a difference of $-0.034$
+$[-0.055, -0.013]$ in the \emph{opposite} direction to the cue, and $0.897$ against
+$0.877$ on Lod-lille, $+0.020$ $[-0.024, +0.064]$. Within the cue-free subset the
+two differences are $-0.026$ $[-0.069, +0.016]$ and $+0.056$ $[-0.025, +0.130]$,
+neither distinguishable from zero. Length is a genuine asymmetry in the material
+and not a route to capture, which is why we report it separately rather than
+claiming the subset removes it. The worked examples in
 Table~\ref{tab:bnexamples} are drawn from this subset so that none of them rests
 on a cue.
 
@@ -2588,7 +2634,8 @@ is scoped by something the three arms do not share. The literal condition needs
 an annotated literal gloss, which exists in Bangla for the whole corpus but in
 English only for the $3{,}265$-item pool. The confidence results need a comparable
 confidence signal, and the three arms expose three different ones: Laya-ml's
-fitted per-bucket temperatures, Lod-lille's separate confidence head, and
+maximum over option markers, which its shipped per-bucket temperatures were not
+applied to (Appendix~\ref{app:repro}), Lod-lille's separate confidence head, and
 Jev-1.13's maximum together with a separate presence-of-answer field, which we
 report on the semantics-free control in \S\ref{sec:nosignal}. The order experiment
 needs the full permutation set, which
@@ -2697,9 +2744,12 @@ state it as a reading.
 \paragraph{What E3 can and cannot show.} Three scope conditions bound it, and we
 state them rather than leaving them to be inferred.
 
-\emph{The perturbations are real.} E3 runs only on idioms of three words or more,
-$1{,}136$ of three words, $495$ of four and $147$ longer, so no manipulation is a
-no-op on a one- or two-word string. Measured against the logged intact state, the
+\emph{The perturbations are real.} E3 selects idioms of three words or more under
+the same tokenizer the distractor builder uses. The corpus holds $1{,}791$ such
+idioms and the logged outputs cover $1{,}778$ of them, $1{,}136$ of three words,
+$495$ of four and $147$ longer; the $13$ missing are absent from the logged output
+rather than excluded by the rule, and at $0.7\%$ of the condition they move no
+reported figure. No manipulation is a no-op on a one- or two-word string. Measured against the logged intact state, the
 shuffle changes the string on $99.9\%$ of items, reversal on $99.7\%$, deletion and
 substitution on $100\%$. The one genuine collision is between shuffle and reversal,
 which coincide on $16.0\%$ of items because a three-word reversal is one of only
@@ -2873,7 +2923,7 @@ the condition \S\ref{sec:nosignal} builds on, because it is the one place where
 accuracy is known a priori and any confidence above zero is therefore unambiguously
 excess.
 
-\paragraph{Caveats.} Two bound what the \textsc{o}-series shows. First,
+\paragraph{Caveats.} Three bound what the \textsc{o}-series shows. First,
 truncation to six words is a weaker manipulation than it sounds: the median Bangla
 gloss is four words, so truncation leaves $77.8\%$ of options untouched, and the
 English options, median seven words, are cut on $58.0\%$. The scramble is the
@@ -3089,10 +3139,11 @@ are near-stable.}
 \paragraph{Environment.} Python 3.13.15 throughout. The two open arms ran on one
 Tesla T4 (15{,}360\,MiB): Laya-ml with \texttt{amp\_dtype} set to \texttt{bf16}
 and \texttt{max\_len} 1024 at 27.2\,ms per call, Lod-lille in \texttt{fp32} at
-86.1\,ms per call. The T4 is Turing and has no native \texttt{bf16} path, so that
-setting is emulated: the autocast context accepts it and the arithmetic runs
-through \texttt{fp32} tensor cores with \texttt{bf16} rounding at the cast
-boundaries. We report the configured value because that is what the run record
+86.1\,ms per call. The T4 is Turing, whose tensor cores take \texttt{fp16} and
+integer inputs only, so there is no native \texttt{bf16} path and no
+\texttt{fp32} or \texttt{tf32} tensor-core path either: the autocast context
+accepts the setting and the arithmetic falls back to ordinary \texttt{fp32} CUDA
+cores, with \texttt{bf16} rounding only at the cast boundaries. We report the configured value because that is what the run record
 holds, and flag it because a reader comparing against an Ampere or later card is
 not comparing the same numerics.
 
@@ -3170,9 +3221,10 @@ its English-ladder value to four decimal places ($0.0472$), which is the check
 that the two constructions measure the same thing.
 
 \paragraph{Known gaps.} E2 was not run on the commercial arm. The reason is
-budget and ordering rather than language: its Bangla blocks, the control and the
+ordering rather than language or cost: its Bangla blocks, the control and the
 matrix, were planned before the surface-invariance pairs were, and we did not
-return to it. The matrix covers the literal condition only; the other distractor
+return to it. Cost was not the constraint, since the whole commercial arm came to
+under a dollar. The matrix covers the literal condition only; the other distractor
 families were not run in both languages. The confidence \emph{inversion} remains a
 two-arm result, although \S\ref{sec:confidence} reports the commercial arm's
 Bangla calibration from the matrix outputs.
