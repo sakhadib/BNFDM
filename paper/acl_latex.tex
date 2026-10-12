@@ -129,20 +129,20 @@
 Decision models, non-generative scorers that report a probability over
 caller-supplied options and emit no text, are increasingly deployed as routers,
 classifiers and guardrails. Because they generate nothing, rationales and
-chain-of-thought do not apply. We audit three of them, an encoder scorer, a
-decoder scorer and a closed API, entirely through interventions on the option set,
-using expert-annotated Bangla idioms carrying both a gold figurative and a gold
-literal gloss. Dropping an idiom's own literal
-gloss into the option list draws every arm toward it: in Bangla it takes $66\%$ to
-$96\%$ of each model's remaining errors. A full model $\times$ language matrix over
-one shared item set shows how far this depends on the test language: every arm is
-$1.9$ to $6.4$ times more captured in Bangla than in English on the same paired
-entries, the commercial model's apparent resistance is a property of the language
-it was tested in, and capability does not order the failure. Calibration
-degrades in all three arms under the same shift, and on the two open arms
+chain-of-thought do not apply. We audit three: an encoder scorer, a decoder
+scorer and a closed API, entirely through interventions on the option set, using
+expert-annotated Bangla idioms carrying a gold figurative and a gold literal
+gloss. Dropping an idiom's own literal gloss into the option list draws every arm
+toward it, taking $66\%$ to $96\%$ of each arm's remaining Bangla errors. A model
+$\times$ language matrix over one shared item set shows how far this depends on
+the test language: every arm is $1.9$ to $6.4$ times more captured in Bangla than
+in English on the same paired entries, the commercial model's apparent resistance
+is a property of its test language, and capability does not order the failure.
+Calibration degrades in all three arms under the same shift, and on the open arms
 confidence inverts, so gating on it is worse than gating at random. On a
 semantics-free option list, where accuracy is at chance, the best-calibrated arm
-still reports mean confidence $0.82$.
+still reports mean confidence $0.82$. Code and data are available at
+\url{https://anonymous.4open.science/r/FSS-CC4D/}.
 \end{abstract}
 
 
@@ -3155,7 +3155,7 @@ read against that build.
 
 \paragraph{Release.} The instrument, the per-item outputs for every cell, the
 analysis scripts and the figure sources are available at
-\url{https://anonymous.4open.science/r/anon-project} for review, and the same material
+\url{https://anonymous.4open.science/r/FSS-CC4D/} for review, and the same material
 will be released under a permanent identifier on acceptance.
 
 \paragraph{Temperatures.} Laya-ml's run recorded
