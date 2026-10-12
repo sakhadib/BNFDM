@@ -1,4 +1,4 @@
-"""BNFDM figure style.
+"""ANON-PROJECT figure style.
 
 Palette is used exactly as specified, undarkened:
     #27ebf5 cyan    Laya-ml
@@ -42,7 +42,7 @@ ARM_LABEL = {"laya-ml": "Laya-ml", "lod-lille-0.6b": "Lod-lille", "jev-1.13": "J
 ARMS3 = ["laya-ml", "lod-lille-0.6b", "jev-1.13"]
 ARMS2 = ["laya-ml", "lod-lille-0.6b"]
 
-CMAP_SEQ = LinearSegmentedColormap.from_list("bnfdm_seq", ["#FFFFFF", YEL, MAG, K])
+CMAP_SEQ = LinearSegmentedColormap.from_list("anon_project_seq", ["#FFFFFF", YEL, MAG, K])
 
 W1, W2 = 3.15, 6.50          # ACL single / double column, inches
 EDGE = dict(linewidth=0)     # fills carry no outline

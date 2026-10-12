@@ -1,8 +1,8 @@
-# BNFDM — Lod-lille-0.6B arm (standalone)
+# ANON-PROJECT — Lod-lille-0.6B arm (standalone)
 
 Self-contained. Builds its own root, downloads its own copy of the dataset, rebuilds the splits and the task instrument from scratch. Nothing from the Laya run is read. Runs on a fixed 10% subset because this model is far slower than Laya.
 
-Root: `/content/drive/MyDrive/BNFDM`. Results under `results/lod-lille-0.6b/`.
+Root: `/content/drive/MyDrive/ANON-PROJECT`. Results under `results/lod-lille-0.6b/`.
 
 **The repo moved.** `thefloydd/qwen3-0.6b-rlcd` is now **`mrn-dk/lod-lille-0.6B`** — same model (Qwen3-0.6B-Base + merged LoRA), renamed account and repo. That's why `bouncy` isn't on PyPI: there is no package any more. It ships `modeling_lod.py` as `trust_remote_code`, so `torch` + `transformers` is the whole dependency list and the call is `model.score(state=..., questions=...)`.
 
@@ -46,7 +46,7 @@ drive.mount('/content/drive')
 import os, json, platform, subprocess, datetime as dt
 from pathlib import Path
 
-ROOT  = Path("/content/drive/MyDrive/BNFDM")
+ROOT  = Path("/content/drive/MyDrive/ANON-PROJECT")
 MODEL = "lod-lille-0.6b"
 RUN   = dt.datetime.now().strftime("%Y%m%d-%H%M")
 
@@ -840,7 +840,7 @@ print(f"\n{len(arte)} artefacts")
 ## What lands on disk
 
 ```
-BNFDM/
+ANON-PROJECT/
 ├── configs/task.json
 ├── data/
 │   ├── bagdhara_raw.jsonl

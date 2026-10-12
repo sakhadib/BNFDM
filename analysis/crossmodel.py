@@ -18,7 +18,7 @@ import pandas as pd
 from scipy.stats import binomtest
 
 sys.path.insert(0, str(Path(__file__).parent))
-from bnfdm_style import boot_ci  # noqa: E402
+from anon_project_style import boot_ci  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TBL = ROOT / "analysis" / "tables"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BNFDM analysis, both arms.
+"""ANON-PROJECT analysis, both arms.
 
 Arms:
   laya-ml        Laya multilingual (convaiinnovations/laya, subfolder multilingual)
@@ -28,7 +28,7 @@ import pandas as pd
 from scipy.stats import binomtest
 
 sys.path.insert(0, str(Path(__file__).parent))
-from bnfdm_style import boot_ci, ece, aurc  # noqa: E402
+from anon_project_style import boot_ci, ece, aurc  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "analysis" / "tables"

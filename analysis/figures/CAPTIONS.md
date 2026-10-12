@@ -257,7 +257,7 @@ Each figure writes three siblings in this directory: `.pdf` (for the paper),
 in the text from the `.csv`, not from reading the bars.
 
 Regenerate with `python analysis/figures.py`. Colours and all shared helpers
-live in `analysis/bnfdm_style.py`; that module deliberately contains **no**
+live in `analysis/anon_project_style.py`; that module deliberately contains **no**
 label, legend or value-annotation helpers, so a figure cannot drift back into
 carrying its own key.
 

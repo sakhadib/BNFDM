@@ -1,4 +1,4 @@
-# BNFDM — the missing matrix cells
+# ANON-PROJECT — the missing matrix cells
 
 One notebook, one new result: **literal capture as a complete model × language
 matrix**, on the same 3,265-item pool, with one option-construction function and
@@ -23,8 +23,8 @@ should land on the existing $\LAR = 0.047$.
 single calls at 27 ms ≈ 3 min. Lod ≈ 6,530 at 86 ms ≈ 9 min. Model loading
 dominates the wall clock, not inference.
 
-**Runtime:** T4. **Root:** `/content/drive/MyDrive/BNFDM`. Everything this
-notebook writes goes to `BNFDM/added/`; nothing existing is touched.
+**Runtime:** T4. **Root:** `/content/drive/MyDrive/ANON-PROJECT`. Everything this
+notebook writes goes to `ANON-PROJECT/added/`; nothing existing is touched.
 
 Every cell appends to JSONL and skips work already done, so you can lose the
 session and re-run from the top.
@@ -41,7 +41,7 @@ drive.mount('/content/drive')
 import os, json, platform, subprocess, datetime as dt
 from pathlib import Path
 
-ROOT = Path("/content/drive/MyDrive/BNFDM")
+ROOT = Path("/content/drive/MyDrive/ANON-PROJECT")
 OUT  = ROOT / "added"                      # everything new lands here
 RUN  = dt.datetime.now().strftime("%Y%m%d-%H%M")
 
@@ -634,7 +634,7 @@ if len(j_en):
 ```python
 # ── 13 ── one archive to attach ────────────────────────────────────────────
 import shutil
-z = shutil.make_archive("/content/bnfdm_added", "zip", OUT)
+z = shutil.make_archive("/content/anon_project_added", "zip", OUT)
 print(z, f"{os.path.getsize(z)/1e6:.1f} MB")
 from google.colab import files; files.download(z)
 ```
@@ -643,7 +643,7 @@ from google.colab import files; files.download(z)
 
 ## What to send back
 
-`bnfdm_added.zip`, or push `BNFDM/added/` to the repo. The two files that matter
+`anon_project_added.zip`, or push `ANON-PROJECT/added/` to the repo. The two files that matter
 are `results/matrix_summary.csv` and `results/matrix_language_effect.csv`; the
 per-cell `raw.csv` files carry the item-level rows for paired tests.
 

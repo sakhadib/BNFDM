@@ -1,4 +1,4 @@
-# BNFDM — Bangla Figurative Decision-Model diagnostics
+# ANON-PROJECT — Bangla Figurative Decision-Model diagnostics
 
 Behavioural diagnostics for *decision models* — non-autoregressive, option-scoring
 models that return calibrated probabilities over a caller-supplied option set and
@@ -43,13 +43,13 @@ captured one.
 ## Layout
 
 ```
-BNFDM/
+ANON-PROJECT/
 ├── FINDINGS.md                      write-up: 8 result sections, limitations
 ├── LAYA_RUN/  results/laya-ml/      full set, n = 8,876
 ├── LOD_RUN/   results/lod-lille-0.6b/  10% subset, n = 888
 │              data/splits/          full · sub10 · meta (shared contract)
 └── analysis/
-    ├── bnfdm_style.py               CMYK palette, ACL style, bootstrap/ECE/AURC
+    ├── anon_project_style.py        CMYK palette, ACL style, bootstrap/ECE/AURC
     ├── analyze.py                   raws -> tables/<arm>/*.csv
     ├── crossmodel.py                pairing check, McNemar, subset check
     ├── tables_tex.py                -> tables/tables.tex

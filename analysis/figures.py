@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BNFDM paper figures.
+"""ANON-PROJECT paper figures.
 
 Design rule: the figure carries data, the caption carries description. No
 legends, no series names, no value labels, no in-axes text of any kind.
@@ -25,7 +25,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, str(Path(__file__).parent))
-import bnfdm_style as S  # noqa: E402
+import anon_project_style as S  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TBL = ROOT / "analysis" / "tables"

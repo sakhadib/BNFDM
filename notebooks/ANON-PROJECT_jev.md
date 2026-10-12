@@ -1,6 +1,6 @@
-# BNFDM — Jev 1.13 arm (OpenRouter Decisions API)
+# ANON-PROJECT — Jev 1.13 arm (OpenRouter Decisions API)
 
-Third arm. **CPU runtime is fine** — no model is loaded locally; everything goes over the OpenRouter Decisions API. Root `/content/drive/MyDrive/BNFDM`, results under `results/jev-1.13/`.
+Third arm. **CPU runtime is fine** — no model is loaded locally; everything goes over the OpenRouter Decisions API. Root `/content/drive/MyDrive/ANON-PROJECT`, results under `results/jev-1.13/`.
 
 Jev is English-only, so this arm is built around an **English** version of the instrument. That is the point, not a workaround: it separates *literal capture* from *the Bangla representation gap*. If capture persists in English — where Lod already scores 0.864 — it is a property of figurative processing, not a symptom of low-resource failure.
 
@@ -47,7 +47,7 @@ drive.mount('/content/drive')
 import os, json, platform, datetime as dt
 from pathlib import Path
 
-ROOT  = Path("/content/drive/MyDrive/BNFDM")
+ROOT  = Path("/content/drive/MyDrive/ANON-PROJECT")
 MODEL = "jev-1.13"
 RUN   = dt.datetime.now().strftime("%Y%m%d-%H%M")
 
@@ -308,8 +308,8 @@ CANDIDATE_URLS = ["https://openrouter.ai/api/alpha/decisions",
                   "https://openrouter.ai/api/v1/api/alpha/decisions"]
 HEADERS = {"Authorization": f"Bearer {API_KEY}",
            "Content-Type": "application/json",
-           "HTTP-Referer": "https://github.com/sakhadib/BNFDM",
-           "X-Title": "BNFDM"}
+           "HTTP-Referer": "https://github.com/anonymous/ANON-PROJECT",
+           "X-Title": "ANON-PROJECT"}
 JEV = "typesafe/jev-1.13"
 
 _probe = {"model": JEV, "state": "The checkout page is blank after I click Pay.",
@@ -722,7 +722,7 @@ print(f"\n{len(arte)} artefacts | total spend ${COST['usd']:.4f} over {COST['cal
 ## Output
 
 ```
-BNFDM/
+ANON-PROJECT/
 ├── configs/task_en.json
 ├── data/splits/  full · sub10 · pool_en_literal · meta_en
 └── results/jev-1.13/

@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from bnfdm_style import boot_ci, ece, aurc  # noqa: E402
+from anon_project_style import boot_ci, ece, aurc  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT / "JEV_RUN" / "results" / "jev-1.13"
