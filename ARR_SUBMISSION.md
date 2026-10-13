@@ -104,21 +104,15 @@ which names each model arm by its released artifact and hosting location.
 **B2 discuss the license for artifacts**
 
 ```
-No
+Yes
 ```
 
-**B2 justification** (only needed if the form asks for one; see the note below)
-
-```
-The paper does not state the licenses of the source corpus or the two open model checkpoints, and the release does not carry a license file of its own. The released artifacts are our own code, configurations and per-item probability outputs rather than a redistribution of the corpus, but we should state the terms explicitly rather than leave it implicit.
-```
-
-> **Fix this before you submit.** This is the one checklist answer that is
-> currently "No" for a reason you can remove in ten minutes: add a `LICENSE` to
-> the anonymous repository and one sentence to the Ethics Statement naming the
-> corpus license, the two checkpoints' licenses and the license you release
-> under. Then flip B2 to `Yes` and cite that sentence. Tell me and I will write
-> the sentence and the license file.
+Ethics Statement: the source corpus is distributed under CC BY-SA 4.0, and we
+release the instrument, the per-item outputs and the analysis code under the
+same license, as its share-alike term requires. The two open checkpoints are
+used under the terms their model cards declare. Appendix R repeats the release
+license beside the repository link, and the repository carries the full CC BY-SA
+4.0 text in its `LICENSE` file.
 
 **B3 data contains personally identifying info**
 

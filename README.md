@@ -134,3 +134,9 @@ figurative gloss: **8,876 items**.
 
 Sakhawat et al., *When Words Don't Mean What They Say: Figurative Understanding in
 Bengali Idioms*, LREC 2026.
+
+## License
+
+Released under [CC BY-SA 4.0](LICENSE), the same license as the source corpus,
+which is distributed under CC BY-SA 4.0 on Kaggle. The two open checkpoints
+under audit are used under the terms their own model cards declare.
