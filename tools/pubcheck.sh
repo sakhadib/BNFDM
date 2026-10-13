@@ -21,8 +21,8 @@ VENV="${PUBCHECK_VENV:-$WORK/venv}"
 REFS=0
 [ "${1:-}" = "--refs" ] && REFS=1
 
-# In GitHub Actions, also emit an ::error:: annotation so the reason shows up on
-# the run even when the logs are not being read.
+# Print the reason plainly; also emit a GitHub Actions annotation if one day this
+# runs in CI, where step logs are awkward to read.
 die() {
   echo "pubcheck: $1"
   [ -n "${GITHUB_ACTIONS:-}" ] && echo "::error title=pubcheck::$1"

@@ -29,6 +29,12 @@ things about the real source, which pubcheck cannot see:
 - the author block is still anonymous,
 - the build has no undefined references or citations.
 
+### Run it locally
+
+There is no CI for this: the paper needs XeLaTeX, the TikZ stack and the Bengali
+font, and rebuilding all of that on a runner to re-check an artifact we already
+build locally is not worth the maintenance. Run the script before you submit.
+
 ### Installation note
 
 aclpubcheck and its `tsv` dependency use a `setup.py` that newer setuptools
@@ -40,4 +46,4 @@ directory.
 ## `aclpubcheck_online.py`
 
 The upstream Colab notebook, exported, kept for reference. It is the same tool
-driven interactively; `pubcheck.sh` is what runs in CI.
+driven interactively; `pubcheck.sh` is the local wrapper.
