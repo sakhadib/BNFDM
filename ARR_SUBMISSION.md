@@ -50,6 +50,47 @@ that the third track's reviewers usually expect probing or mechanistic work, and
 Section 4.4 and Appendix B state plainly that this paper measures behavior
 rather than internals, so it is the weakest of the three fits.
 
+### Research Area Keywords
+
+Taken verbatim from the ARR areas page. Recommended list, primary-area keywords
+first and then the four from adjacent areas that match what the paper actually
+measures:
+
+```
+evaluation methodologies, evaluation, benchmarking, metrics, statistical testing for evaluation, reproducibility, datasets for low resource languages, calibration/uncertainty, robustness, data shortcuts/artifacts, multilingual evaluation, less-resourced languages
+```
+
+If you would rather keep every keyword inside Resources and Evaluation, use this
+instead:
+
+```
+evaluation methodologies, evaluation, benchmarking, metrics, statistical testing for evaluation, reproducibility, datasets for low resource languages, language resources
+```
+
+Where each one is earned, so you can drop any that you think overclaims:
+
+| keyword | area | what backs it |
+| --- | --- | --- |
+| evaluation methodologies | Resources and Evaluation | the whole instrument: auditing a non-generative scorer entirely through the option set, Section 4 and Appendix D |
+| evaluation | Resources and Evaluation | the paper is an audit of three deployed arms |
+| benchmarking | Resources and Evaluation | the distractor ladder and the model x language matrix |
+| metrics | Resources and Evaluation | LAR, and ECE, ACE, Brier, AURC and AUGRC in Section 5.2 and Appendix F |
+| statistical testing for evaluation | Resources and Evaluation | 95% percentile bootstrap and McNemar's exact test throughout, Appendix R |
+| reproducibility | Resources and Evaluation | per-item outputs, seeds, split manifests, run records and per-figure CSVs, Appendix R |
+| datasets for low resource languages | Resources and Evaluation | the Bangla corpus and the Bangla cells of every experiment |
+| calibration/uncertainty | Interpretability and Analysis | Section 5.2 and Appendix F: three calibration metrics, the inverted reliability curves, selective prediction |
+| robustness | Interpretability and Analysis | the perturbation, surface-form and option-order experiments, Appendices M, N and Q |
+| data shortcuts/artifacts | Interpretability and Analysis | Section 5.6 and Appendix J: the verbatim-overlap and Latin-script cues, measured rather than assumed away |
+| multilingual evaluation | Multilingualism and Cross-Lingual NLP | the model x language matrix over one shared item set, Section 5.1 and Appendix I |
+| less-resourced languages | Multilingualism and Cross-Lingual NLP | Bangla, and the finding that the failure localizes to the test language |
+
+Two Resources and Evaluation keywords I left out on purpose. **corpus creation**
+and **NLP datasets**: we create no corpus. Section 3 says we add no annotation and
+assemble every intervention from fields that already exist, so claiming either
+would invite a reviewer to look for a resource contribution that is not there.
+**multilingual corpora** is also out, since the source corpus is monolingual
+Bangla and the English side comes from one annotated field.
+
 ### Contribution Types
 
 Primary:
