@@ -3,3 +3,7 @@ paper/*.bbl
 paper/*.blg
 paper/*.log
 paper/*.out
+
+# pubcheck scratch
+.pubcheck-work/
+.pubcheck-venv/
