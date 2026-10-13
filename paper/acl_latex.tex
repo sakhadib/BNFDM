@@ -37,6 +37,7 @@
 \setcounter{totalnumber}{4}
 
 \usepackage{booktabs}
+\usepackage{alltt}
 \usepackage[table]{xcolor}
 \usepackage{multirow}
 \usepackage{amsmath}
@@ -101,6 +102,10 @@
 \newcommand{\Dhard}{\textsc{d-hard}}
 \newcommand{\LAR}{\textsc{lar}}
 
+
+% ── Inline string highlights (paint the text, not the whole column) ──
+\newcommand{\hlL}[1]{{\setlength{\fboxsep}{1.6pt}\colorbox{fLaya}{#1}}}
+\newcommand{\hlG}[1]{{\setlength{\fboxsep}{1.6pt}\colorbox{fGrey}{#1}}}
 
 % ── Probability cells ────────────────────────────────────────────────
 \newcommand{\pL}[1]{%
@@ -515,7 +520,7 @@ chance, and the \emph{stronger} model harder.}
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.25cm}@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash}p{1.25cm}}
 \toprule
 \textbf{Distractors} & \textbf{Laya} & \textbf{Lod} & $\boldsymbol{\Delta}$ \\
 \midrule
@@ -1016,7 +1021,7 @@ available.
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}*{3}{>{\centering\arraybackslash}X}@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.35cm}*{3}{>{\centering\arraybackslash}X}}
 \toprule
 & \textbf{\laya{Laya-ml}} & \textbf{\lod{Lod-lille}} & \textbf{\jev{Jev-1.13}} \\
 \midrule
@@ -1036,16 +1041,28 @@ drift at $0.016$.}
 \end{table}
 
 \paragraph{Request.} For the commercial arm the body posted to
-\texttt{/api/alpha/decisions} is
+\texttt{/api/alpha/decisions} is the following; the instruction string is the
+one in Table~\ref{tab:instr}.
 
-\begin{quote}\footnotesize\ttfamily
-\{"model": "typesafe/jev-1.13",\\
-\ "state": \textit{<idiom, or carrier sentence>},\\
-\ "questions": \{"q": \{\\
-\ \ \ "type": "choice",\\
-\ \ \ "instructions": \textit{<one sentence, Table~\ref{tab:instr}>},\\
-\ \ \ "criteria": \{"A": \textit{<gloss>}, "B": \textit{<gloss>},\\
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "C": \textit{<gloss>}, "D": \textit{<gloss>}\}\}\}\}
+\begin{quote}\scriptsize
+\begin{alltt}
+\{
+  "model": "typesafe/jev-1.13",
+  "state": \textit{<idiom or carrier sentence>},
+  "questions": \{
+    "q": \{
+      "type": "choice",
+      "instructions": \textit{<instruction string>},
+      "criteria": \{
+        "A": \textit{<gloss>},
+        "B": \textit{<gloss>},
+        "C": \textit{<gloss>},
+        "D": \textit{<gloss>}
+      \}
+    \}
+  \}
+\}
+\end{alltt}
 \end{quote}
 
 The two open arms are called locally with the same four fields: the idiom as
@@ -1056,10 +1073,20 @@ in every arm and every family.
 
 \paragraph{Response.}
 
-\begin{quote}\footnotesize\ttfamily
-\{"type": "choice", "choice": "B", "confidence": 0.75,\\
-\ "probabilities": \{"A": 0.00, "B": 0.84,\\
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "C": 0.16, "D": 0.00\}\}
+\begin{quote}\scriptsize
+\begin{alltt}
+\{
+  "type": "choice",
+  "choice": "B",
+  "confidence": 0.75,
+  "probabilities": \{
+    "A": 0.00,
+    "B": 0.84,
+    "C": 0.16,
+    "D": 0.00
+  \}
+\}
+\end{alltt}
 \end{quote}
 
 We assert on every call that the returned keys are a subset of
@@ -1242,7 +1269,6 @@ unmeasured by anyone so far.
     >{\centering\arraybackslash}p{1.45cm}
     >{\centering\arraybackslash}p{1.55cm}
     >{\centering\arraybackslash}p{1.55cm}
-    @{}
 }
 \toprule
 
@@ -1602,7 +1628,7 @@ contains the literal gloss.
 \centering\small
 \renewcommand{\arraystretch}{1.12}
 \setlength{\tabcolsep}{3.2pt}
-\begin{tabular}{@{}l*{4}{c}@{\hspace{5pt}}cc@{}}
+\begin{tabular}{@{}l*{4}{c}@{\hspace{5pt}}cc}
 \toprule
 \textbf{Family} & \textbf{acc} & \textbf{ECE} & \textbf{ACE} & \textbf{Brier} &
 \textbf{AUGRC} & \textit{rand} \\
@@ -1689,18 +1715,17 @@ resource rather than a choice of ours.
 
 \begin{tabularx}{\textwidth}{
     @{}
-    >{\raggedright\arraybackslash}p{2.05cm}
+    >{\raggedright\arraybackslash}p{3.45cm}
+    >{\centering\arraybackslash}p{1.35cm}
     >{\raggedright\arraybackslash}X
-    >{\centering\arraybackslash}p{1.15cm}
-    @{}
 }
 \toprule
 
 \textbf{manipulation}
 &
-\textbf{string sent to the model}
-&
 \textbf{$p(\text{gold})$}
+&
+\textbf{string sent to the model}
 \\
 \midrule
 
@@ -1710,48 +1735,48 @@ resource rather than a choice of ours.
     \textit{idiom: \bangla{অগাধ জলের মাছ}
     (\emph{Still waters run deep})}
 }
-\\[-1pt]
+\\[1pt]
 
 \textit{intact}
 &
-\cellcolor{fLaya}\bangla{অগাধ জলের মাছ}
-&
 \textbf{0.21}
+&
+\hlL{\bangla{অগাধ জলের মাছ}}
 \\
 
 \textit{word shuffle}
 &
-\bangla{মাছ জলের অগাধ}
-&
 \textbf{0.19}
+&
+\bangla{মাছ জলের অগাধ}
 \\
 
 \textit{reversed}
 &
-\bangla{মাছ জলের অগাধ}
-&
 \textbf{0.19}
+&
+\bangla{মাছ জলের অগাধ}
 \\
 
 \textit{delete one word}
 &
-\bangla{অগাধ জলের}
-&
 \textbf{0.24}
+&
+\bangla{অগাধ জলের}
 \\
 
 \textit{substitute one word}
 &
-\bangla{অগাধ জলের ফ্যা}
-&
 \textbf{0.24}
+&
+\bangla{অগাধ জলের ফ্যা}
 \\
 
 \textit{in its carrier sentence}
 &
-\bangla{সে অগাধ জলের মাছ, কখনো বুঝতে পারি না তার পরিকল্পনা কী।}
-&
 \textbf{0.07}
+&
+\bangla{সে অগাধ জলের মাছ, কখনো বুঝতে পারি না তার পরিকল্পনা কী।}
 \\[4pt]
 
 \midrule
@@ -1761,36 +1786,37 @@ resource rather than a choice of ours.
     \quad
     \textit{gold option rewritten; the other three are rewritten identically}
 }
-\\[-1pt]
+\\[1pt]
 
 \textit{full gloss}
 &
-\cellcolor{fLaya}\bangla{খুব চালাক লোক; সুচতুর ব্যক্তি; যার মনোভাব বোঝা যায় না}
 &
+\hlL{\bangla{খুব চালাক লোক; সুচতুর ব্যক্তি; যার মনোভাব বোঝা যায় না}}
 \\
 
 \textit{truncated to 6 words}
 &
-\bangla{খুব চালাক লোক সুচতুর ব্যক্তি যার}
 &
+\bangla{খুব চালাক লোক সুচতুর ব্যক্তি যার}
 \\
 
 \textit{words scrambled}
 &
-\bangla{খুব লোক সুচতুর চালাক যায় ব্যক্তি না যার বোঝা মনোভাব}
 &
+\bangla{খুব লোক সুচতুর চালাক যায় ব্যক্তি না যার বোঝা মনোভাব}
 \\
 
 \textit{English gloss}
 &
-A very clever person; a shrewd individual; someone whose mindset or intentions are hard to fathom
 &
+A very clever person; a shrewd individual; someone whose mindset or
+intentions are hard to fathom
 \\
 
 \textit{semantics removed}
 &
-\cellcolor{fGrey}\bangla{অর্থ} 1
 &
+\hlG{\bangla{অর্থ} 1}
 \\
 
 \bottomrule
@@ -1799,8 +1825,11 @@ A very clever person; a shrewd individual; someone whose mindset or intentions a
 \caption{\textbf{What the interventions do to real Bangla text.}
 The table shows the exact strings used for the idiom
 \bangla{অগাধ জলের মাছ} (\emph{still waters run deep}, literally
-``a fish of deep water''). \emph{E3} changes the state supplied to the
-model; the reported probabilities are Laya-ml's, on the gold figurative gloss. Shuffling and reversing the
+``a fish of deep water''); the tinted string in each block is the unmodified one
+the rest of that block is derived from. \emph{E3} changes the state supplied to
+the model; the reported probabilities are Laya-ml's, on the gold figurative
+gloss. E6 rewrites the options rather than the state, so a single
+$p(\text{gold})$ is not defined for its rows and the column is empty there. Shuffling and reversing the
 expression leave the probability essentially unchanged, whereas the
 carrier sentence changes it. \emph{E6} changes the option text while
 holding its role fixed; the five rows show increasingly reduced or
@@ -1920,7 +1949,6 @@ annotators' own rather than one we wrote.
     >{\raggedright\arraybackslash}X
     >{\raggedright\arraybackslash}p{2.4cm}
     >{\centering\arraybackslash}p{1.25cm}
-    @{}
 }
 \toprule
 \textbf{idiom} & \textbf{expert literal gloss} & \textbf{gold figurative gloss} &
@@ -1970,14 +1998,14 @@ one of these the model gave the gold gloss $0.01$ or less.}
 \label{app:matrix}
 
 Table~\ref{tab:matrix} gives the six cells of \S\ref{sec:capture} with the
-accuracy column alongside \LAR. All cells are $n = 3{,}265$ and were built by
-one function from seed 21000; 95\% bootstrap intervals on \LAR{} are
-$[.716,.746]$, $[.363,.397]$, $[.909,.928]$, $[.227,.256]$, $[.288,.319]$ and
-$[.040,.055]$ reading down the table. The paired within-model language effect
-on capture is $+0.352$ for Laya-ml, $+0.677$ for Lod-lille and $+0.256$ for
-Jev-1.13, all McNemar $p < 10^{-100}$. Jev-1.13's English \LAR{} here agrees with its English-ladder value to four decimal
-places, $0.0472$, which is why we treat the two constructions as measuring the
-same thing. Its accuracy in that cell is $0.926$ against $0.931$ in
+accuracy column alongside \LAR; Table~\ref{tab:matrixci} gives the bootstrap
+intervals on those \LAR{} values and the paired within-model language effect.
+All cells are $n = 3{,}265$ and were built by one function from seed 21000.
+The language effect is positive on every arm and the intervals on the two
+language cells are disjoint in every case.
+Jev-1.13's English \LAR{} here agrees with its English-ladder value to four
+decimal places, $0.0472$, which is why we treat the two constructions as
+measuring the same thing. Its accuracy in that cell is $0.926$ against $0.931$ in
 Table~\ref{tab:fullladder}: same model, same items, same family, but the two runs
 draw their two sampled distractors from different seed namespaces (12000 and
 21000), so the option lists share the gold and the literal gloss and differ in the
@@ -2051,6 +2079,32 @@ English, and the Bangla ordering does not follow capability: Jev-1.13 is the
 most accurate and the least captured, while Lod-lille is more accurate than
 Laya-ml and more captured.}
 \label{tab:matrix}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}X
+  >{\centering\arraybackslash}p{1.75cm}
+  >{\centering\arraybackslash}p{1.75cm}
+  >{\centering\arraybackslash}p{1.05cm}}
+\toprule
+& \multicolumn{2}{c}{\textbf{\LAR{} 95\% CI}} & \\
+\cmidrule(lr){2-3}
+& \textbf{Bangla} & \textbf{English} & $\boldsymbol{\Delta}$ \\
+\midrule
+Laya-ml   & $[.716,.746]$ & $[.363,.397]$ & $+0.352$ \\
+Lod-lille & $[.909,.928]$ & $[.227,.256]$ & $+0.677$ \\
+Jev-1.13  & $[.288,.319]$ & $[.040,.055]$ & $+0.256$ \\
+\bottomrule
+\end{tabularx}
+\caption{Bootstrap intervals on the \LAR{} cells of Table~\ref{tab:matrix} and
+the paired within-model language effect. Intervals are 1{,}000-resample
+percentile intervals on the same $3{,}265$ items; $\Delta$ is the
+Bangla-minus-English difference on those paired items, McNemar
+$p < 10^{-100}$ in all three rows.}
+\label{tab:matrixci}
 \end{table}
 
 
@@ -2414,7 +2468,7 @@ headline gap (all pool) & $+0.352$ & $+0.677$ & $+0.256$ \\
 \bottomrule
 \end{tabularx}
 \caption{\textbf{The content-word hook does not carry the language gap.}
-\swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13. ``Hook'' means the Bangla literal
+Columns are Laya-ml, Lod-lille and Jev-1.13. ``Hook'' means the Bangla literal
 gloss shares at least one content word with the idiom, which is the asymmetry
 most likely to inflate Bangla capture. Upper block: capture is not reliably higher
 when the hook is present, and on the commercial arm it is lower. Lower block:
