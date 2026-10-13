@@ -21,21 +21,29 @@ VENV="${PUBCHECK_VENV:-$WORK/venv}"
 REFS=0
 [ "${1:-}" = "--refs" ] && REFS=1
 
-command -v xelatex >/dev/null || { echo "pubcheck: xelatex not found"; exit 2; }
-[ -f "$SRC" ] || { echo "pubcheck: $SRC not found"; exit 2; }
+# In GitHub Actions, also emit an ::error:: annotation so the reason shows up on
+# the run even when the logs are not being read.
+die() {
+  echo "pubcheck: $1"
+  [ -n "${GITHUB_ACTIONS:-}" ] && echo "::error title=pubcheck::$1"
+  exit "${2:-2}"
+}
+
+command -v xelatex >/dev/null || die "xelatex not found"
+[ -f "$SRC" ] || die "$SRC not found"
 
 # aclpubcheck's deps need setuptools<60 (distutils install_layout), so it gets
 # its own venv rather than the ambient interpreter.
 if [ ! -x "$VENV/bin/aclpubcheck" ]; then
   echo "pubcheck: installing aclpubcheck into $VENV"
-  python3 -m venv "$VENV" || exit 2
+  python3 -m venv "$VENV" || die "could not create the virtualenv at $VENV"
   "$VENV/bin/pip" install -q --upgrade pip || true
   "$VENV/bin/pip" install -q "setuptools<60" wheel \
-    || { echo "pubcheck: could not install setuptools<60"; exit 2; }
+    || die "could not install setuptools<60 into $VENV"
   # aclpubcheck and its tsv dep use a setup.py that newer setuptools rejects
   # (AttributeError: install_layout), hence the pin above and no build isolation.
   "$VENV/bin/pip" install --no-build-isolation git+https://github.com/acl-org/aclpubcheck \
-    || { echo "pubcheck: could not install aclpubcheck"; exit 2; }
+    || die "could not install aclpubcheck into $VENV"
 fi
 
 echo "pubcheck: building a camera-ready copy in $WORK"
@@ -51,7 +59,6 @@ bibtex  check                              >/dev/null 2>&1
 xelatex -interaction=nonstopmode check.tex >/dev/null 2>&1
 xelatex -interaction=nonstopmode check.tex >"$WORK/build.log" 2>&1
 if [ ! -f check.pdf ]; then
-  echo "pubcheck: FAILED to build the check copy"
   echo "--- LaTeX errors ---"
   grep -A3 '^!' "$WORK/build.log" | head -40
   echo "--- missing files, if any ---"
@@ -59,7 +66,8 @@ if [ ! -f check.pdf ]; then
        "$WORK/build.log" | sort -u | head -20
   echo "--- tail of the log ---"
   tail -25 "$WORK/build.log"
-  exit 2
+  first=$(grep -m1 -A2 '^!' "$WORK/build.log" | tr '\n' ' ' | cut -c1-200)
+  die "the check copy did not build. First LaTeX error: ${first:-none captured}"
 fi
 
 # Guard the things pubcheck cannot see, which matter for the submission build.

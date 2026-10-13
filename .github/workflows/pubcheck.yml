@@ -42,6 +42,17 @@ jobs:
           kpsewhich tikz.sty >/dev/null || { echo "tikz.sty missing"; exit 1; }
           fc-list | grep -qi "tex gyre termes" || echo "note: TeX Gyre Termes not in fontconfig"
 
+      - name: Environment report
+        run: |
+          echo "xelatex: $(xelatex --version 2>/dev/null | head -1)"
+          for s in tikz.sty fontspec.sty tabularx.sty booktabs.sty multirow.sty \
+                   microtype.sty latexsym.sty times.sty amsmath.sty; do
+            printf '  %-16s %s\n' "$s" "$(kpsewhich $s || echo MISSING)"
+          done
+          echo "TeX Gyre Termes in fontconfig:"; fc-list | grep -i 'termes' | head -3 || echo "  none"
+          echo "kalpurush.ttf tracked: $(ls -l paper/kalpurush.ttf 2>&1)"
+          echo "figures: $(ls paper/figures | wc -l) files"
+
       - name: Cache the aclpubcheck venv
         uses: actions/cache@v4
         with:
