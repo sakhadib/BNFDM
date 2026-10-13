@@ -113,7 +113,7 @@
 
 % ── Title ─────────────────────────────────────────────────────────────
 \title{
-    Captured by the Words: The Test Language Shifts Literal Attraction\\
+    Literal Lock-In: How Test Language Shifts Literal Attraction\\
     in Typed Decision Models on Bangla Idioms
 }
 
@@ -142,7 +142,7 @@ Calibration degrades in all three arms under the same shift, and on the open arm
 confidence inverts, so gating on it is worse than gating at random. On a
 semantics-free option list, where accuracy is at chance, the best-calibrated arm
 still reports mean confidence $0.82$. Code and data are available at
-\url{https://anonymous.4open.science/r/FSS-CC4D/}.
+\url{https://anonymous.4open.science/r/FSS-CC4D}.
 \end{abstract}
 
 
@@ -414,6 +414,7 @@ $\arg\max$, and confidence without requiring generated text; and
 and order stability. The figure's visual encoding distinguishes the
 varied distractor family, literal-bearing conditions, models under test,
 and measured outcomes.}
+\vspace{-2mm}
 \label{fig:pipeline}
 \end{figure*}
 
@@ -540,6 +541,7 @@ Appendix~\ref{app:ladder} and differ by at most $0.016$
 higher value in a row. The sign of $\Delta$ reverses at the literal boundary: the
 stronger arm leads on the first three families and trails on the two containing a
 literal gloss.}
+\vspace{-2mm}
 \label{tab:ladder}
 \end{table}
 
@@ -831,12 +833,12 @@ the idiom and carries no English parenthetical, so neither lexical cue is
 available: \LAR{} stays far above the $0.250$ chance level on both arms. Length is
 not removed by that subset and is reported separately in \S\ref{sec:construction},
 where it does not predict capture. The commercial arm cannot be split this way,
-since its only Bangla literal run is the matrix pool, where every item carries a
+since its only Bangla literal run is the matrix pool, where each carries a
 parenthetical by construction.}
 \label{tab:construction}
 \end{table}
 
-\subsection{The failure localizes to Bangla, in every arm}
+\subsection{Failure localizes to Bangla, in every arm}
 \label{sec:crosslingual}
 
 E4 asks the same question of an ordinary benchmark item rather than a
@@ -1599,6 +1601,7 @@ contains the literal gloss.
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.12}
+\resizebox{0.96\columnwidth}{!}{
 \begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.15cm}*{5}{>{\centering\arraybackslash}X}@{}}
 \toprule
 \textbf{Family} & \textbf{acc} & \textbf{ECE} & \textbf{ACE} & \textbf{Brier} &
@@ -1620,6 +1623,7 @@ contains the literal gloss.
 \Dhard & 0.854 & 0.047 & 0.047 & 0.220 & 0.034 \textit{(.073)} \\
 \bottomrule
 \end{tabularx}
+}
 \caption{\textbf{Three calibration metrics on the same recorded
 distributions.} \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13. ECE uses 15
 equal-width bins, ACE the adaptive equal-mass variant of
