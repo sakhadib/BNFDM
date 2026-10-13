@@ -70,6 +70,10 @@ Publicly available software and/or pre-trained models
 
 ## 2. Responsible NLP Checklist
 
+Every answered item has its elaboration below it in its own block, and each one
+opens with the section or appendix number and title so the reviewer can find it
+without searching. Section numbers are those of the current compiled PDF.
+
 ### Section A
 
 **A1 potential risks**
@@ -81,7 +85,7 @@ Yes
 **A1 elaboration**
 
 ```
-Ethics Statement (unnumbered section after the Conclusion) and Limitations. The Ethics Statement covers the three risks that apply to this work: the source corpus is a published expert-annotated resource containing no personal data and no content about identifiable individuals; we report a named commercial endpoint's failure modes, so we state that the alias is mutable and that our figures are a dated snapshot of the 20260917 build rather than a standing property of the product; and we flag, against our own interest, both the pool selection effect in Section 5.1 and the lexical construction cue in Appendix J that accounts for part of the headline effect on one arm. Limitations states what the design cannot settle.
+Ethics Statement (unnumbered section, immediately after Section 7: Conclusion) and Limitations (unnumbered section, immediately before it). The Ethics Statement covers the three risks that apply to this work. First, the source corpus is a published expert-annotated resource of idioms containing no personal data and no content about identifiable individuals. Second, we report a named commercial endpoint's failure modes, so we state that the model alias is mutable, that at the time of our run it resolved to the 20260917 build, and that our figures should be read as a dated snapshot rather than a standing property of the product. Third, we flag against our own interest both the pool selection effect stated in Section 5.1: Literal capture, and what it tracks, and the lexical construction cue reported in Appendix J: How the two language cells were built, which accounts for part of the headline effect on one arm. Limitations sets out what the design cannot settle, including the relabeling confound in the order audit and the fact that the two language cells are paired entries rather than translations.
 ```
 
 ### Section B
@@ -92,14 +96,23 @@ Ethics Statement (unnumbered section after the Conclusion) and Limitations. The 
 Yes
 ```
 
+**B elaboration**
+
+```
+Used: the Bangla Bagdhara corpus (Section 3: Dataset) and three model arms (Section 4.4: Models). Created and released: the instrument, the per-item probability outputs for every cell of every experiment, the split manifests, the task configurations, the analysis scripts and the figure sources, all enumerated in Appendix R: Run record.
+```
+
 **B1 cite creators of artifacts**
 
 ```
 Yes
 ```
 
-Cited in Section 3 (the Bangla Bagdhara corpus) and Section 4.4 with footnote 2,
-which names each model arm by its released artifact and hosting location.
+**B1 elaboration**
+
+```
+Section 3: Dataset cites the source corpus at first mention and again in the Ethics Statement. Section 4.4: Models names each of the three arms, and its footnote 2 gives the released artifact and hosting location for each one, including the exact endpoint and build for the commercial arm. Appendix R: Run record repeats the commercial build identifier.
+```
 
 **B2 discuss the license for artifacts**
 
@@ -107,12 +120,11 @@ which names each model arm by its released artifact and hosting location.
 Yes
 ```
 
-Ethics Statement: the source corpus is distributed under CC BY-SA 4.0, and we
-release the instrument, the per-item outputs and the analysis code under the
-same license, as its share-alike term requires. The two open checkpoints are
-used under the terms their model cards declare. Appendix R repeats the release
-license beside the repository link, and the repository carries the full CC BY-SA
-4.0 text in its `LICENSE` file.
+**B2 elaboration**
+
+```
+Ethics Statement (unnumbered section, after Section 7: Conclusion) states that the source corpus is distributed under CC BY-SA 4.0 and that we release the instrument, the per-item outputs and the analysis code under the same license, as its share-alike term requires, with the two open checkpoints used under the terms their own model cards declare. Appendix R: Run record repeats the release license beside the repository link, and the repository carries the full CC BY-SA 4.0 text in its LICENSE file.
+```
 
 **B3 data contains personally identifying info**
 
@@ -120,9 +132,11 @@ license beside the repository link, and the repository carries the full CC BY-SA
 Yes
 ```
 
-Ethics Statement: the corpus is a published resource of idioms, it contains no
-personal data and no content about identifiable individuals, and we add no
-annotation, so nothing we release can carry it.
+**B3 elaboration**
+
+```
+Ethics Statement (unnumbered section, after Section 7: Conclusion): the corpus is a published resource of idioms, it contains no personal data and no content about identifiable individuals, and we add no annotation of our own, so nothing we release can introduce it. Section 3: Dataset describes the 19-field schema, none of whose fields carries personal data.
+```
 
 **B4 data contains offensive content**
 
@@ -130,9 +144,11 @@ annotation, so nothing we release can carry it.
 N/A
 ```
 
-We release option lists and probability vectors derived from a published
-expert-annotated idiom corpus. We produce no new text and no generated output,
-so there is no new surface on which objectionable content could appear.
+**B4 elaboration**
+
+```
+Not applicable. Section 3: Dataset and Appendix R: Run record describe what we release: option lists assembled from fields that already exist in the published corpus, and the probability vectors the three arms returned for them. We add no annotation and the arms emit no text, as Appendix A: The typed question sets out, so the release opens no new surface on which objectionable content could appear.
+```
 
 **B5 documentation of artifacts**
 
@@ -140,13 +156,11 @@ so there is no new surface on which objectionable content could appear.
 Yes
 ```
 
-Section 3 documents the corpus coverage, the 19-field schema and the 8,876 rows
-that carry every field the instrument requires. Appendix A gives the exact
-interface. Appendix R, "What is released", enumerates every released file: the
-per-item outputs for every cell of every experiment, the five split manifests,
-the three run environment records, the task configurations with the verbatim
-instruction strings, the analysis scripts that produce every table, and a CSV of
-the plotted values beside each figure.
+**B5 elaboration**
+
+```
+Section 3: Dataset documents the corpus coverage, the language, the 19-field schema and the 8,876 rows that carry every field the instrument requires, including the footnote reconciling the published count of 10,361 against the 10,359 distributed rows. Appendix A: The typed question gives the exact interface, the request and response bodies and the two instruction strings. Appendix R: Run record, paragraph "What is released", enumerates every released file: the per-item outputs for every cell of every experiment, the five split manifests, the three run environment records, the task configurations with the verbatim instruction strings, the analysis scripts that produce every table in the paper, the figure sources, and a CSV of the exact plotted values beside each figure.
+```
 
 **B6 statistics for data**
 
@@ -154,11 +168,11 @@ the plotted values beside each figure.
 Yes
 ```
 
-Section 3 and Table 4 give the item counts per arm (8,876 / 888 / 8,761), Section
-5.1 and Appendix O give the shared 888-item subset and bound its drift at 0.016,
-Section 5.1 and Appendix I give the 3,265-item matrix pool and Appendix J
-documents how it was cut, and Appendix R gives the per-block call volume for the
-commercial arm.
+**B6 elaboration**
+
+```
+Section 3: Dataset gives the corpus size and the usable subset. Table 4: The three model arms gives the item count per arm (8,876 / 888 / 8,761). Section 5.1: Literal capture, and what it tracks gives the 888-item shared subset and the 3,265-item matrix pool, and Appendix O: Subset representativeness bounds the drift from running one arm on the 10% subset at 0.016. Appendix J: How the two language cells were built documents every cut that produces the 3,265-item pool, and Appendix I: The capture matrix reports the per-cell counts and intervals. Appendix R: Run record gives the per-block call volume for the commercial arm, 56,533 calls in total. There are no train/dev/test splits because nothing here is trained; every split is an evaluation stratum and each one is documented where it is first used.
+```
 
 ### Section C
 
@@ -168,16 +182,23 @@ commercial arm.
 Yes
 ```
 
+**C elaboration**
+
+```
+The paper is an audit. Section 5: Analysis reports the results of computational experiments on three model arms, and Section 4: Methodology defines the seven interventions that produce them.
+```
+
 **C1 model size and budget**
 
 ```
 Yes
 ```
 
-Table 4 gives parameter counts (322M, 0.6B, closed) and per-call latency.
-Appendix R gives the infrastructure (one Tesla T4, 15,360 MiB; Python 3.13.15),
-the precision actually used on that card, and the commercial arm's full cost:
-56,533 calls for $0.9348.
+**C1 elaboration**
+
+```
+Table 4: The three model arms, referenced from Section 4.4: Models, gives the parameter count for each arm (322M, 0.6B, and closed for the commercial one) together with per-call latency. Appendix R: Run record, paragraph "Environment", gives the computing infrastructure: Python 3.13.15 throughout, with the two open arms on one Tesla T4 (15,360 MiB) and the commercial arm on CPU, and it notes that the T4 is Turing, so the configured bf16 setting falls back to ordinary fp32 CUDA cores. Appendix R, paragraph "Call volume and cost", gives the commercial arm's full budget: 56,533 calls for $0.9348, broken down per block.
+```
 
 **C2 experimental setup and hyperparameters**
 
@@ -185,11 +206,11 @@ the precision actually used on that card, and the commercial arm's full cost:
 Yes
 ```
 
-Section 4 and Appendix A give the typed-question setup in full: there is no
-prompt template, no system message and no sampling parameter, so the option set
-is the only intervention surface. Appendix R records the per-experiment seeds,
-the split seed, the temperature settings on both open arms and the reason they
-are untempered.
+**C2 elaboration**
+
+```
+Section 4: Methodology, and in particular Section 4.1: The meaning-choice task, Section 4.2: Distractor families and measures and Section 4.3: Interventions and statistics, defines the setup. Appendix A: The typed question gives the complete interface: one typed choice question and one probability vector, with no prompt template, no system message, no sampling parameter and no generated text, which is why the option set is the only intervention surface and why there is no prompt or decoding hyperparameter to search. Appendix C: What each experiment changes states what each of the seven interventions varies and holds fixed. Appendix R: Run record gives the per-experiment seeds, the split seed, and the temperature settings on both open arms with the reason they are untempered.
+```
 
 **C3 descriptive statistics**
 
@@ -197,11 +218,11 @@ are untempered.
 Yes
 ```
 
-All intervals are 95% percentile bootstrap over items, 2,000 resamples, fixed
-seed 0; paired comparisons use McNemar's exact test. Appendix R, "Statistics",
-states this once for the whole paper, and Appendix I tabulates the intervals for
-the matrix cells. Every reported number is a single deterministic run, not a max
-or a mean over runs, which is why the seeds are recorded per experiment.
+**C3 elaboration**
+
+```
+Appendix R: Run record, paragraph "Statistics", states the convention once for the whole paper: all intervals are 95% percentile bootstrap over items, 2,000 resamples, fixed seed 0, and paired comparisons use McNemar's exact test via the binomial distribution. Every reported number is a single deterministic run rather than a max or a mean over runs, which is why the seeds are recorded per experiment in the same appendix. Intervals are reported alongside the results throughout: Section 5.1: Literal capture, and what it tracks, Table 15 in Appendix I: The capture matrix for the six matrix cells, and Appendix J: How the two language cells were built for the construction-cue effects. Figures carry 95% bootstrap error bars, stated in their captions.
+```
 
 **C4 parameters for packages**
 
@@ -209,10 +230,11 @@ or a mean over runs, which is why the seeds are recorded per experiment.
 Yes
 ```
 
-Appendix R records the environment and the metric definitions we implement: ECE
-over 15 equal-width bins, ACE as the adaptive equal-mass variant, multiclass
-Brier, and AURC against a random gate on the same items. The analysis scripts
-that compute them are part of the release.
+**C4 elaboration**
+
+```
+Appendix R: Run record gives the environment and the metric definitions we implement rather than import: ECE over 15 equal-width bins, ACE as the adaptive equal-mass variant, multiclass Brier, and AURC against a random gate computed on the same items. Appendix F: Selective prediction in detail defines AUGRC and its analytic random baseline and reports all three calibration metrics on the same recorded distributions. The analysis scripts that compute every one of these are part of the release enumerated in Appendix R.
+```
 
 ### Section D
 
@@ -222,9 +244,11 @@ that compute them are part of the release.
 No
 ```
 
-We ran no annotation and recruited no participants. The corpus is a
-pre-existing published resource; its annotation was carried out and documented
-by its own authors.
+**D elaboration**
+
+```
+We ran no annotation and recruited no participants. Section 3: Dataset states that the corpus is a pre-existing published resource annotated under a 19-field schema by expert consensus, that its annotation was carried out and documented by its own authors, and that we add no annotation: every intervention in the paper is assembled from fields that already exist in the corpus. The Ethics Statement repeats that our interventions rewrite option lists and perturb idiom strings and produce no new annotation.
+```
 
 ### Section E
 
@@ -243,11 +267,18 @@ Yes
 **E1 elaboration**
 
 ```
-An AI coding assistant was used for the analysis and plotting code and for copy-editing passes over the manuscript. Every experimental design decision, every claim and every number reported in the paper is the authors'. All analysis code is released, and every figure ships with a CSV of its exact plotted values, so each reported number can be recomputed from the released per-item outputs independently of how the code was written. No AI system was used to generate, paraphrase or annotate any item in the corpus, and no model output in the paper comes from an assistant: the three arms under audit are called through the typed interface described in Appendix A.
+Ethics Statement (unnumbered section, after Section 7: Conclusion), and the elaboration here. An AI coding assistant was used for the analysis and plotting code and for copy-editing passes over the manuscript. Every experimental design decision, every claim and every number reported in the paper is the authors'. All analysis code is released and every figure ships with a CSV of its exact plotted values, as Appendix R: Run record sets out, so each reported number can be recomputed from the released per-item outputs independently of how the code was written. No AI system was used to generate, paraphrase or annotate any item in the corpus, and no model output in the paper comes from an assistant: the three arms under audit are called through the typed interface described in Appendix A: The typed question.
 ```
 
-> Adjust the first sentence to match what you actually did. If you also used an
-> assistant for literature search, say so; if you did not, drop the mention.
+> Two things to settle before you paste E1.
+>
+> 1. Edit the first sentence to match what you actually did. If you also used an
+>    assistant for literature search, say so; if you did not, drop the mention.
+> 2. The elaboration above points at the Ethics Statement, but the Ethics
+>    Statement does not currently say anything about AI assistance. Either drop
+>    that opening pointer and let the checklist text stand alone, which the form
+>    explicitly allows, or tell me and I will add the sentence to the Ethics
+>    Statement so the pointer is true.
 
 ### Readers
 
