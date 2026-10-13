@@ -1524,7 +1524,7 @@ one.
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.05cm}*{4}{>{\centering\arraybackslash}X}@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.3cm}*{4}{>{\centering\arraybackslash}X}}
 \toprule
 & \multicolumn{2}{c}{\textbf{Laya-ml}} & \multicolumn{2}{c}{\textbf{Lod-lille}} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
@@ -1601,29 +1601,28 @@ contains the literal gloss.
 \begin{table}[t]
 \centering\small
 \renewcommand{\arraystretch}{1.12}
-\resizebox{0.96\columnwidth}{!}{
-\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{1.15cm}*{5}{>{\centering\arraybackslash}X}@{}}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}l*{4}{c}@{\hspace{5pt}}cc@{}}
 \toprule
 \textbf{Family} & \textbf{acc} & \textbf{ECE} & \textbf{ACE} & \textbf{Brier} &
-\textbf{AUGRC} \\
+\textbf{AUGRC} & \textit{rand} \\
 \midrule
-\multicolumn{6}{@{}l}{\laya{\emph{Laya-ml} ($n=8{,}876$)}} \\
-\Drand & 0.367 & 0.071 & 0.073 & 0.728 & 0.294 \textit{(.316)} \\
-\Dlit  & 0.151 & 0.385 & 0.385 & \textbf{1.030} & \textbf{0.448} \textit{(.425)} \\
-\Dhard & 0.144 & 0.389 & 0.389 & \textbf{1.030} & \textbf{0.450} \textit{(.428)} \\
+\multicolumn{7}{@{}l}{\laya{\emph{Laya-ml} ($n=8{,}876$)}} \\
+\Drand & 0.367 & 0.071 & 0.073 & 0.728 & 0.294 & \textit{.316} \\
+\Dlit  & 0.151 & 0.385 & 0.385 & \textbf{1.030} & \textbf{0.448} & \textit{.425} \\
+\Dhard & 0.144 & 0.389 & 0.389 & \textbf{1.030} & \textbf{0.450} & \textit{.428} \\
 \addlinespace
-\multicolumn{6}{@{}l}{\lod{\emph{Lod-lille} ($n=888$)}} \\
-\Drand & 0.484 & 0.073 & 0.084 & 0.608 & 0.193 \textit{(.258)} \\
-\Dlit  & 0.066 & 0.679 & 0.681 & \textbf{1.391} & \textbf{0.491} \textit{(.467)} \\
-\Dhard & 0.063 & 0.673 & 0.674 & \textbf{1.390} & \textbf{0.490} \textit{(.468)} \\
+\multicolumn{7}{@{}l}{\lod{\emph{Lod-lille} ($n=888$)}} \\
+\Drand & 0.484 & 0.073 & 0.084 & 0.608 & 0.193 & \textit{.258} \\
+\Dlit  & 0.066 & 0.679 & 0.681 & \textbf{1.391} & \textbf{0.491} & \textit{.467} \\
+\Dhard & 0.063 & 0.673 & 0.674 & \textbf{1.390} & \textbf{0.490} & \textit{.468} \\
 \addlinespace
-\multicolumn{6}{@{}l}{\jev{\emph{Jev-1.13}, English ($n=3{,}265$)}} \\
-\Drand & 0.968 & 0.005 & 0.003 & 0.048 & 0.002 \textit{(.016)} \\
-\Dlit  & 0.931 & 0.014 & 0.013 & 0.107 & 0.010 \textit{(.035)} \\
-\Dhard & 0.854 & 0.047 & 0.047 & 0.220 & 0.034 \textit{(.073)} \\
+\multicolumn{7}{@{}l}{\jev{\emph{Jev-1.13}, English ($n=3{,}265$)}} \\
+\Drand & 0.968 & 0.005 & 0.003 & 0.048 & 0.002 & \textit{.016} \\
+\Dlit  & 0.931 & 0.014 & 0.013 & 0.107 & 0.010 & \textit{.035} \\
+\Dhard & 0.854 & 0.047 & 0.047 & 0.220 & 0.034 & \textit{.073} \\
 \bottomrule
-\end{tabularx}
-}
+\end{tabular}
 \caption{\textbf{Three calibration metrics on the same recorded
 distributions.} \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13. ECE uses 15
 equal-width bins, ACE the adaptive equal-mass variant of
@@ -1634,8 +1633,8 @@ its value for a uniform four-way distribution, where the model's reported
 distribution is less useful to a caller than no preference at all. AUGRC is the
 generalized risk-coverage area of \citet{traub2024selective}, which does not
 condition risk on the accepted set and so does not over-weight high-confidence
-failures; the parenthesized value is its analytic random baseline, half the error
-rate, and bold marks the cells that are worse than it. No new model calls were
+failures; the \textit{rand} column is its analytic random baseline, half the
+error rate, and bold marks the AUGRC cells that are worse than it. No new model calls were
 made; every metric here is a re-reading of the released per-item probabilities.}
 \label{tab:calib}
 \end{table}
