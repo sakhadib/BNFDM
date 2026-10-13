@@ -30,8 +30,12 @@ if [ ! -x "$VENV/bin/aclpubcheck" ]; then
   echo "pubcheck: installing aclpubcheck into $VENV"
   python3 -m venv "$VENV" || exit 2
   "$VENV/bin/pip" install -q --upgrade pip || true
-  "$VENV/bin/pip" install -q "setuptools<60" wheel || exit 2
-  "$VENV/bin/pip" install -q git+https://github.com/acl-org/aclpubcheck || exit 2
+  "$VENV/bin/pip" install -q "setuptools<60" wheel \
+    || { echo "pubcheck: could not install setuptools<60"; exit 2; }
+  # aclpubcheck and its tsv dep use a setup.py that newer setuptools rejects
+  # (AttributeError: install_layout), hence the pin above and no build isolation.
+  "$VENV/bin/pip" install --no-build-isolation git+https://github.com/acl-org/aclpubcheck \
+    || { echo "pubcheck: could not install aclpubcheck"; exit 2; }
 fi
 
 echo "pubcheck: building a camera-ready copy in $WORK"
@@ -47,8 +51,14 @@ bibtex  check                              >/dev/null 2>&1
 xelatex -interaction=nonstopmode check.tex >/dev/null 2>&1
 xelatex -interaction=nonstopmode check.tex >"$WORK/build.log" 2>&1
 if [ ! -f check.pdf ]; then
-  echo "pubcheck: FAILED to build the check copy; see $WORK/build.log"
-  grep -m5 '^!' "$WORK/build.log"
+  echo "pubcheck: FAILED to build the check copy"
+  echo "--- LaTeX errors ---"
+  grep -A3 '^!' "$WORK/build.log" | head -40
+  echo "--- missing files, if any ---"
+  grep -iE "not found|cannot find|undefined control sequence|file .* not found" \
+       "$WORK/build.log" | sort -u | head -20
+  echo "--- tail of the log ---"
+  tail -25 "$WORK/build.log"
   exit 2
 fi
 

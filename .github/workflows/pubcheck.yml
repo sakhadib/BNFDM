@@ -33,8 +33,14 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             texlive-xetex texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-plain-generic \
             texlive-fonts-recommended texlive-fonts-extra texlive-bibtex-extra \
-            texlive-lang-other biber fonts-freefont-ttf
+            texlive-lang-other biber lmodern fonts-texgyre
+          fc-cache -f >/dev/null 2>&1 || true
+          # the paper loads TeX Gyre Termes and TikZ by name; fail loudly here
+          # rather than inside the paper build if either is missing
+          kpsewhich tikz.sty >/dev/null || { echo "tikz.sty missing"; exit 1; }
+          fc-list | grep -qi "tex gyre termes" || echo "note: TeX Gyre Termes not in fontconfig"
 
       - name: Cache the aclpubcheck venv
         uses: actions/cache@v4
