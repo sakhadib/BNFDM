@@ -7,3 +7,6 @@ paper/*.out
 # pubcheck scratch
 .pubcheck-work/
 .pubcheck-venv/
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.xdv
