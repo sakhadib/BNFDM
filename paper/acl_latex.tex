@@ -135,15 +135,15 @@ Decision models, non-generative scorers that report a probability over
 caller-supplied options and emit no text, are increasingly deployed as routers,
 classifiers and guardrails. Because they generate nothing, rationales and
 chain-of-thought do not apply. We audit three: an encoder scorer, a decoder
-scorer and a closed API, entirely through interventions on the option set, using
+scorer and a closed API, entirely through interventions on their input, using
 expert-annotated Bengali idioms carrying a gold figurative and a gold literal
 gloss. Dropping an idiom's own literal gloss into the option list draws every arm
-toward it, taking $66\%$ to $96\%$ of each arm's remaining Bengali errors. A model
+toward it, taking $65\%$ to $96\%$ of each arm's remaining Bengali errors. A model
 $\times$ language matrix over one shared item set shows how far this depends on
 the test language: every arm is $1.9$ to $6.4$ times more captured in Bengali than
 in English on the same paired entries, the commercial model's apparent resistance
 is a property of its test language, and capability does not order the failure.
-Calibration degrades in all three arms under the same shift, and on the open arms
+Calibration degrades in all three arms, and on the open arms
 confidence inverts, so gating on it is worse than gating at random. On a
 semantics-free option list, where accuracy is at chance, the best-calibrated arm
 still reports mean confidence $0.82$. Code and data are available at
@@ -218,7 +218,7 @@ computable but has no evident linguistic referent. We would rather intervene on
 the expression as a unit than report shares we cannot interpret
 (Appendix~\ref{app:why}).
 
-We take the option set as the intervention surface instead. Bengali
+We take the option set as the main intervention surface instead. Bengali
 \emph{b\=agdh\=ar\=a} (idioms) are well suited to this because the expert
 resource we use ships, for each idiom, both a gold figurative meaning and a gold
 \emph{literal} gloss: a ready-made, human-certified counterfactual distractor
@@ -227,12 +227,12 @@ list turns a benchmark question into a targeted probe: does the model read the
 expression as an idiom, or as its words? Figure~\ref{fig:teaser} shows one item
 answered both ways.
 
-We contribute (i) a meaning-choice instrument for decision models in which the \emph{distractor family} is the independent variable and everything else is held fixed, requiring no new annotation (\S\ref{sec:instrument}); (ii) the Literal Attraction Rate, measured as a full model $\times$ language matrix, which shows how far capture depends on the test language and that capability does not order it (\S\ref{sec:capture}); (iii) evidence that calibration degrades under this shift in all three arms, and that on the two open arms confidence becomes anti-diagnostic, with confidence-gated selective prediction worse than random gating (\S\ref{sec:confidence}); (iv) a large dissociation in option-order dependence between the two scoring designs, with a methodological consequence for anyone evaluating this class (\S\ref{sec:order}); and (v) a semantics-free control, run on all three arms and needing no annotation of any kind, bounding what each model reports when the options carry no information at all (\S\ref{sec:nosignal}).
+We contribute (i) a meaning-choice instrument for decision models in which the \emph{distractor family} is the independent variable and the item, instruction and $k$ are held fixed, requiring no new annotation (\S\ref{sec:instrument}); (ii) the Literal Attraction Rate, measured as a full model $\times$ language matrix, which shows how far capture depends on the test language and that capability does not order it (\S\ref{sec:capture}); (iii) evidence that calibration degrades under this shift in all three arms, and that on the two open arms confidence becomes anti-diagnostic, with confidence-gated selective prediction worse than random gating (\S\ref{sec:confidence}); (iv) a large dissociation in option-order dependence between the two scoring designs, with a methodological consequence for anyone evaluating this class (\S\ref{sec:order}); and (v) a semantics-free control, run on all three arms and needing no annotation of any kind, bounding what each model reports when the options carry no information at all (\S\ref{sec:nosignal}).
 
 \section{Related Work}
 
 \paragraph{The decision-model class.} The evaluation literature is still
-forming, and reports competitive quality at far lower cost with no independent
+forming, and reports quality somewhat below large models at far lower cost, with no independent
 accuracy advantage from the typed readout itself
 \citep{tang2026audit,rao2026rubric,ibrahim2026evaluating,guo2026justask,yu2026visualjev}.
 Two strands bear on ours. \citet{ibrahim2026evaluating} report decision-model
@@ -431,8 +431,8 @@ supplies, what each condition changes, and what comes back.
 Given an idiom, choose its gold figurative meaning from $k=4$
 candidates. Chance is $0.250$ throughout. The \textbf{distractor family is the
 independent variable}; the item, the instruction, $k$, and per-item option-order
-randomization (seeded by item id) are held fixed across families, so a paired
-test across families is a test on byte-identical questions.
+randomization (seeded by item id and experiment) are held fixed across families,
+so a paired test across families compares one item under different option lists.
 
 \subsection{Distractor families and measures}
 
@@ -534,12 +534,12 @@ hard & \layah{0.149} & \lod{0.063} & $-0.086^{***}$ \\
 \LAR{} (lit.) & 0.658 & \lodh{0.885} & \\
 \LAR{} (hard) & 0.615 & \lodh{0.855} & \\
 mean $p$(lit.) & 0.460 & \lodh{0.726} & \\
-mean $p$(gold) & \layah{0.193} & 0.128 & \\
+mean $p$(gold) & \layah{0.193} & 0.127 & \\
 \bottomrule
 \end{tabularx}
 \caption{\textbf{The distractor ladder and literal attraction.}
 Every cell is the 888 items the two arms share, so the printed values and
-$\Delta$ have one base; Laya-ml's full-set figures are in
+$\Delta$ have one base ($\Delta$ is computed before rounding); Laya-ml's full-set figures are in
 Appendix~\ref{app:ladder} and differ by at most $0.016$
 (Appendix~\ref{app:subset}). McNemar is paired on those items
 ($^{***}$ $p<0.001$). \swL Laya-ml, \swD Lod-lille; the darker fill marks the
@@ -567,17 +567,16 @@ full model $\times$ language matrix on the 3{,}265-item shared pool, every cell
 built by one function from one seed (Table~\ref{tab:matrix},
 Figure~\ref{fig:matrix}); Jev-1.13's English cell lands at $0.0472$
 $[0.0401, 0.0545]$, matching its value in the English ladder of
-Appendix~\ref{app:ladder} and checking that the two constructions measure the same
-thing.
+Appendix~\ref{app:ladder}.
 
 Two things follow. First, \textbf{every arm is far more captured in Bengali than in
 English on the same paired entries}: $0.731 \rightarrow 0.379$, $0.918 \rightarrow
 0.241$ and $0.304 \rightarrow 0.047$, all paired McNemar $p < 10^{-100}$. Second,
-\textbf{capture is not monotone in capability}: Lod-lille is more accurate than
-Laya-ml and more captured, Jev-1.13 more accurate than both and less captured. The
+\textbf{capture is not monotone in capability}: Lod-lille, the stronger open arm on
+random distractors, is the more captured in Bengali, and Jev-1.13 the least. The
 open arms fall below chance here; Jev-1.13 does not, but loses $0.390$ of accuracy
 against its own English run. The pool is not neutral and its Bengali literal option
-carries a cue the English one lacks; on the $5{,}485$ corpus items without it,
+carries a cue the English one lacks; on ladder items without it,
 Bengali capture is still $0.581$ and $0.871$ (Appendices~\ref{app:matrix},
 \ref{app:construction}).
 
@@ -619,13 +618,12 @@ AURC (random)    & 0.849 & 0.934 & 0.069 \\
 \caption{Confidence by outcome, pooled over the two literal-bearing families
 \Dlit{} and \Dhard, with calibration below.
 Bold marks, per model, whether it is more confident when correct or when captured.
+Each column is on that arm's own items, so compare pattern rather than level.
 Both open arms are more confident when captured, and their confidence-gated AURC
 is \emph{worse} than the random-gate baseline on the row below it, which inverts
 selective prediction. Both AURC rows are the \Dlit{} condition, and the random-gate
 value is the expected AURC of a confidence signal drawn at random on the same
-items. Jev-1.13's English condition does not show the inversion.
-Appendix~\ref{app:selective} adds Brier, equal-mass ACE and the AUGRC of
-\citet{traub2024selective} for the same cells.}
+items.}
 \label{tab:conf}
 \end{table}
 
@@ -633,14 +631,15 @@ ECE depends on the binning \citep{nixon2019measuring}, so we also report the
 binning-free multiclass Brier score: $1.030$ and $1.391$ for the open arms under
 \Dlit{} against $0.750$ for a uniform four-way distribution, so their reported
 probabilities are worse than declining to choose. Equal-mass bins move no ECE by
-more than $0.010$ (Appendix~\ref{app:selective}).
+more than $0.011$ (Appendix~\ref{app:selective}).
 
 Selective prediction therefore inverts on both open arms: restricting Laya-ml's
 \Dlit{} to its most confident 5\% gives $0.007$ accuracy against $0.151$ at full
 coverage, and Lod-lille answers every item in its most confident 35\% incorrectly
 (Appendix~\ref{app:selective}). It is not an artifact of one confidence signal:
 Lod-lille's \emph{separate confidence head}, which estimates whether the answer is
-in the option list at all, shows the same inversion ($0.631$ against $0.295$), and
+in the option list at all, shows the same inversion ($0.631$ against $0.295$ over
+both literal-bearing families), and
 it survives AUGRC
 \citep{traub2024selective}, which matters here because AURC aggregates risk
 conditioned on the accepted set and so over-weights failures made at high
@@ -652,7 +651,7 @@ than random on that measure as on AURC.
 Calibration degrades in all three arms; only the inversion is two-arm. Jev-1.13
 looks well calibrated in English (ECE $0.014$, Brier $0.107$) and is not on the
 same items in Bengali (ECE $0.135$, Brier $0.604$), where its advantage over a
-random gate falls from $5.2\times$ to $1.4\times$. It is not inverted, though,
+random gate falls from $5.1\times$ to $1.4\times$. It is not inverted, though,
 staying more confident when correct ($0.724$) than when captured ($0.644$), so the
 sign depends on the arm. This does not contradict \citet{ibrahim2026evaluating}:
 in-distribution calibration need not survive a targeted distractor shift, and it
@@ -668,7 +667,7 @@ The \textsc{o4} ablation replaces every option's text with a bare ordinal label,
 \bangla{অর্থ}~\texttt{1}--\texttt{4} for the Bengali arms and
 \texttt{meaning}~\texttt{1}--\texttt{4} for the commercial one, so the four options are distinguishable but carry no meaning. With the gold
 position randomized and no option carrying information, expected accuracy is
-$0.25$ and whatever confidence survives is overconfidence, with no modeling
+$0.25$ and whatever confidence survives above it is overconfidence, with no modeling
 assumption needed to read it. It needs no gloss and no literal annotation, so it
 is the one condition we can put to all three arms without the pool restriction;
 the commercial arm's run is in English, so the labels differ in language from the
@@ -680,8 +679,8 @@ The ordering reverses against Table~\ref{tab:conf}. The best-calibrated model
 under real options is the worst when the options carry nothing: Jev-1.13 reports
 $0.815$ mean confidence at $0.254$ accuracy, an overconfidence of $0.561$, which
 we give as a gap rather than a binned ECE because the gap is a lower bound on ECE
-and needs no binning choice to defend. Lod-lille, the weakest of the three on
-accuracy, is the only one whose confidence collapses appropriately ($0.282$).
+and needs no binning choice to defend. Lod-lille is the only one whose confidence
+falls close to the $0.25$ a calibrated model would report ($0.282$).
 
 Jev-1.13 exposes a second field meant for exactly this case, a confidence that the
 answer is present in the option list at all, and it does not rescue the reading:
@@ -694,8 +693,7 @@ Appendix~\ref{app:positioning} sets out: a \emph{verification}-typed call recove
 what the choice type does not, and we have not tested whether that holds here.
 What the control shows is what a caller of this answer type is told, which is why
 we read it as the most portable finding: it needs no annotation and no matched
-language, and a degenerate list is an ordinary consequence of an upstream bug or
-an empty retrieval rather than an adversarial construction. McNemar between the two
+language. McNemar between the two
 open arms under \textsc{o4} is not significant ($p = 0.76$), so the instrument's
 null behaves alike in both.
 
@@ -707,7 +705,7 @@ the chosen gloss's identity, recovered as
 $\mathrm{perm}[\mathrm{slot}(\hat{y})]$; Appendix~\ref{app:position} explains why
 the slot letter is the wrong unit for the \emph{answer}.
 
-One caveat applies to everything here and belongs before the numbers. Permuting
+One caveat applies to everything here. Permuting
 the list does two things at once: it moves each gloss and it changes which letter
 names it. They cannot be separated in this design, and the literature gives reason
 to think the second matters, since \citet{sun2026typesafe} rebind option names to
@@ -718,11 +716,12 @@ and labeling \emph{together}, which is what a caller varies when they reorder a
 list, not a clean effect of position. Separating them needs a condition that moves
 each gloss while it keeps its own letter, which we did not run.
 
-Table~\ref{tab:order} gives six measures of that sensitivity. The marker-based
+Table~\ref{tab:order} gives six measures of that sensitivity, each on an item
+sample drawn separately per arm. The marker-based
 scorer changes its chosen gloss on $83.7\%$ of items against $10.7\%$ for the
 independent-option scorer and $13.3\%$ for the commercial one, a $7.8\times$
-difference in answer stability and a $12\times$ difference in the within-item range
-of $p$(gold). Each scoring design is represented by exactly one model, so the
+difference in the rate of answer changes and a $12\times$ difference in the
+within-item range of $p$(gold). Each scoring design is represented by exactly one model, so the
 design cannot be separated from the backbone or the capability of the model
 carrying it; we read the pattern as consistent with the scoring architecture
 rather than as demonstrated to follow from it.
@@ -734,20 +733,19 @@ probability back to the option it displayed, a single option's own score travels
 $4.0 \times 10^{-2}$ at the median item and never stays below $10^{-4}$, orders of
 magnitude above \texttt{fp32} noise (Appendix~\ref{app:position}). Given the
 caveat above we state the conclusion narrowly: a caller who permutes an option
-list does not get identical probabilities back, which is what the guarantee would
-have to mean in use. Whether the residue is positional or comes from the letters
+list does not get identical probabilities back. Whether the residue is positional or comes from the letters
 being reassigned we cannot say, and the second would be no less a failure of the
 guarantee than the first.
 
 
 
-A slot preference follows, measured on the full ladder run where the gold position
-is randomized across all $8{,}876$ items: Laya-ml takes slot B $37.2\%$ of the time
+A slot preference follows, measured over all five families of the full ladder,
+where the gold position is randomized: Laya-ml takes slot B $37.2\%$ of the time
 against $14.6\%$ for slot A (Appendix~\ref{app:position}). Here too slot and letter
 covary, so it is as consistent with a prior on the token \texttt{B} as with a
 preference for the second position. Either way, an evaluation of this class that
 fixes option order is partly measuring something other than the options. All
-results here randomize order per item, seeded by item id, and we would treat that
+results here randomize order per item, seeded by item id and experiment, and we would treat that
 as a default rather than a robustness check.
 
 \subsection{The option side is read lexically, and the idiom is not held as a unit}
@@ -773,8 +771,8 @@ string on $99.7\%$ of items or better. Accuracy cannot carry the argument, becau
 the condition is \Dlit{} and the intact accuracies on E3's own items, $0.157$ and
 $0.072$, already sit below chance. Agreement with the intact answer has no such
 floor, and that is where the claim rests: under word-shuffling the open arms
-return the same option on $0.742$ and $0.917$ of items, so breaking the expression
-is close to invisible to them. The one manipulation that moves both is the gold
+return the same option on $0.742$ and $0.917$ of items, at least as often as under
+meaning-preserving rewrites ($0.657$, $0.677$; Appendix~\ref{app:surface}). The one manipulation that moves both is the gold
 carrier sentence, $+0.080$ and $+0.117$, so context rather than the idiom string
 carries the usable signal. That cuts both ways, since \citet{xu2026jevout} flip
 61.4\% of correct decisions with short fluent additions chosen to redirect them
@@ -797,16 +795,14 @@ overlap on both arms, and the Latin-script cue on Laya-ml, with Lod-lille's
 interval covering zero. Length is the exception and needs separate handling, since
 the subset below does not remove it. Splitting on whether the literal option is
 the longest of the four moves \LAR{} by $-0.034$ $[-0.055,-0.013]$ on Laya-ml and
-$+0.020$ $[-0.024,+0.064]$ on Lod-lille, so the larger arm is slightly \emph{less}
+$+0.020$ $[-0.024,+0.064]$ on Lod-lille, so Laya-ml is slightly \emph{less}
 captured when it is: a real asymmetry in the material, not a route to capture.
 
 Restricting to the $2{,}480$ items that are multiword, whose gloss does not
 contain the idiom and carries no parenthetical, removes both lexical cues and
 narrows the length gap to $36.6$ against $32.4$ characters. \LAR{} is still
 $0.560$ and $0.891$ against a chance level of $0.250$, and the length split stays
-null. Appendix~\ref{app:items} has the rest, including \LAR{} by idiom length,
-which peaks on two-word idioms rather than the single-word ones where idiom and
-gloss most often coincide.
+null; Appendix~\ref{app:items} has the rest, including \LAR{} by idiom length.
 
 \begin{table}[t]
 \centering\small
@@ -854,8 +850,8 @@ items (all McNemar $p<0.001$). Lod-lille reaches $0.864$ in English against
 $0.484$ in Bengali, so the figurative concepts appear largely available to it and
 the Bengali route is where the loss occurs, consistent with its documented
 English-only training evaluation. Laya-ml's English-only checkpoint on Bengali
-script sits at $0.283$, barely above chance, which makes it unlikely the Bengali
-result is an artifact of the scorer rather than of the language. Here too the
+script sits at $0.283$, barely above chance, against $0.371$ for the multilingual
+one on the same items, so the scorer does read Bengali where the checkpoint can. Here too the
 English condition presents the annotator's nearest English idiom rather than a
 translation (Appendices~\ref{app:crossling}, \ref{app:construction}).
 
@@ -876,20 +872,21 @@ on degrades first and silently.
 
 Decision models are being placed at decision points, and the interface that makes
 them attractive is also what makes them hard to audit: no rationale, no chain of
-thought, and in the commercial case no weights. We have argued that the option
-list is an adequate substitute, since every result here comes from changing what
-is in that list and reading the probability vector back, which needs no new
-annotation and works unchanged on a closed, text-free model.
+thought, and in the commercial case no weights. We have argued that the caller's
+input is an adequate substitute, since every result here comes from changing the
+option list or the expression it asks about and reading the probability vector
+back, which needs no new annotation and works unchanged on a closed, text-free
+model.
 
 One substituted option is enough. The idiom's own expert literal gloss draws all
-three arms toward the literal reading, taking $66\%$ to $96\%$ of what each arm
+three arms toward the literal reading, taking $65\%$ to $96\%$ of what each arm
 gets wrong in Bengali, and the model $\times$ language matrix separates two
 explanations that are easy to conflate: capture falls by $0.26$ to $0.68$ in every
 arm when the paired entries are asked in English, so the commercial model's
 apparent resistance belongs to its test language rather than to the model.
-Capability does not order the failure, the most accurate arm being the least
-captured. Nor is any of this visible to the caller: confidence inverts on the open
-arms under the same shift, calibration degrades on all three, and on an option
+Capability does not order the failure: the middle arm by accuracy is the most
+captured in Bengali. Nor is any of this visible to the caller: confidence inverts on
+the open arms under the literal shift, calibration degrades on all three, and on an option
 list stripped of semantics the arms still report between $0.28$ and $0.82$.
 
 What the design cannot settle is set out in Limitations, and the cues that could
@@ -904,7 +901,8 @@ particular set of decision tasks, and the open arms' own documentation reports
 that base checkpoints are weak on tasks outside that set. Some part of what we
 measure may therefore be out-of-distribution task transfer rather than literal
 capture specifically. The \textsc{o4} control bounds this from one side, since
-it shows the instrument's null behaving identically in both open arms, and the
+it shows both open arms at chance accuracy with no detectable difference between
+them, and the
 \Drand{} to \Dlit{} contrast is within-model and within-item, which removes any
 fixed task-transfer offset. Neither argument rules the confound out. A single
 lightly fine-tuned arm would settle it, and we have not run one.
@@ -918,12 +916,13 @@ path, so the arithmetic falls back to \texttt{fp32} CUDA cores
 (Appendix~\ref{app:repro}); a reader reproducing on
 later hardware is not reproducing the same numerics.
 
-Lod-lille ran a fixed 10\% subset (888 items), so its intervals are roughly
+Outside the capture matrix, which it ran on the full $3{,}265$-item pool,
+Lod-lille ran a fixed 10\% subset (888 items), so its intervals there are roughly
 $\pm 3$ points and its stratified cells are thin. Appendix~\ref{app:subset}
 bounds the subset bias at $0.016$ and shows it changes no sign or ordering. E3
 on the Lod-lille arm is 180 items and several of its perturbation contrasts are
 not individually significant. E7 covers 992 / 299 / 300 items rather than the
-full sets.
+full sets, drawn separately per arm, so its cross-arm comparison is unpaired.
 
 Three of the interventions are weaker than their headings suggest, and we would
 rather say so than have it found. E7 cannot separate position from labeling,
@@ -964,9 +963,9 @@ Appendix~\ref{app:construction} sets out all four asymmetries we could find and
 tests the two that recorded outputs can reach. Restricted to the $1{,}429$ items
 whose Bengali literal gloss shares no content word with the idiom, the capture gap
 is $+0.358$, $+0.610$ and $+0.310$ against headline gaps of $+0.352$, $+0.677$ and
-$+0.256$. Restricted to the $5{,}485$ corpus items whose literal gloss carries no
-English parenthetical at all, Bengali capture is still $0.581$ and $0.871$ on the
-two open arms, against a chance level of $0.250$. Neither cue accounts for the
+$+0.256$. Restricted to the ladder items whose literal gloss carries no English
+parenthetical at all, $5{,}485$ for Laya-ml and $560$ for Lod-lille, Bengali capture
+is still $0.581$ and $0.871$, against a chance level of $0.250$. Neither cue accounts for the
 result, though the second is worth a real $+0.165$ on one arm and we report it as
 such. What we cannot do without new runs is make the two cells symmetric by
 construction; a translation-paired corpus, or a Bengali cell with the parenthetical
@@ -1019,8 +1018,8 @@ Appendix~\ref{app:repro} is the run record they correspond to.
 Every call in this paper sends one typed \texttt{choice} question and receives
 one probability vector. Nothing else is exchanged: there is no prompt template,
 no system message, no sampling parameter and no generated text. This is the
-whole interface, which is why the option set is the only intervention surface
-available.
+whole interface, which is why every intervention in this paper acts on one of the
+two things the caller supplies: the state, or the option set.
 
 \begin{table}[t]
 \centering\small
@@ -1037,10 +1036,11 @@ available.
 \textbf{weights} & open & open & closed \\
 \bottomrule
 \end{tabularx}
-\caption{\textbf{The three model arms.} Item counts and latencies are those used
-in the reported experiments. Parameter counts are the model cards'. Lod-lille was
-run on a fixed 10\% random subset; Appendix~\ref{app:subset} bounds the resulting
-drift at $0.016$.}
+\caption{\textbf{The three model arms.} Item counts are each arm's main run: the
+full ladder for Laya-ml, a fixed 10\% random subset for Lod-lille, and the English
+pool for Jev-1.13. Every arm also ran the $3{,}265$-item capture matrix in full.
+Parameter counts are the model cards'. Appendix~\ref{app:subset} bounds the
+subset's drift at $0.016$.}
 \label{tab:models}
 \end{table}
 
@@ -1072,8 +1072,9 @@ one in Table~\ref{tab:instr}.
 The two open arms are called locally with the same four fields: the idiom as
 state, the instruction string, and the four option texts keyed \texttt{A}--%
 \texttt{D}. The option order is shuffled per item by a generator seeded with the
-item id and the experiment seed, so the same item receives the same permutation
-in every arm and every family.
+item id and the experiment seed, so within an experiment the same item receives the
+same permutation in both open arms and in every family. The commercial arm's blocks
+use their own seeds (Appendix~\ref{app:repro}), so its permutations differ.
 
 \paragraph{Response.}
 
@@ -1136,15 +1137,14 @@ English &
 \end{tabularx}
 \caption{The two instruction strings. Each is one sentence and is byte-identical
 across families, experiments and arms; the Bengali string is the direct equivalent
-of the English one. The commercial arm receives the English string in its English
-blocks and the \emph{same Bengali string} in its Bengali control and its Bengali
-matrix cell. The two open arms are configured with one instruction string, the
-Bengali one, and their task configuration carries no second string, so their
-English E4 cells were asked in Bengali about an English state; the per-item outputs
-do not log the instruction, so this follows from the released configuration rather
-than from the logs. The matched condition of Appendix~\ref{app:threeway} therefore
-shares its instruction across the three arms, and differs only in the sampled
-distractors, which the commercial arm drew under its own seed namespace.}
+of the English one. Which string a call receives follows the language of the cell,
+on every arm: Bengali cells receive the Bengali string and English cells the
+English one, including the open arms' English cells in E4 and in the capture
+matrix. The open arms' task configuration records only the Bengali string because
+their English cells set the English one in the run code. The matched condition of
+Appendix~\ref{app:threeway} therefore shares its instruction across the three
+arms, and differs only in the sampled distractors, which the commercial arm drew
+under its own seed namespace.}
 \label{tab:instr}
 \end{table}
 
@@ -1187,11 +1187,13 @@ output remains structurally valid.
 
 Our \textsc{o}-series (\S\ref{sec:bagofwords}) manipulates the complementary
 half. We hold the option names fixed at \texttt{A}--\texttt{D} and destroy the
-internal structure of the text bound to them, by truncation and by shuffling
-words within each option, and find accuracy almost unchanged. Read together, the
-two results bracket the same conclusion from either side: within an option,
-these models are sensitive to lexical identity and insensitive to composed
-meaning. Neither result alone would establish that, because theirs is consistent
+internal structure of the text bound to them, chiefly by shuffling words within
+each option (truncation is the weaker probe, Appendix~\ref{app:options}), and find
+accuracy almost unchanged. Read together, the two results point the same way from
+either side: within an option, these models are sensitive to lexical identity, and
+on random distractors their decisions do not depend on composed meaning. That falls
+short of showing they cannot compose, since composition is not needed on that
+condition (Appendix~\ref{app:options}). Neither result alone would establish that, because theirs is consistent
 with a model that reads definitions carefully but weights names more heavily,
 and ours is consistent with a model that reads definitions as unordered bags.
 
@@ -1230,9 +1232,11 @@ escalating the rest, and exceed a frontier model's accuracy at 41\% of its cost.
 
 We reproduce the favorable calibration for the commercial arm on its own
 language (\S\ref{sec:confidence}), so this is not a contradiction. The boundary
-we add has two parts. First, in-distribution calibration does not survive a
-targeted distractor shift, and it fails in the direction that costs a cascade
-most: on the literal-bearing families the high-confidence tail is where the open
+we add has two parts. First, in-distribution calibration does not survive the
+shifts we apply: on the open arms it fails under a targeted distractor shift, and
+on the commercial arm, which stays calibrated under that shift in English, it fails
+under the change of language. On the open arms it fails in the direction that costs
+a cascade most: on the literal-bearing families the high-confidence tail is where the open
 arms are \emph{least} accurate, so a confidence gate forwards exactly the items
 that should have been escalated. Second, and independent of any distribution
 assumption, the semantics-free control (\S\ref{sec:nosignal}) shows what each
@@ -1411,7 +1415,7 @@ readers who want the reasoning rather than the result.
 
 A decision model takes a question and a list of candidate options and returns a
 probability over exactly those options. It does not sample and it emits no text. Three of the usual explainability routes are
-therefore closed. There is no rationale to inspect and no chain of thought whose
+therefore closed or compromised. There is no rationale to inspect and no chain of thought whose
 faithfulness could be measured \citep{jacovi2020faithfulness,turpin2023unfaithful}.
 Weights are available for two of our arms but not for the commercial one, so no
 method that requires opening every model, including probing and causal tracing,
@@ -1452,7 +1456,8 @@ within-model, so a difference between two families cannot be explained by item
 difficulty, by the prompt, or by anything about the model that does not change
 between the two calls.
 
-The same logic produces the other six interventions. If the failure were about
+The same logic produces the other five interventions; E5 is an analysis of E1's
+outputs rather than an intervention. If the failure were about
 the idiom's surface form rather than its meaning, E2 would show it
 (Appendix~\ref{app:surface}). If the model
 held the expression as a stored unit, breaking the unit in E3 would hurt. If the
@@ -1495,16 +1500,19 @@ rather than a robustness check.
 \paragraph{The commercial column does something different.} Jev-1.13's ordering is
 not the same shape. Its worst family in English is \Dsem{} at $0.829$, and the
 literal family at $0.931$ is \emph{easier} for it than the semantic one, which
-inverts the open arms' ordering. Read alone, that looks like a model which has
+inverts the open arms' ordering. Those two rows come from different pools, so that
+comparison is indicative; the paired version is on the $3{,}265$ items both
+\Drand{} and \Dlit{} share, where the literal gloss costs it only $0.037$
+($0.968$ to $0.931$) against $0.216$ and $0.418$ on the open arms. Read alone, that looks like a model which has
 simply solved the literal distractor. Read against the Bengali column of
 Table~\ref{tab:matrix}, where the same model on the same construction is captured
 at $0.304$, it reads instead as a model for which the literal distractor is easy
 \emph{in English}. Only the matrix distinguishes the two, which is why we report
 the English ladder and the matrix together rather than either alone.
 
-\paragraph{Why \Dhard{} adds little.} \Dhard{} contains everything \Dlit{} does
-plus two harder neighbors, yet costs only a further $0.007$ and $0.003$ on the
-open arms. Once the literal gloss is present it absorbs essentially all of the
+\paragraph{Why \Dhard{} adds little.} \Dhard{} keeps \Dlit{}'s literal gloss and
+replaces its two random distractors with harder neighbors, yet costs only a further
+$0.007$ and $0.003$ on the open arms. Once the literal gloss is present it absorbs essentially all of the
 available error: the remaining two slots could be filled with anything without
 changing the outcome much. This is also why we report \LAR{} on both families and
 treat \Dlit{} as the headline, since it is the cleaner single-variable
@@ -1602,8 +1610,9 @@ any model-independent way: the items retained at $0.05$ coverage are whichever
 items \emph{that} model ranked highest, which differ between the two arms and
 between the two families. The comparison the table supports is therefore vertical
 within a column, not horizontal across them. The quantity to watch is the sign of
-the gradient. In the two \Drand{} columns it is the sign a caller expects, and the
-magnitude is substantial: Lod-lille reaches $0.977$ in its most confident
+the gradient. In the two \Drand{} columns it is the sign a caller expects, with
+one small reversal at the top of Lod-lille's ($0.977$ at $5\%$, $0.989$ at $10\%$),
+and the magnitude is substantial: Lod-lille reaches $0.977$ in its most confident
 twentieth against $0.484$ at full coverage. In the two \Dlit{} columns it is
 reversed, and the reversal is monotone rather than noisy, which is what makes it
 an inversion of the mechanism rather than a weak signal. The four zeros in the
@@ -1617,7 +1626,7 @@ metric \citet{nixon2019measuring} show to be sensitive to the binning: with 15
 equal-width bins most of the mass can land in one or two bins, and an estimator
 averaging over near-empty bins can move with the bin count. Replacing them with
 15 equal-mass bins, which is their adaptive variant, changes nothing material
-here: the largest shift across the nine cells is $0.010$, and the ordering of the
+here: the largest shift across the nine cells is $0.011$, and the ordering of the
 arms is identical. So the calibration failure is a property of the
 distributions, not of our bin edges.
 
@@ -1631,8 +1640,8 @@ stronger than miscalibration: on the literal-bearing condition, a caller
 integrating these models' full reported distributions is worse off than a caller
 who replaced them with a flat prior. Jev-1.13 in English stays far below the
 reference throughout, and the one cell where it approaches a visible calibration
-cost is \Dhard{} ($0.220$, ECE $0.047$), which is the condition that also
-contains the literal gloss.
+cost is \Dhard{} ($0.220$, ECE $0.047$), which with \Dlit{} is one of the two
+conditions containing the literal gloss.
 
 \begin{table}[t]
 \centering\small
@@ -1663,7 +1672,7 @@ contains the literal gloss.
 distributions.} \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13. ECE uses 15
 equal-width bins, ACE the adaptive equal-mass variant of
 \citet{nixon2019measuring}; the largest gap between them across these nine cells
-is $0.010$, so the ECE figures elsewhere in the paper are not artifacts of the
+is $0.011$, so the ECE figures elsewhere in the paper are not artifacts of the
 binning. Brier is the multiclass score and needs no bins; bold marks cells above $0.750$,
 its value for a uniform four-way distribution, where the model's reported
 distribution is less useful to a caller than no preference at all. AUGRC is the
@@ -1842,8 +1851,9 @@ gloss. E6 rewrites the options rather than the state, so a single
 $p(\text{gold})$ is not defined for its rows and the column is empty there. Shuffling and reversing the
 expression leave the probability essentially unchanged, whereas the
 carrier sentence changes it. \emph{E6} changes the option text while
-holding its role fixed; the five rows show increasingly reduced or
-rearranged lexical content, ending with the semantics-free control.
+holding its role fixed; after the full gloss, the rows truncate it, scramble its
+words, translate it, and finally remove its content, ending with the semantics-free
+control.
 The other three options undergo the same transformation as the gold
 option. The E6 tokenizer splits on punctuation and rejoins on spaces, so the
 semicolons of the full gloss do not survive into the truncated and scrambled
@@ -1895,8 +1905,8 @@ That last point is worth stating separately, because it is the mechanism behind
 the inverted reliability curves. A model that found the literal option merely
 distracting would spread mass and lose accuracy together. Both open arms do the
 opposite: adding the literal gloss \emph{concentrates} the distribution onto it.
-On 24 items Laya-ml returns $p = 1.000$ on the literal gloss and $p = 0.000$ on
-the gold.
+On 21 items Laya-ml returns $p = 1.000$ on the literal gloss and $p = 0.000$ on
+the gold, to three decimal places.
 
 \paragraph{How to read the entropy column.} Normalized entropy is the entropy of
 the returned four-way vector divided by $\log 4$, so $1$ is uniform and $0$ is a
@@ -1994,12 +2004,13 @@ annotators' own rather than one we wrote.
 gloss.} All five are drawn from the $2{,}480$ items on which none of the
 lexical construction cues of \S\ref{sec:construction} is available: each idiom is
 multiword, its literal gloss does not contain the idiom string, and the gloss
-carries no English parenthetical, so the literal option is not the only
-Latin-bearing one. Glosses and English equivalents are
+carries no English parenthetical, so no option in the list carries Latin script.
+Each idiom does still share a content word with its literal gloss, the hook that
+Table~\ref{tab:hook} tests and finds does not carry capture. Glosses and English equivalents are
 the corpus's own; the English in parentheses is ours, for readability. Both the
 literal and the figurative gloss were in the option list, and the last column is
 the mass placed on the literal one under \Dlit{} on the full Bengali run. On every
-one of these the model gave the gold gloss $0.01$ or less.}
+one of these the model gave the gold gloss at most $0.011$.}
 \label{tab:bnexamples}
 \end{table*}
 
@@ -2040,9 +2051,9 @@ the design is a full crossing, so the same $3{,}265$ items, the same distractor
 draw and the same seed produce all six cells, and both margins are readable. The
 language margin is large and uniform in sign: every arm is more captured in
 Bengali, by $+0.352$, $+0.677$ and $+0.256$. The capability margin is not even
-monotone. Lod-lille, which beats Laya-ml by $+0.133$ on the matched random
-condition (Table~\ref{tab:threeway}), is the \emph{most} captured arm in both
-languages, and the strongest arm is the least captured. A single ordering of
+monotone. Lod-lille, which beats Laya-ml by $+0.133$ on random distractors over
+the 888 items they share (Table~\ref{tab:ladder}), is the \emph{most} captured arm
+in Bengali, and the strongest arm is the least captured in both languages. A single ordering of
 these three models therefore cannot predict their capture, while knowing the test
 language can.
 
@@ -2064,8 +2075,8 @@ than translations, and are asymmetric in construction in four ways we enumerate 
 the same appendix. And the matrix covers the literal condition only; we did not
 cross the other four families with language, so we cannot say whether the language
 effect is specific to literal capture or general to distractor difficulty. The
-first of these affects levels, the second we test directly, and the third is simply
-unrun.
+first of these affects levels, the second we test in part, since the recorded
+outputs reach two of the four asymmetries, and the third is simply unrun.
 
 \begin{table}[t]
 \centering\small
@@ -2085,9 +2096,10 @@ Jev-1.13  & 0.536 & 0.304 & 0.926 & 0.047 \\
 cells measured on the same 3{,}265 items with one construction and one seed
 ($n=3{,}265$ per cell; 95\% CIs in Appendix~\ref{app:matrix}). Bold marks the
 highest \LAR{} per language. Every arm is far more captured in Bengali than in
-English, and the Bengali ordering does not follow capability: Jev-1.13 is the
-most accurate and the least captured, while Lod-lille is more accurate than
-Laya-ml and more captured.}
+English, and the Bengali ordering does not follow capability: Jev-1.13, the
+strongest arm, is the least captured in both languages, while Lod-lille, stronger
+than Laya-ml on random distractors (Table~\ref{tab:ladder}), is the more captured
+of the two in Bengali.}
 \label{tab:matrix}
 \end{table}
 
@@ -2383,8 +2395,8 @@ $p < 10^{-100}$ in all three rows.}
 
 The capture matrix is the result we lean on hardest, so this appendix states
 exactly how its two language cells were constructed, lists every asymmetry
-between them that we could find, and reports the one test of the largest
-asymmetry that the existing outputs permit.
+between them that we could find, and reports the tests of the two that the
+existing outputs can reach.
 
 \paragraph{Where the glosses come from.} Neither literal gloss is a translation
 produced by us or by a machine. The corpus annotates one field per idiom,
@@ -2414,7 +2426,7 @@ than ``identical items''.
 the annotated field as written, and pool membership requires that field to contain
 an English parenthetical, every one of the $3{,}265$ Bengali literal options
 contains its own English gloss inside it, averaging $44$ characters against $24$
-for the English literal option. This is the most serious of the four, because it
+for the English literal option. This is the most direct of the four, because it
 supplies a cue that has nothing to do with reading the expression: no Bengali
 figurative gloss in the corpus contains any Latin character, so whenever the
 literal option carries a parenthetical it is the \emph{only} option in the list
@@ -2432,8 +2444,8 @@ Jaccard is $0.029$ in Bengali against $0.052$ in English, so the
 Bengali side is the more separated of the two and would have passed the cut almost
 everywhere. This asymmetry is procedural rather than consequential.
 
-\emph{(iv) The literal gloss echoes the state more often in Bengali.} This is the
-one that could plausibly manufacture the result. The Bengali literal gloss shares at
+\emph{(iv) The literal gloss echoes the state more often in Bengali.} With (ii),
+this is one of the two that could plausibly manufacture the result. The Bengali literal gloss shares at
 least one content word with the Bengali idiom on $56.2\%$ of pool items; the English
 literal gloss shares one with the English equivalent idiom on $25.1\%$. A model
 doing order-free lexical matching on the option side, which
@@ -2481,8 +2493,8 @@ headline gap (all pool) & $+0.352$ & $+0.677$ & $+0.256$ \\
 \end{tabularx}
 \caption{\textbf{The content-word hook does not carry the language gap.}
 Columns are Laya-ml, Lod-lille and Jev-1.13. ``Hook'' means the Bengali literal
-gloss shares at least one content word with the idiom, which is the asymmetry
-most likely to inflate Bengali capture. Upper block: capture is not reliably higher
+gloss shares at least one content word with the idiom, one of the two
+asymmetries most likely to inflate Bengali capture. Upper block: capture is not reliably higher
 when the hook is present, and on the commercial arm it is lower. Lower block:
 restricting both language cells to hook-absent items leaves the capture gap
 essentially unchanged, and larger for two of three arms. The script is released
@@ -2543,8 +2555,8 @@ written in Latin script. Upper block: the cue is worth $+0.165$ of capture on th
 marker scorer and little on the independent-option scorer, yet capture without it
 is still $0.581$ and $0.871$ against a chance level of $0.250$. Lower block: the
 same split moves accuracy on families containing no literal option by at most
-$0.042$, and on Laya-ml by a consistent $1.4$ to $3.0$ points, an order of
-magnitude below what it buys on the literal family. The commercial arm cannot be split this way,
+$0.042$, and on Laya-ml by a consistent $1.4$ to $3.0$ points, five to twelve
+times less than what it buys on the literal family. The commercial arm cannot be split this way,
 since its only Bengali literal run is the pool, where every item carries a
 parenthetical.}
 \label{tab:paren}
@@ -2599,7 +2611,9 @@ neither distinguishable from zero. Length is a genuine asymmetry in the material
 and not a route to capture, which is why we report it separately rather than
 claiming the subset removes it. The worked examples in
 Table~\ref{tab:bnexamples} are drawn from this subset so that none of them rests
-on a cue.
+on verbatim overlap or the Latin-script cue. All five do share a content word with
+their literal gloss, which is asymmetry (iv), and Table~\ref{tab:hook} shows that
+overlap does not carry capture.
 
 \paragraph{What this appendix does not establish.} Asymmetry (i) remains untested:
 we cannot ask what the arms would do on an English state that is a literal
@@ -2623,12 +2637,13 @@ is the within-model language contrast. The third and fourth use the vendor's
 English-only checkpoint, and exist as a control rather than as a result: the third
 runs it on the English condition, where it should and does perform, and the fourth
 runs it on Bengali script, where it sits at $0.283$, barely above the $0.250$
-chance line. That fourth bar is doing one specific job. It rules out the
-possibility that our Bengali numbers are an artifact of the option-marker scoring
-harness rather than of the language, because a checkpoint that is documented as
-unable to read the script fails here in the documented way. If the harness were
-manufacturing the Bengali deficit, this bar would not be distinguishable from the
-multilingual checkpoint's Bengali bar, and it is.
+chance line. That fourth bar does one specific job. A checkpoint documented as
+unable to read the script fails here in the documented way, while the multilingual
+checkpoint on the same items reaches $0.371$, so the scoring harness does pass
+Bengali through to a model that can read it. What the bar cannot do is rule out a
+harness that depresses Bengali scores without erasing them, since an English-only
+checkpoint would fail on Bengali either way; it shows the harness is not erasing
+the language, not that the harness contributes nothing to the deficit.
 
 \paragraph{The gains are not uniform, and the ordering is informative.} Lod-lille
 gains the most ($+0.380$), Laya-ml and Jev-1.13 roughly similar amounts ($+0.246$
@@ -2692,9 +2707,10 @@ Bengali figurative gloss with random distractors, the same instruction string an
 the same $k$. It is not byte-identical, because the commercial arm drew its
 sampled distractors under a disjoint seed namespace
 (Appendix~\ref{app:repro}), so the three option lists share the gold and differ
-in the three distractors. All pairwise McNemar tests
-on the overlapping items are significant: Jev--Laya $+0.369$,
-Jev--Lod $+0.259$, and Lod--Laya $+0.133$ (all $p<10^{-9}$).}
+in the three distractors. Each row is on that arm's own items, so $n$ differs.
+The pairwise differences are computed on the items each pair shares, which is why
+they do not equal the differences between rows: Jev--Laya $+0.369$,
+Jev--Lod $+0.259$ and Lod--Laya $+0.133$ (McNemar, all $p<10^{-9}$).}
 \label{tab:threeway}
 \end{table}
 
@@ -2709,11 +2725,12 @@ the construction, not the byte string.
 is scoped by something the three arms do not share. The literal condition needs
 an annotated literal gloss, which exists in Bengali for the whole corpus but in
 English only for the $3{,}265$-item pool. The confidence results need a comparable
-confidence signal, and the three arms expose three different ones: Laya-ml's
-maximum over option markers, which its shipped per-bucket temperatures were not
-applied to (Appendix~\ref{app:repro}), Lod-lille's separate confidence head, and
-Jev-1.13's maximum together with a separate presence-of-answer field, which we
-report on the semantics-free control in \S\ref{sec:nosignal}. The order experiment
+confidence signal; the maximum probability is the only one all three define
+identically (Appendix~\ref{app:payload}), and it is uncalibrated on Laya-ml, whose
+shipped per-bucket temperatures were not applied (Appendix~\ref{app:repro}). Beyond
+it the arms expose different auxiliary signals, Lod-lille's separate confidence head
+and Jev-1.13's presence-of-answer field, which we report where they bear on a
+result (\S\ref{sec:confidence}, \S\ref{sec:nosignal}). The order experiment
 needs the full permutation set, which
 we ran at different $n$ per arm. This condition needs none of that, so it is the
 one place where a bare capability ordering can be read without a caveat attached.
@@ -2725,7 +2742,7 @@ later results do not follow it. Capture is highest on the middle arm
 (Table~\ref{tab:matrix}). Calibration is best on the strongest arm by ECE and
 worst on the strongest arm on the semantics-free control, where it reports $0.815$
 confidence at $0.254$ accuracy. Order stability is highest on the two arms with the
-independent-option and commercial designs, which are the strongest and the middle
+independent-option and commercial designs, which are the middle and the strongest
 arm, and lowest on the weakest. Without a baseline ordering none of those
 non-correspondences would be statable, which is why a table this simple earns its
 own appendix.
@@ -2802,20 +2819,25 @@ because it changes many answers in compensating directions. Agreement
 distinguishes those: it counts the share of items whose answer is unchanged from
 the intact state, so a model that is unaffected scores high on both while a model
 that is churning scores flat accuracy and low agreement. Laya-ml agrees with
-itself on $0.742$ of items under shuffling and Lod-lille on $0.917$, so neither is
-churning. The conclusion is the stronger one: the perturbation is close to
-invisible to both, not merely harmless on average.
+itself on $0.742$ of items under shuffling and Lod-lille on $0.917$. For Lod-lille
+the perturbation is close to invisible. For Laya-ml it is not negligible, but it is
+no larger than what a meaning-preserving rewrite does: the annotators' certified
+alternative forms leave Laya-ml's answer unchanged on only $0.657$ of pairs
+(Appendix~\ref{app:surface}). Scrambling the expression's word order moves this
+model no more than paraphrasing it faithfully, which is the opposite of what a
+model holding the expression as an ordered unit would show.
 
 \paragraph{What this rules out, and what it does not.} It rules out the
 hypothesis that these models hold the idiom as a stored lexical unit whose
 retrieval is keyed on its exact form, because breaking the form does not cost them
-the answer. It does not establish what they do instead. In particular, flat
-accuracy under shuffling is also consistent with a model that was never using the
-state string for much at all, which the carrier-sentence row supports: that is the
-only manipulation that moves either arm, by $+0.080$ and $+0.117$, and it is the
-one that adds context rather than altering the expression. Our reading is that the
-usable signal is in the surrounding material rather than in the expression, and we
-state it as a reading.
+the answer. It does not establish what they do instead. The state string is
+read: \S\ref{sec:construction} shows a literal gloss that contains the idiom
+verbatim is chosen more often. What the shuffle shows is that its word order
+carries little, which fits a model that reads the expression as a set of words. The
+carrier sentence is the only manipulation that moves either arm, by $+0.080$ and
+$+0.117$, and it is the one that adds context rather than altering the expression.
+Our reading is that the usable figurative signal is in the surrounding material
+rather than in the expression's form, and we state it as a reading.
 
 \paragraph{What E3 can and cannot show.} Three scope conditions bound it, and we
 state them rather than leaving them to be inferred.
@@ -2853,8 +2875,8 @@ that is individually large in both.
 \swL Laya-ml, \swD Lod-lille; error bars 95\% bootstrap
 CIs, dashed line chance (left panel). \emph{Left:} accuracy. \emph{Right:}
 agreement with the answer on the intact idiom. Scrambling and reversing the
-expression does not meaningfully hurt either model, which is the bag-of-words
-signature.}
+expression does not meaningfully hurt either model, which is what a model reading
+the expression as a set of words would show.}
 \label{fig:unit}
 \end{figure*}
 
@@ -2914,7 +2936,8 @@ which is why the pair-level figure is the more conservative of the two.
 \label{app:subset}
 
 Lod-lille ran a fixed $10\%$ random subset, drawn once with seed $909$ and reused
-for every experiment on that arm, so its cells are comparable to each other.
+for every experiment on that arm except the capture matrix, which it ran on the
+full $3{,}265$-item pool, so its subset cells are comparable to each other.
 The question this appendix answers is whether they are comparable to the other
 arm's full-set cells. Because the subset is a subset of the same corpus, we can
 measure the answer directly rather than assume it: Table~\ref{tab:subset} runs
@@ -2924,14 +2947,15 @@ itself.
 \paragraph{Why this is the right test.} An alternative would be to compare
 Lod-lille on the subset against Laya-ml on the full set and attribute any
 difference to sampling, which conflates the sample with the model. Holding the
-model fixed and varying only the sample isolates the sampling term. Whatever
-drift appears in Table~\ref{tab:subset} is an upper estimate of what the subset
-contributes to a cross-arm comparison, since the two arms see the same items.
+model fixed and varying only the sample isolates the sampling term. The drift in
+Table~\ref{tab:subset} measures how well the subset stands in for the full corpus.
+It does not enter the paired cross-arm comparisons, which are made on the shared
+888 items where both arms see the same subset.
 
 \paragraph{What the drift column shows.} The largest absolute drift across five
-families is $0.016$, on \Drand{}, and the signs are mixed rather than systematic:
-three families drift down, two up. A subset that over-represented easy or hard
-items would drift consistently in one direction. Two of the five subset estimates
+families is $0.016$, on \Drand{}. Three families drift down and two up, but the
+two upward drifts are negligible ($+0.001$, $+0.004$), so the fair summary is a
+slight downward lean of under two points rather than no lean at all. Two of the five subset estimates
 fall marginally outside the full-set bootstrap interval, which at $n=888$ against
 $n=8{,}876$ is the expected rate rather than a signal. Critically, no family's
 drift is large enough to reorder the ladder: \Dlit{} and \Dhard{} remain far below
@@ -2952,9 +2976,9 @@ gap, which is the quantity the paper reports, changes by $0.001$.
 \Dhard & 0.144 & 0.149 & $+0.004$ \\
 \bottomrule
 \end{tabularx}
-\caption{Laya-ml on the 10\% subset against its own full set. Maximum drift
-is $0.016$ and the signs are mixed, so there is no systematic easy-or-hard
-skew. Two of five subset estimates fall marginally outside the full-set
+\caption{Laya-ml on the 10\% subset against its own full set, drift computed
+before rounding. Maximum drift is $0.016$, and the larger drifts are downward,
+a slight lean of under two points. Two of five subset estimates fall marginally outside the full-set
 bootstrap CI, which is expected at $n=888$ and changes no sign or ordering.
 The full-set figures are therefore reported as the precise estimates, and
 Lod-lille's intervals are reported wider throughout.}
@@ -2996,15 +3020,15 @@ artifact of the harness, because when the semantics are removed the measurement
 collapses to exactly where it should. It also shows the gold-position randomization
 is working: a harness with a position leak would score above chance here. And it is
 the condition \S\ref{sec:nosignal} builds on, because it is the one place where
-accuracy is known a priori and any confidence above zero is therefore unambiguously
-excess.
+accuracy is known a priori, at $0.25$, so any reported confidence above that is
+unambiguously excess.
 
 \paragraph{Caveats.} Three bound what the \textsc{o}-series shows. First,
 truncation to six words is a weaker manipulation than it sounds: the median Bengali
 gloss is four words, so truncation leaves $77.8\%$ of options untouched, and the
 English options, median seven words, are cut on $58.0\%$. The scramble is the
-informative row, since it is a no-op only on the $5.7\%$ of options that are a
-single word. Second, the whole series runs on random distractors, where
+informative row: it is necessarily a no-op on the $5.7\%$ of options that are a
+single word, and otherwise changes the option's word order. Second, the whole series runs on random distractors, where
 identifying the right words already suffices to answer; a model that composes
 meaning and one that only matches words would both score well. So these rows show
 that composition is not \emph{required} on this condition, not that these models
@@ -3013,9 +3037,10 @@ are lexically close and composition would pay, is the test that would separate t
 two, and we did not run it. Third, Jev-1.13's column is English throughout, so its
 rows are not comparable in level to the other two, only in shape. The three arms' \emph{full
 gloss} rows differ slightly from the corresponding \Drand{} rows of
-Table~\ref{tab:fullladder} because E6 draws its own distractor sample under seed
-$6000$; the differences are $0.002$ to $0.008$ and we report both rather than
-reconciling them silently.
+Table~\ref{tab:fullladder} because E6 draws its own distractor sample, under seed
+$6000$ on the open arms and $16000$ on the commercial arm, whose E6 also runs on
+$873$ items rather than $3{,}265$; the differences are $0.002$ to $0.008$ and we
+report both rather than reconciling them silently.
 
 \begin{table}[t]
 \centering\small
@@ -3060,10 +3085,19 @@ the independent-option scorer is real rather than an artifact of our harness.
 four option texts. We present that same set 24 times, once per permutation, and
 change nothing else: the instruction string, the state, $k$, the decoding
 configuration and the option texts themselves are byte-identical across the 24
-calls, and no call is retried. The only quantity that varies is which slot each
-option occupies. Anything that moves across the 24 calls is therefore
-attributable to order, which is what makes this the cleanest of our seven
-interventions.
+calls, and no call is retried. The only quantity that varies is which slot, and
+therefore which letter, each option occupies. Anything that moves across the 24
+calls is attributable to that reordering, which cannot separate position from
+labeling (\S\ref{sec:order}): the condition is clean in what it holds fixed, not in
+what it can attribute.
+
+\paragraph{Item samples.} The three arms' item samples were drawn separately, $992$
+for Laya-ml, $299$ for Lod-lille and $300$ for Jev-1.13, and barely overlap: no
+item is common to all three, and any two share at most $33$. Every cross-arm
+figure in Tables~\ref{tab:order} and~\ref{tab:orderaudit} is therefore a comparison
+of rates on different items, not a paired one. At these sizes the gap between
+$83.7\%$ and $10.7\%$ is far outside sampling error, but item composition is not
+controlled across arms.
 
 \paragraph{Recovering option identity.} The harness records, per call, the
 permutation as a four-digit string in which position $s$ holds the index, in the
@@ -3097,9 +3131,10 @@ orderings of the same four options ($n=992/299/300$).
 across the 24 orderings, averaged over items; \emph{selection spread} is the gap
 between the most and least chosen slot, pooled over orderings, and is $0$ under no
 positional preference. The marker-based scorer changes its chosen gloss on
-$83.7\%$ of items against $10.7\%$ for the independent-option scorer. Lod is
-documented as order-independent by construction; Appendix~\ref{app:position} shows
-it is not, which is why its entries here are small rather than zero.}
+$83.7\%$ of items against $10.7\%$ for the independent-option scorer. The three
+item samples are drawn separately per arm, so cross-arm comparisons are unpaired.
+Lod is documented as order-independent by construction; the permutation audit below
+shows it is not, which is why its entries here are small rather than zero.}
 \label{tab:order}
 \end{table}
 
@@ -3166,10 +3201,10 @@ weights, and we do not claim it.
 \paragraph{Position bias.} Figure~\ref{fig:order} gives the distributional
 summaries behind Table~\ref{tab:order}, both from the permutation sweep.
 Figure~\ref{fig:position} is the one panel in this appendix drawn from a different
-run: it reports per-slot selection shares over the full ladder condition, all
-$8{,}876$ items for Laya-ml and $8{,}761$ for Jev-1.13, because position is
-randomized per item there and the estimate is far better powered than the sweep's
-$992$ items would allow. The sweep agrees in direction and is milder, $32.7\%$
+run: it reports per-slot selection shares over the full ladder condition, pooled
+over its families, on $8{,}876$ items for Laya-ml, $888$ for Lod-lille and
+$8{,}761$ for Jev-1.13, because position is randomized per item there and the
+estimate is far better powered than the sweep's $992$ items would allow. The sweep agrees in direction and is milder, $32.7\%$
 against $18.8\%$ on slot B and slot A for Laya-ml. Because the gold option is
 placed uniformly at random in both, the expectation under no positional bias is
 exactly $0.25$ in every slot for every arm, so neither needs a baseline model: the
@@ -3248,7 +3283,8 @@ permutation is reproducible and identical across arms. The split seed is
 20261001. The commercial arm uses a disjoint block seed set (order audit 17000,
 literal 12000, ceiling 11000, Bengali control 14000, options 16000) because its
 blocks ran in a different order; the permutation for a given item is still a
-pure function of seed and id.
+pure function of seed and id. Lod-lille's 10\% subset was drawn once with seed
+$909$.
 
 \paragraph{Call volume and cost.} The commercial arm issued 56{,}533 calls for
 \$0.9348 at \$0.042 per million input tokens with output free. The blocks are
@@ -3268,7 +3304,9 @@ Transient 429 and 5xx responses were retried with exponential backoff to a
 \paragraph{Statistics.} All intervals are 95\% percentile bootstrap over items,
 2{,}000 resamples, fixed seed 0. ECE uses 15 equal-width bins. Paired
 comparisons use McNemar's exact test via the binomial distribution. AURC is
-reported against a random-gate baseline computed on the same items.
+reported against a random-gate baseline computed on the same items. Differences
+and ratios are computed from unrounded values, so they can differ in the last digit
+from differences of the printed figures.
 
 \paragraph{What is released.} The per-item outputs for every cell of every
 experiment (one row per item per condition, carrying the full probability
@@ -3284,22 +3322,20 @@ a direct check: on the 4{,}440 overlapping rows the gold key, gold position,
 idiom string and literal-distractor key agree at $1.000$. That check is itself a
 released artifact, and it is what licenses every paired test in the paper.
 
-\paragraph{The matrix run.} The six cells of \S\ref{sec:capture} were run
-afterwards as one job, with its own seed namespace (21000) so no option
-permutation collides with the runs above. Every cell covers the same 3{,}265
+\paragraph{The matrix run.} The six cells of \S\ref{sec:capture} were run as one
+job, with their own seed namespace (21000) so no option permutation collides with
+the runs above. Every cell covers the same 3{,}265
 items and is built by a single function; the two languages share one distractor
 draw per item and are shuffled independently from the same generator. Laya-ml
 ran both languages on the multilingual checkpoint, so only the language changes
-and the checkpoint does not. Lod-lille ran the full pool rather than its earlier
-10\% subset, which supersedes the thin 316-item in-pool estimate. The
+and the checkpoint does not. Lod-lille ran the full pool here rather than its
+10\% subset, so its matrix cells rest on $3{,}265$ items. The
 commercial arm issued 6{,}531 calls for \$0.1152. Its English cell reproduces
 its English-ladder value to four decimal places ($0.0472$), which is the check
 that the two constructions measure the same thing.
 
-\paragraph{Known gaps.} E2 was not run on the commercial arm. The reason is
-ordering rather than language or cost: its Bengali blocks, the control and the
-matrix, were planned before the surface-invariance pairs were, and we did not
-return to it. Cost was not the constraint: the whole commercial arm came to
+\paragraph{Known gaps.} E2 was not run on the commercial arm, a gap in coverage
+rather than a constraint of language or cost. Cost was not the constraint: the whole commercial arm came to
 \$1.05, the \$0.9348 of the main blocks plus the \$0.1152 of the matrix run. The matrix covers the literal condition only; the other distractor
 families were not run in both languages. The confidence \emph{inversion} remains a
 two-arm result, although \S\ref{sec:confidence} reports the commercial arm's
