@@ -11,25 +11,25 @@ repository URL.
 ### Title
 
 ```
-Literal Lock-In: How Test Language Shifts Literal Attraction in Typed Decision Models on Bangla Idioms
+Literal Lock-In: How Test Language Shifts Literal Attraction in Typed Decision Models on Bengali Idioms
 ```
 
 ### Keywords
 
 ```
-decision models, typed output, option scoring, literal attraction, idioms, figurative language, Bangla, Bengali, low-resource languages, cross-lingual evaluation, calibration, selective prediction, confidence, model auditing, guardrails
+decision models, typed output, option scoring, literal attraction, idioms, figurative language, Bengali, low-resource languages, cross-lingual evaluation, calibration, selective prediction, confidence, model auditing, guardrails
 ```
 
 ### TL;DR
 
 ```
-Dropping an idiom's own literal gloss into the option list captures three decision models on Bangla, 1.9 to 6.4 times more than in English on the same paired items, and their confidence inverts, so gating on it is worse than gating at random.
+Dropping an idiom's own literal gloss into the option list captures three decision models on Bengali, 1.9 to 6.4 times more than in English on the same paired items, and their confidence inverts, so gating on it is worse than gating at random.
 ```
 
 ### Abstract
 
 ```
-Decision models, non-generative scorers that report a probability over caller-supplied options and emit no text, are increasingly deployed as routers, classifiers and guardrails. Because they generate nothing, rationales and chain-of-thought do not apply. We audit three: an encoder scorer, a decoder scorer and a closed API, entirely through interventions on the option set, using expert-annotated Bangla idioms carrying a gold figurative and a gold literal gloss. Dropping an idiom's own literal gloss into the option list draws every arm toward it, taking 66% to 96% of each arm's remaining Bangla errors. A model x language matrix over one shared item set shows how far this depends on the test language: every arm is 1.9 to 6.4 times more captured in Bangla than in English on the same paired entries, the commercial model's apparent resistance is a property of its test language, and capability does not order the failure. Calibration degrades in all three arms under the same shift, and on the open arms confidence inverts, so gating on it is worse than gating at random. On a semantics-free option list, where accuracy is at chance, the best-calibrated arm still reports mean confidence 0.82. Code and data are available at https://anonymous.4open.science/r/FSS-CC4D
+Decision models, non-generative scorers that report a probability over caller-supplied options and emit no text, are increasingly deployed as routers, classifiers and guardrails. Because they generate nothing, rationales and chain-of-thought do not apply. We audit three: an encoder scorer, a decoder scorer and a closed API, entirely through interventions on the option set, using expert-annotated Bengali idioms carrying a gold figurative and a gold literal gloss. Dropping an idiom's own literal gloss into the option list draws every arm toward it, taking 66% to 96% of each arm's remaining Bengali errors. A model x language matrix over one shared item set shows how far this depends on the test language: every arm is 1.9 to 6.4 times more captured in Bengali than in English on the same paired entries, the commercial model's apparent resistance is a property of its test language, and capability does not order the failure. Calibration degrades in all three arms under the same shift, and on the open arms confidence inverts, so gating on it is worse than gating at random. On a semantics-free option list, where accuracy is at chance, the best-calibrated arm still reports mean confidence 0.82. Code and data are available at https://anonymous.4open.science/r/FSS-CC4D
 ```
 
 ### Research Area
@@ -77,19 +77,19 @@ Where each one is earned, so you can drop any that you think overclaims:
 | metrics | Resources and Evaluation | LAR, and ECE, ACE, Brier, AURC and AUGRC in Section 5.2 and Appendix F |
 | statistical testing for evaluation | Resources and Evaluation | 95% percentile bootstrap and McNemar's exact test throughout, Appendix R |
 | reproducibility | Resources and Evaluation | per-item outputs, seeds, split manifests, run records and per-figure CSVs, Appendix R |
-| datasets for low resource languages | Resources and Evaluation | the Bangla corpus and the Bangla cells of every experiment |
+| datasets for low resource languages | Resources and Evaluation | the Bengali corpus and the Bengali cells of every experiment |
 | calibration/uncertainty | Interpretability and Analysis | Section 5.2 and Appendix F: three calibration metrics, the inverted reliability curves, selective prediction |
 | robustness | Interpretability and Analysis | the perturbation, surface-form and option-order experiments, Appendices M, N and Q |
 | data shortcuts/artifacts | Interpretability and Analysis | Section 5.6 and Appendix J: the verbatim-overlap and Latin-script cues, measured rather than assumed away |
 | multilingual evaluation | Multilingualism and Cross-Lingual NLP | the model x language matrix over one shared item set, Section 5.1 and Appendix I |
-| less-resourced languages | Multilingualism and Cross-Lingual NLP | Bangla, and the finding that the failure localizes to the test language |
+| less-resourced languages | Multilingualism and Cross-Lingual NLP | Bengali, and the finding that the failure localizes to the test language |
 
 Two Resources and Evaluation keywords I left out on purpose. **corpus creation**
 and **NLP datasets**: we create no corpus. Section 3 says we add no annotation and
 assemble every intervention from fields that already exist, so claiming either
 would invite a reviewer to look for a resource contribution that is not there.
 **multilingual corpora** is also out, since the source corpus is monolingual
-Bangla and the English side comes from one annotated field.
+Bengali and the English side comes from one annotated field.
 
 ### Contribution Types
 

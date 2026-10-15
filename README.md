@@ -1,8 +1,8 @@
-# ANON-PROJECT — Bangla Figurative Decision-Model diagnostics
+# ANON-PROJECT — Bengali Figurative Decision-Model diagnostics
 
 Behavioural diagnostics for *decision models* — non-autoregressive, option-scoring
 models that return calibrated probabilities over a caller-supplied option set and
-never generate text — applied to Bangla idioms (বাগধারা).
+never generate text — applied to Bengali idioms (বাগধারা).
 
 Because these models cannot explain themselves (no chain of thought, no
 self-rationalisation), every diagnostic here is an **intervention on the input** with
@@ -37,7 +37,7 @@ captured one.
 3. **Option-order dependence dissociates cleanly**: 83.7% of Laya's items change
    answer under reordering versus 10.7% of Lod's, a 12× gap in probability stability.
    Independent-option scoring delivers what it claims; option-marker scoring does not.
-4. **Failure localises to Bangla**, not to figurativeness: +0.246 / +0.380 from
+4. **Failure localises to Bengali**, not to figurativeness: +0.246 / +0.380 from
    swapping language alone on the same model.
 
 ## Layout
@@ -73,7 +73,7 @@ analysis runs entirely off the committed artifacts.
 
 ## The instrument
 
-Given a Bangla idiom, choose its gold `figurative_meaning_bn` from k = 4 candidates.
+Given a Bengali idiom, choose its gold `figurative_meaning_bn` from k = 4 candidates.
 Exactly scored, no rubric, no human judgment — which turns the generative benchmark
 of the [LREC 2026 Bangla Bagdhara paper](https://aclanthology.org/2026.lrec-1.546.pdf)
 into a discriminative one. The **distractor family is the independent variable**;
@@ -120,15 +120,15 @@ match at **1.000**. A failure there is fatal, not cosmetic.
 No titles (captions belong in the paper), ACL single/double column widths, embedded
 TrueType, CMYK palette on white. Laya is drawn in cyan, Lod in magenta throughout.
 
-**No Bangla glyphs in any figure** — matplotlib does not use HarfBuzz and cannot
+**No Bengali glyphs in any figure** — matplotlib does not use HarfBuzz and cannot
 shape Bengali, and no Bengali font was available on the analysis machine. Every
 figure is quantitative by design; qualitative examples live in `FINDINGS.md`, which
-renders Bangla natively.
+renders Bengali natively.
 
 ## Data
 
 [Bangla Bagdhara](https://www.kaggle.com/datasets/sakhadib/bangla-bagdhara) — 10,361 published rows (10,359 on load, 8,876 usable); Sakhawat et al., LREC 2026, doi:10.63317/546w2cys6m6t
-idioms under a 19-field schema, expert-validated by consensus of ≥2 Bangla
+idioms under a 19-field schema, expert-validated by consensus of ≥2 Bengali
 linguists. After deduplication on the idiom string and requiring both a literal and a
 figurative gloss: **8,876 items**.
 

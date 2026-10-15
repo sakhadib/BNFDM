@@ -14,7 +14,7 @@
 % Explicitly keep the main text in Times.
 \setmainfont{TeX Gyre Termes}
 
-% ── Bangla ────────────────────────────────────────────────────────────
+% ── Bengali ────────────────────────────────────────────────────────────
 \newfontface{\bn}{kalpurush.ttf}[
     Script=Bengali,
     Language=Bengali
@@ -119,7 +119,7 @@
 % ── Title ─────────────────────────────────────────────────────────────
 \title{
     Literal Lock-In: How Test Language Shifts Literal Attraction\\
-    in Typed Decision Models on Bangla Idioms
+    in Typed Decision Models on Bengali Idioms
 }
 
 \author{Anonymous Submission}
@@ -136,11 +136,11 @@ caller-supplied options and emit no text, are increasingly deployed as routers,
 classifiers and guardrails. Because they generate nothing, rationales and
 chain-of-thought do not apply. We audit three: an encoder scorer, a decoder
 scorer and a closed API, entirely through interventions on the option set, using
-expert-annotated Bangla idioms carrying a gold figurative and a gold literal
+expert-annotated Bengali idioms carrying a gold figurative and a gold literal
 gloss. Dropping an idiom's own literal gloss into the option list draws every arm
-toward it, taking $66\%$ to $96\%$ of each arm's remaining Bangla errors. A model
+toward it, taking $66\%$ to $96\%$ of each arm's remaining Bengali errors. A model
 $\times$ language matrix over one shared item set shows how far this depends on
-the test language: every arm is $1.9$ to $6.4$ times more captured in Bangla than
+the test language: every arm is $1.9$ to $6.4$ times more captured in Bengali than
 in English on the same paired entries, the commercial model's apparent resistance
 is a property of its test language, and capability does not order the failure.
 Calibration degrades in all three arms under the same shift, and on the open arms
@@ -157,10 +157,10 @@ still reports mean confidence $0.82$. Code and data are available at
 % \caption{\textbf{The model takes the words.} \emph{Agnibal} is built from the
 % words for \emph{fire} and \emph{strength} and means intense hunger; English says
 % \emph{fire in the belly}. With both readings in the option list, all three
-% models we audit choose the literal one in Bangla, at $p = 1.00$, $0.97$ and
+% models we audit choose the literal one in Bengali, at $p = 1.00$, $0.97$ and
 % $0.36$; asked in English with the same four options, two of the three recover.
 % Across 3{,}265 items literal attraction falls from $0.731$, $0.918$ and $0.304$
-% in Bangla to $0.379$, $0.241$ and $0.047$ in English (\S\ref{sec:capture}).}
+% in Bengali to $0.379$, $0.241$ and $0.047$ in English (\S\ref{sec:capture}).}
 % \label{fig:teaser}
 % \end{figure}
 
@@ -170,15 +170,15 @@ still reports mean confidence $0.82$. Code and data are available at
 \includegraphics[width=\columnwidth]{figures/fig_bn_teaser_2.pdf}
 \caption{\textbf{The model takes the words.}
 \swL Laya-ml, \swD Lod-lille and \swJ Jev-1.13 keep these three markers
-throughout the paper. The Bangla idiom \bangla{অগ্নিবল} (\emph{agnibal}) is built
+throughout the paper. The Bengali idiom \bangla{অগ্নিবল} (\emph{agnibal}) is built
 from \bangla{অগ্নি} (\emph{fire}) and \bangla{বল} (\emph{strength}) and means
 intense hunger. With both readings in the option list, all three models select the
-literal gloss in Bangla, at $p=1.00$, $0.97$ and $0.36$. Asked as the paired
+literal gloss in Bengali, at $p=1.00$, $0.97$ and $0.36$. Asked as the paired
 English entry, with the English glosses of the same four options, Lod-lille and
 Jev-1.13 recover and Laya-ml does not. Across the $3{,}265$ paired items literal
-attraction falls from $0.731$, $0.918$ and $0.304$ in Bangla to $0.379$, $0.241$
+attraction falls from $0.731$, $0.918$ and $0.304$ in Bengali to $0.379$, $0.241$
 and $0.047$ in English (\S\ref{sec:capture}). Every item in that pool carries an
-English parenthetical inside its Bangla literal option by construction, this one
+English parenthetical inside its Bengali literal option by construction, this one
 included; \S\ref{sec:construction} measures what that cue is worth and shows
 capture without it.}
 \label{fig:teaser}
@@ -218,7 +218,7 @@ computable but has no evident linguistic referent. We would rather intervene on
 the expression as a unit than report shares we cannot interpret
 (Appendix~\ref{app:why}).
 
-We take the option set as the intervention surface instead. Bangla
+We take the option set as the intervention surface instead. Bengali
 \emph{b\=agdh\=ar\=a} (idioms) are well suited to this because the expert
 resource we use ships, for each idiom, both a gold figurative meaning and a gold
 \emph{literal} gloss: a ready-made, human-certified counterfactual distractor
@@ -248,7 +248,7 @@ Appendix~\ref{app:positioning} sets out how each relates to our design.
 
 \paragraph{Idioms in NLP.} Idiom resources and tasks are well established
 \citep{haagsma2020magpie,tayyarmadabushi2022semeval,chakrabarty2022flute},
-including for Bangla \citep{sakhawat-etal-2026-words}, and the difficulty of
+including for Bengali \citep{sakhawat-etal-2026-words}, and the difficulty of
 figurative language for distributional models is long-noted
 \citep{shwartz2019pain}. Psycholinguistics frames the phenomenon as competition
 between a literal and a figurative route whose resolution depends on
@@ -291,24 +291,24 @@ contrast sets and counterfactual minimal pairs
 the contribution is carrying that tradition into a model class with no text
 output, where it is one of the few instruments left.
 
-\paragraph{Low-resource evaluation.} Bangla has strong encoders and corpora
+\paragraph{Low-resource evaluation.} Bengali has strong encoders and corpora
 \citep{bhattacharjee2022banglabert,kakwani2020indicnlpsuite}, and cross-lingual
 benchmarks establish the transfer gap
 \citep{hu2020xtreme,ruder2021xtremer,adelani2021masakhaner};
-\S\ref{sec:crosslingual} localizes our failure to the Bangla side rather than to
+\S\ref{sec:crosslingual} localizes our failure to the Bengali side rather than to
 figurativeness.
 
 \section{Dataset}
 \label{sec:dataset}
 
 \paragraph{Source corpus.} We use \emph{Bangla Bagdhara}
-\citep{sakhawat-etal-2026-words}, a corpus of 10{,}361 Bangla (Bengali) idioms
+\citep{sakhawat-etal-2026-words}, a corpus of 10{,}361 Bengali idioms
 annotated under a 19-field schema by expert consensus.\footnote{The published
 count is 10{,}361 and the distributed record file holds 10{,}359; the two missing
 rows are lost in the corpus's own export rather than in our loader, which parses
 all 10{,}359 without error, so we cannot recover them. Of the 10{,}359, 8{,}876
 carry every field the instrument requires.} Each row carries the idiom,
-a gold figurative meaning in Bangla, an expert literal gloss, semantic tags,
+a gold figurative meaning in Bengali, an expert literal gloss, semantic tags,
 alternative surface forms certified as meaning-preserving, and a gold carrier
 sentence. We add no annotation; every intervention below is assembled from
 fields that already exist.
@@ -561,7 +561,7 @@ gloss. Laya-ml's full-set decomposition, $0.151$ / $0.644$ / $0.205$, is in
 Appendix~\ref{app:ladder}.
 
 \paragraph{Capture tracks the language, not capability.} The arms above ran the
-literal condition in Bangla, while the commercial arm's headline $\LAR = 0.047$ is
+literal condition in Bengali, while the commercial arm's headline $\LAR = 0.047$ is
 \emph{English}, so the two are not comparable as they stand. We therefore ran the
 full model $\times$ language matrix on the 3{,}265-item shared pool, every cell
 built by one function from one seed (Table~\ref{tab:matrix},
@@ -570,21 +570,21 @@ $[0.0401, 0.0545]$, matching its value in the English ladder of
 Appendix~\ref{app:ladder} and checking that the two constructions measure the same
 thing.
 
-Two things follow. First, \textbf{every arm is far more captured in Bangla than in
+Two things follow. First, \textbf{every arm is far more captured in Bengali than in
 English on the same paired entries}: $0.731 \rightarrow 0.379$, $0.918 \rightarrow
 0.241$ and $0.304 \rightarrow 0.047$, all paired McNemar $p < 10^{-100}$. Second,
 \textbf{capture is not monotone in capability}: Lod-lille is more accurate than
 Laya-ml and more captured, Jev-1.13 more accurate than both and less captured. The
 open arms fall below chance here; Jev-1.13 does not, but loses $0.390$ of accuracy
-against its own English run. The pool is not neutral and its Bangla literal option
+against its own English run. The pool is not neutral and its Bengali literal option
 carries a cue the English one lacks; on the $5{,}485$ corpus items without it,
-Bangla capture is still $0.581$ and $0.871$ (Appendices~\ref{app:matrix},
+Bengali capture is still $0.581$ and $0.871$ (Appendices~\ref{app:matrix},
 \ref{app:construction}).
 
 
 
 \paragraph{The capability ordering.} One scored condition is matched across all three
-arms, Bangla idiom with random distractors, and on it the commercial model is far
+arms, Bengali idiom with random distractors, and on it the commercial model is far
 ahead, $0.736$ against $0.367$ and $0.484$ (Appendix~\ref{app:threeway}). That is
 the ordering the calibration results below should be read against, and the one
 capture does not follow.
@@ -651,7 +651,7 @@ than random on that measure as on AURC.
 
 Calibration degrades in all three arms; only the inversion is two-arm. Jev-1.13
 looks well calibrated in English (ECE $0.014$, Brier $0.107$) and is not on the
-same items in Bangla (ECE $0.135$, Brier $0.604$), where its advantage over a
+same items in Bengali (ECE $0.135$, Brier $0.604$), where its advantage over a
 random gate falls from $5.2\times$ to $1.4\times$. It is not inverted, though,
 staying more confident when correct ($0.724$) than when captured ($0.644$), so the
 sign depends on the arm. This does not contradict \citet{ibrahim2026evaluating}:
@@ -665,7 +665,7 @@ are \emph{least} accurate
 \label{sec:nosignal}
 
 The \textsc{o4} ablation replaces every option's text with a bare ordinal label,
-\bangla{অর্থ}~\texttt{1}--\texttt{4} for the Bangla arms and
+\bangla{অর্থ}~\texttt{1}--\texttt{4} for the Bengali arms and
 \texttt{meaning}~\texttt{1}--\texttt{4} for the commercial one, so the four options are distinguishable but carry no meaning. With the gold
 position randomized and no option carrying information, expected accuracy is
 $0.25$ and whatever confidence survives is overconfidence, with no modeling
@@ -759,7 +759,7 @@ conditions we state with the result.
 On the option side, scrambling the words inside every option costs almost nothing:
 writing \emph{signal} for accuracy above chance as a fraction of the full-gloss
 condition's, the three arms retain $0.928$, $0.944$ and $1.005$ of it. The
-companion truncation is weaker than it looks, since the median Bangla gloss is
+companion truncation is weaker than it looks, since the median Bengali gloss is
 four words and truncation to six is a no-op on $77.8\%$ of options. The scramble
 is the result, and it converges with \citet{sun2026typesafe} from the other
 direction; the scope condition is that the series runs on random distractors,
@@ -788,7 +788,7 @@ corpus it is often lexically close to the idiom. Three properties could let a
 lexical matcher select it without reading anything. The idiom is a single word on
 $42.3\%$ of items, and on $18.0\%$ the literal gloss contains the idiom verbatim.
 In the matrix pool it is the only option written partly in Latin script, since no
-Bangla figurative gloss in the corpus contains a Latin character. And it is longer
+Bengali figurative gloss in the corpus contains a Latin character. And it is longer
 than the gold gloss on $67\%$ of items, though longest of all four on only
 $40.2\%$.
 
@@ -815,7 +815,7 @@ gloss most often coincide.
 \toprule
 & \textbf{Laya} & \textbf{Lod} \\
 \midrule
-\multicolumn{3}{@{}l}{\emph{Bangla \LAR{} under \Dlit, by cue}} \\
+\multicolumn{3}{@{}l}{\emph{Bengali \LAR{} under \Dlit, by cue}} \\
 idiom not in gloss      & 0.616 & 0.866 \\
 idiom in gloss          & 0.767 & 0.986 \\
 \quad difference        & $+0.151$ & $+0.120$ \\
@@ -838,12 +838,12 @@ the idiom and carries no English parenthetical, so neither lexical cue is
 available: \LAR{} stays far above the $0.250$ chance level on both arms. Length is
 not removed by that subset and is reported separately in \S\ref{sec:construction},
 where it does not predict capture. The commercial arm cannot be split this way,
-since its only Bangla literal run is the matrix pool, where every item carries an
+since its only Bengali literal run is the matrix pool, where every item carries an
 English parenthetical by construction.}
 \label{tab:construction}
 \end{table}
 
-\subsection{Failure localizes to Bangla, in every arm}
+\subsection{Failure localizes to Bengali, in every arm}
 \label{sec:crosslingual}
 
 E4 asks the same question of an ordinary benchmark item rather than a
@@ -851,10 +851,10 @@ literal-bearing one: hold the model fixed, swap the task language, keep the
 distractors random. Every arm moves by a large margin, Laya-ml $+0.246$,
 Lod-lille $+0.380$ and Jev-1.13 $+0.230$, each paired on that arm's own shared
 items (all McNemar $p<0.001$). Lod-lille reaches $0.864$ in English against
-$0.484$ in Bangla, so the figurative concepts appear largely available to it and
-the Bangla route is where the loss occurs, consistent with its documented
+$0.484$ in Bengali, so the figurative concepts appear largely available to it and
+the Bengali route is where the loss occurs, consistent with its documented
 English-only training evaluation. Laya-ml's English-only checkpoint on Bengali
-script sits at $0.283$, barely above chance, which makes it unlikely the Bangla
+script sits at $0.283$, barely above chance, which makes it unlikely the Bengali
 result is an artifact of the scorer rather than of the language. Here too the
 English condition presents the annotator's nearest English idiom rather than a
 translation (Appendices~\ref{app:crossling}, \ref{app:construction}).
@@ -883,7 +883,7 @@ annotation and works unchanged on a closed, text-free model.
 
 One substituted option is enough. The idiom's own expert literal gloss draws all
 three arms toward the literal reading, taking $66\%$ to $96\%$ of what each arm
-gets wrong in Bangla, and the model $\times$ language matrix separates two
+gets wrong in Bengali, and the model $\times$ language matrix separates two
 explanations that are easy to conflate: capture falls by $0.26$ to $0.68$ in every
 arm when the paired entries are asked in English, so the commercial model's
 apparent resistance belongs to its test language rather than to the model.
@@ -943,33 +943,33 @@ English literal gloss, which is not a neutral sample: for Laya-ml, in-pool \LAR{
 is higher than out-of-pool while \Drand{} accuracy is unchanged, so the absolute
 rates there are higher than they would be corpus wide. That difference is not
 generic pool selection. Pool membership requires an English parenthetical inside
-the Bangla literal gloss, and Appendix~\ref{app:construction} shows the
+the Bengali literal gloss, and Appendix~\ref{app:construction} shows the
 parenthetical is itself worth $+0.165$ of \LAR{} on Laya-ml, which is most of the
 in-pool elevation. The language comparison is paired within item and within model,
 so the selection affects the levels rather than the direction. The matrix also covers
 the literal condition only; we did not run the other distractor families in both
 languages. The confidence results in \S\ref{sec:confidence} remain two-arm,
 because the commercial arm never shows the inversion, not because it was
-unmeasured: \S\ref{sec:confidence} reports its Bangla calibration from the matrix
+unmeasured: \S\ref{sec:confidence} reports its Bengali calibration from the matrix
 outputs.
 
 The two language cells are also not symmetric in construction, and this is the
 limitation we would flag hardest. They are paired entries rather than identical
-items: the Bangla state is the idiom, while the English state is the annotator's
+items: the Bengali state is the idiom, while the English state is the annotator's
 nearest English idiom rather than a translation of it. The two literal glosses are
-drawn from one annotated field in different ways, which leaves the Bangla literal
+drawn from one annotated field in different ways, which leaves the Bengali literal
 option both lexically closer to its own state and, because it retains its English
 parenthetical, the only option in the list written partly in Latin script.
 Appendix~\ref{app:construction} sets out all four asymmetries we could find and
 tests the two that recorded outputs can reach. Restricted to the $1{,}429$ items
-whose Bangla literal gloss shares no content word with the idiom, the capture gap
+whose Bengali literal gloss shares no content word with the idiom, the capture gap
 is $+0.358$, $+0.610$ and $+0.310$ against headline gaps of $+0.352$, $+0.677$ and
 $+0.256$. Restricted to the $5{,}485$ corpus items whose literal gloss carries no
-English parenthetical at all, Bangla capture is still $0.581$ and $0.871$ on the
+English parenthetical at all, Bengali capture is still $0.581$ and $0.871$ on the
 two open arms, against a chance level of $0.250$. Neither cue accounts for the
 result, though the second is worth a real $+0.165$ on one arm and we report it as
 such. What we cannot do without new runs is make the two cells symmetric by
-construction; a translation-paired corpus, or a Bangla cell with the parenthetical
+construction; a translation-paired corpus, or a Bengali cell with the parenthetical
 stripped, would settle what we can only bound.
 
 More broadly, this is one corpus, one language, two small open models and one
@@ -1002,7 +1002,7 @@ part of the headline effect on one arm. Commercial endpoints are mutable, so the
 Jev-1.13 results should be read as a dated snapshot rather than a standing
 property of the product.
 
-Bangla is under-served relative to its speaker population, and we think an audit
+Bengali is under-served relative to its speaker population, and we think an audit
 that locates a failure in the language rather than in the task is the more useful
 kind to publish. The instrument, the per-item outputs and the analysis code are released under
 CC BY-SA 4.0, the corpus's own license, and the two open checkpoints are used
@@ -1128,19 +1128,19 @@ also means the five distractor families differ in nothing but their option text.
 \toprule
 \textbf{Arm} & \textbf{Instruction string} \\
 \midrule
-Bangla &
+Bengali &
 \bangla{নিচের বাংলা বাগধারাটির প্রকৃত ভাবার্থ কোনটি?} \\
 English &
 ``What is the actual figurative meaning of this idiom?'' \\
 \bottomrule
 \end{tabularx}
 \caption{The two instruction strings. Each is one sentence and is byte-identical
-across families, experiments and arms; the Bangla string is the direct equivalent
+across families, experiments and arms; the Bengali string is the direct equivalent
 of the English one. The commercial arm receives the English string in its English
-blocks and the \emph{same Bangla string} in its Bangla control and its Bangla
+blocks and the \emph{same Bengali string} in its Bengali control and its Bengali
 matrix cell. The two open arms are configured with one instruction string, the
-Bangla one, and their task configuration carries no second string, so their
-English E4 cells were asked in Bangla about an English state; the per-item outputs
+Bengali one, and their task configuration carries no second string, so their
+English E4 cells were asked in Bengali about an English state; the per-item outputs
 do not log the instruction, so this follows from the released configuration rather
 than from the logs. The matched condition of Appendix~\ref{app:threeway} therefore
 shares its instruction across the three arms, and differs only in the sampled
@@ -1322,7 +1322,7 @@ D &
 \end{tabularx}
 
 \caption{\textbf{One item exactly as received by the models.}
-The state is the Bangla idiom \bangla{ওজন} (\emph{ojon}), literally
+The state is the Bengali idiom \bangla{ওজন} (\emph{ojon}), literally
 ``physical weight,'' with the English equivalent \emph{carry weight}.
 The instruction is identical across items and distractor families.
 The four option texts are the actual strings reconstructed with the
@@ -1367,7 +1367,7 @@ analysis of \S\ref{sec:confidence}: it issues no calls of its own and is compute
 from the E1 outputs. E4's two cells are paired corpus rows rather than the same
 strings: the English cell presents the annotator's English equivalent idiom and
 the English glosses, so what is held fixed is the row and the family, not the
-state (Appendix~\ref{app:construction}). Seeds are the Bangla arms'; the
+state (Appendix~\ref{app:construction}). Seeds are the Bengali arms'; the
 commercial arm uses a disjoint set (Appendix~\ref{app:repro}) because its blocks
 were run in a different order.}
 \label{tab:expgrid}
@@ -1496,7 +1496,7 @@ rather than a robustness check.
 not the same shape. Its worst family in English is \Dsem{} at $0.829$, and the
 literal family at $0.931$ is \emph{easier} for it than the semantic one, which
 inverts the open arms' ordering. Read alone, that looks like a model which has
-simply solved the literal distractor. Read against the Bangla column of
+simply solved the literal distractor. Read against the Bengali column of
 Table~\ref{tab:matrix}, where the same model on the same construction is captured
 at $0.304$, it reads instead as a model for which the literal distractor is easy
 \emph{in English}. Only the matrix distinguishes the two, which is why we report
@@ -1531,7 +1531,7 @@ manipulation.
 \caption{Accuracy by distractor family, and literal attraction on the two
 families that contain a literal gloss. Chance is $0.250$. The commercial column
 is English and is the reason \S\ref{sec:capture} runs the matrix: compare it
-with the Bangla column of Table~\ref{tab:matrix}, where the same model is
+with the Bengali column of Table~\ref{tab:matrix}, where the same model is
 captured at $0.304$.}
 \label{tab:fullladder}
 \end{table}
@@ -1703,7 +1703,7 @@ resource rather than a choice of ours.
 % \begin{figure*}[t]
 % \centering
 % \includegraphics[width=\linewidth]{figures/fig_bn_manipulations.pdf}
-% \caption{What the interventions do to real Bangla text, for the idiom
+% \caption{What the interventions do to real Bengali text, for the idiom
 % \emph{agadh joler machh} (\emph{still waters run deep}, literally ``a fish of
 % deep water''). \emph{Top:} the six E3 states, which are the exact strings logged
 % during the run, with the probability the model gave the gold gloss. Shuffling and
@@ -1832,7 +1832,7 @@ intentions are hard to fathom
 \bottomrule
 \end{tabularx}
 
-\caption{\textbf{What the interventions do to real Bangla text.}
+\caption{\textbf{What the interventions do to real Bengali text.}
 The table shows the exact strings used for the idiom
 \bangla{অগাধ জলের মাছ} (\emph{still waters run deep}, literally
 ``a fish of deep water''); the tinted string in each block is the unmodified one
@@ -1939,7 +1939,7 @@ annotators' own rather than one we wrote.
 % \caption{Five items on which Laya-ml assigns almost all of its probability to
 % the idiom's own literal gloss, shown in Bengali with the English equivalent the
 % annotators recorded. These are not obscure expressions:
-% \emph{ishwarprapti} is the Bangla \emph{kick the bucket} and is read as
+% \emph{ishwarprapti} is the Bengali \emph{kick the bucket} and is read as
 % ``attainment of God'', \emph{akasher chand} is \emph{pie in the sky} and is read
 % as ``the moon of the sky''. Both glosses were present in the option list, and
 % the right-hand column is the mass placed on the literal one.}
@@ -1998,7 +1998,7 @@ carries no English parenthetical, so the literal option is not the only
 Latin-bearing one. Glosses and English equivalents are
 the corpus's own; the English in parentheses is ours, for readability. Both the
 literal and the figurative gloss were in the option list, and the last column is
-the mass placed on the literal one under \Dlit{} on the full Bangla run. On every
+the mass placed on the literal one under \Dlit{} on the full Bengali run. On every
 one of these the model gave the gold gloss $0.01$ or less.}
 \label{tab:bnexamples}
 \end{table*}
@@ -2027,8 +2027,8 @@ what one would expect.
 \includegraphics[width=\columnwidth]{figures/fig2_capture_matrix.pdf}
 \caption{Literal attraction by model and task language, all six cells on the same
 3{,}265 items (error bars 95\% bootstrap CIs; dashed line the four-option chance
-level). \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13; solid bars Bangla, hatched
-bars English. The Bangla ordering does not follow capability, and Jev-1.13's
+level). \swL Laya-ml, \swD Lod-lille, \swJ Jev-1.13; solid bars Bengali, hatched
+bars English. The Bengali ordering does not follow capability, and Jev-1.13's
 English value matches the $0.047$ of the English ladder. The cells are in
 Table~\ref{tab:matrix} and their intervals in Appendix~\ref{app:matrix}.}
 \label{fig:matrix}
@@ -2039,7 +2039,7 @@ paper a comparison moves one thing and holds the rest fixed within one arm. Here
 the design is a full crossing, so the same $3{,}265$ items, the same distractor
 draw and the same seed produce all six cells, and both margins are readable. The
 language margin is large and uniform in sign: every arm is more captured in
-Bangla, by $+0.352$, $+0.677$ and $+0.256$. The capability margin is not even
+Bengali, by $+0.352$, $+0.677$ and $+0.256$. The capability margin is not even
 monotone. Lod-lille, which beats Laya-ml by $+0.133$ on the matched random
 condition (Table~\ref{tab:threeway}), is the \emph{most} captured arm in both
 languages, and the strongest arm is the least captured. A single ordering of
@@ -2050,9 +2050,9 @@ language can.
 redundant. Accuracy counts items answered correctly; \LAR{} counts items where the
 chosen option was specifically the idiom's own literal gloss, which is one of the
 three available errors. The gap between them is the residual error on other
-distractors. For Lod-lille in Bangla, accuracy $0.044$ and \LAR{} $0.918$ leave
+distractors. For Lod-lille in Bengali, accuracy $0.044$ and \LAR{} $0.918$ leave
 $0.038$ for everything else, so the literal gloss accounts for almost the whole
-error budget rather than merely enlarging it. For Jev-1.13 in Bangla, accuracy
+error budget rather than merely enlarging it. For Jev-1.13 in Bengali, accuracy
 $0.536$ and \LAR{} $0.304$ leave $0.160$, so even its errors are less
 literal-dominated. This is the sense in which capture is a specific failure and
 not a restatement of accuracy.
@@ -2072,7 +2072,7 @@ unrun.
 \renewcommand{\arraystretch}{1.12}
 \begin{tabularx}{\columnwidth}{@{}l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
 \toprule
-& \multicolumn{2}{c}{\textbf{Bangla}} & \multicolumn{2}{c}{\textbf{English}} \\
+& \multicolumn{2}{c}{\textbf{Bengali}} & \multicolumn{2}{c}{\textbf{English}} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
 & \textbf{acc} & \textbf{\LAR} & \textbf{acc} & \textbf{\LAR} \\
 \midrule
@@ -2084,8 +2084,8 @@ Jev-1.13  & 0.536 & 0.304 & 0.926 & 0.047 \\
 \caption{The literal condition as a model $\times$ language matrix, all six
 cells measured on the same 3{,}265 items with one construction and one seed
 ($n=3{,}265$ per cell; 95\% CIs in Appendix~\ref{app:matrix}). Bold marks the
-highest \LAR{} per language. Every arm is far more captured in Bangla than in
-English, and the Bangla ordering does not follow capability: Jev-1.13 is the
+highest \LAR{} per language. Every arm is far more captured in Bengali than in
+English, and the Bengali ordering does not follow capability: Jev-1.13 is the
 most accurate and the least captured, while Lod-lille is more accurate than
 Laya-ml and more captured.}
 \label{tab:matrix}
@@ -2102,7 +2102,7 @@ Laya-ml and more captured.}
 \toprule
 & \multicolumn{2}{c}{\textbf{\LAR{} 95\% CI}} & \\
 \cmidrule(lr){2-3}
-& \textbf{Bangla} & \textbf{English} & $\boldsymbol{\Delta}$ \\
+& \textbf{Bengali} & \textbf{English} & $\boldsymbol{\Delta}$ \\
 \midrule
 Laya-ml   & $[.716,.746]$ & $[.363,.397]$ & $+0.352$ \\
 Lod-lille & $[.909,.928]$ & $[.227,.256]$ & $+0.677$ \\
@@ -2112,7 +2112,7 @@ Jev-1.13  & $[.288,.319]$ & $[.040,.055]$ & $+0.256$ \\
 \caption{Bootstrap intervals on the \LAR{} cells of Table~\ref{tab:matrix} and
 the paired within-model language effect. Intervals are 2{,}000-resample
 percentile intervals on the same $3{,}265$ items; $\Delta$ is the
-Bangla-minus-English difference on those paired items, McNemar
+Bengali-minus-English difference on those paired items, McNemar
 $p < 10^{-100}$ in all three rows.}
 \label{tab:matrixci}
 \end{table}
@@ -2124,7 +2124,7 @@ $p < 10^{-100}$ in all three rows.}
 % \caption{The same contrast on a second item, with the returned probabilities.
 % \emph{Abarjana} means an unwanted person; its words mean garbage. Jev-1.13 is
 % asked the identical question with the same four options in both languages: in
-% Bangla it puts $0.85$ on the literal reading and $0.09$ on the gold, in English
+% Bengali it puts $0.85$ on the literal reading and $0.09$ on the gold, in English
 % $0.96$ on the gold. Color marks the option's role, not the model. This is
 % Figure~\ref{fig:teaser}'s claim with the numbers attached.}
 % \label{fig:bnteaser}
@@ -2219,7 +2219,7 @@ $p < 10^{-100}$ in all three rows.}
 % ] at (-3.50,-2.78)
 % {figurative};
 
-% % Bangla options
+% % Bengali options
 % \node[
 %     anchor=west,
 %     font=\small
@@ -2360,10 +2360,10 @@ $p < 10^{-100}$ in all three rows.}
 
 % \caption{\textbf{The same contrast on a second item, with the returned
 % probabilities.}
-% The Bangla idiom \bangla{আবর্জনা} (\emph{abarjana}) means ``an unwanted
+% The Bengali idiom \bangla{আবর্জনা} (\emph{abarjana}) means ``an unwanted
 % person'' figuratively, although its words mean ``garbage or waste''
 % literally. Jev-1.13 is asked the identical question with the same four
-% options in both languages: in Bangla it places $0.85$ on the literal
+% options in both languages: in Bengali it places $0.85$ on the literal
 % reading and $0.09$ on the figurative gloss, whereas in English it places
 % $0.96$ on the figurative gloss. Color marks the option's role, not the
 % model.}
@@ -2388,12 +2388,12 @@ asymmetry that the existing outputs permit.
 
 \paragraph{Where the glosses come from.} Neither literal gloss is a translation
 produced by us or by a machine. The corpus annotates one field per idiom,
-\texttt{literal\_meaning}, written in Bangla with an English parenthetical
-alongside it, so a single expert-authored field carries both readings. The Bangla
+\texttt{literal\_meaning}, written in Bengali with an English parenthetical
+alongside it, so a single expert-authored field carries both readings. The Bengali
 cell uses that field as written. The English cell uses the parenthetical alone,
 recovered by a regular expression that accepts a parenthesized span only if it
 contains at least three ASCII letters and is at least $60\%$ ASCII alphabetic,
-which excludes Bangla asides and bare numerals. Of $8{,}876$ items, $3{,}391$
+which excludes Bengali asides and bare numerals. Of $8{,}876$ items, $3{,}391$
 carry such a parenthetical, $3{,}352$ of those also carry an English equivalent
 idiom, and $3{,}265$ survive a final cut requiring the English literal gloss to be
 lexically distinct from the English gold gloss (Jaccard $< 0.34$). That pool of
@@ -2404,44 +2404,44 @@ annotator-written one does not.
 \paragraph{The four asymmetries.} We can state these precisely, which is better
 than asserting the cells are matched.
 
-\emph{(i) The state differs in kind.} The Bangla state is the idiom itself. The
+\emph{(i) The state differs in kind.} The Bengali state is the idiom itself. The
 English state is the annotator's nearest English idiom, taken from the
-\texttt{similar\_in\_english} field, not a translation of the Bangla one. The
+\texttt{similar\_in\_english} field, not a translation of the Bengali one. The
 cells are therefore paired entries, and we use that phrase in the paper rather
 than ``identical items''.
 
-\emph{(ii) The Bangla literal option is bilingual.} Because the Bangla cell uses
+\emph{(ii) The Bengali literal option is bilingual.} Because the Bengali cell uses
 the annotated field as written, and pool membership requires that field to contain
-an English parenthetical, every one of the $3{,}265$ Bangla literal options
+an English parenthetical, every one of the $3{,}265$ Bengali literal options
 contains its own English gloss inside it, averaging $44$ characters against $24$
 for the English literal option. This is the most serious of the four, because it
-supplies a cue that has nothing to do with reading the expression: no Bangla
+supplies a cue that has nothing to do with reading the expression: no Bengali
 figurative gloss in the corpus contains any Latin character, so whenever the
 literal option carries a parenthetical it is the \emph{only} option in the list
 written partly in Latin script. It is also usually the longer of the two glosses,
 though not reliably the longest of the four: that holds on $40.2\%$ of items, and
 \S\ref{sec:construction} shows length does not predict capture. ``Select the option
-containing English'' would reproduce the Bangla capture numbers for all three
+containing English'' would reproduce the Bengali capture numbers for all three
 arms and would also predict the English cell showing less capture, because there
 the cue is absent. We test it below.
 
 \emph{(iii) The distinctness cut applies to one side only.} The Jaccard
 $< 0.34$ filter between gold and literal gloss was applied in English and not in
-Bangla. Measured after the fact, the filter turns out not to bind: mean gold-versus-literal
-Jaccard is $0.029$ in Bangla against $0.052$ in English, so the
-Bangla side is the more separated of the two and would have passed the cut almost
+Bengali. Measured after the fact, the filter turns out not to bind: mean gold-versus-literal
+Jaccard is $0.029$ in Bengali against $0.052$ in English, so the
+Bengali side is the more separated of the two and would have passed the cut almost
 everywhere. This asymmetry is procedural rather than consequential.
 
-\emph{(iv) The literal gloss echoes the state more often in Bangla.} This is the
-one that could plausibly manufacture the result. The Bangla literal gloss shares at
-least one content word with the Bangla idiom on $56.2\%$ of pool items; the English
+\emph{(iv) The literal gloss echoes the state more often in Bengali.} This is the
+one that could plausibly manufacture the result. The Bengali literal gloss shares at
+least one content word with the Bengali idiom on $56.2\%$ of pool items; the English
 literal gloss shares one with the English equivalent idiom on $25.1\%$. A model
 doing order-free lexical matching on the option side, which
 \S\ref{sec:bagofwords} shows all three partly are, has a surface hook into the
-Bangla literal option that it lacks in English.
+Bengali literal option that it lacks in English.
 
 \paragraph{Testing asymmetry (iv).} The existing per-item outputs are enough to
-test it without running anything new. Split the pool on whether the Bangla literal
+test it without running anything new. Split the pool on whether the Bengali literal
 gloss shares a content word with the idiom and read \LAR{} in each stratum
 (Table~\ref{tab:hook}, upper block). If the hook were driving capture, the
 overlap stratum would be far more captured in every arm. It is not: the effect is
@@ -2455,7 +2455,7 @@ hook is absent and re-reads the gap there (lower block). It barely moves: $+0.35
 $+0.610$ and $+0.310$, against headline gaps of $+0.352$, $+0.677$ and $+0.256$.
 For two of the three arms the gap is slightly \emph{larger} once the hook is
 removed. We read this as showing that asymmetry (iv) does not account for the
-Bangla--English difference, not as showing the cells are equivalent; a corpus
+Bengali--English difference, not as showing the cells are equivalent; a corpus
 paired by translation rather than by annotator judgment would settle what we can
 only bound here.
 
@@ -2466,13 +2466,13 @@ only bound here.
 \toprule
 & \textbf{Laya} & \textbf{Lod} & \textbf{Jev} \\
 \midrule
-\multicolumn{4}{@{}l}{\emph{Bangla \LAR{} by surface hook}} \\
+\multicolumn{4}{@{}l}{\emph{Bengali \LAR{} by surface hook}} \\
 hook absent ($n=1429$)  & 0.716 & 0.845 & 0.376 \\
 hook present ($n=1836$) & 0.742 & 0.975 & 0.247 \\
 difference              & $+0.026$ & $+0.130$ & $-0.129$ \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Capture gap, hook-absent items only}} \\
-Bangla \LAR            & 0.716 & 0.845 & 0.376 \\
+Bengali \LAR            & 0.716 & 0.845 & 0.376 \\
 English \LAR           & 0.358 & 0.236 & 0.066 \\
 gap                    & $+0.358$ & $+0.610$ & $+0.310$ \\
 \addlinespace
@@ -2480,9 +2480,9 @@ headline gap (all pool) & $+0.352$ & $+0.677$ & $+0.256$ \\
 \bottomrule
 \end{tabularx}
 \caption{\textbf{The content-word hook does not carry the language gap.}
-Columns are Laya-ml, Lod-lille and Jev-1.13. ``Hook'' means the Bangla literal
+Columns are Laya-ml, Lod-lille and Jev-1.13. ``Hook'' means the Bengali literal
 gloss shares at least one content word with the idiom, which is the asymmetry
-most likely to inflate Bangla capture. Upper block: capture is not reliably higher
+most likely to inflate Bengali capture. Upper block: capture is not reliably higher
 when the hook is present, and on the commercial arm it is lower. Lower block:
 restricting both language cells to hook-absent items leaves the capture gap
 essentially unchanged, and larger for two of three arms. The script is released
@@ -2492,7 +2492,7 @@ with the per-item outputs.}
 
 \paragraph{Testing asymmetry (ii).}
 The capture matrix cannot test this, because every item in its pool carries a
-parenthetical by construction. The Bangla arm of E1 can. It runs the \Dlit{}
+parenthetical by construction. The Bengali arm of E1 can. It runs the \Dlit{}
 family over all $8{,}876$ items, and on $5{,}485$ of them the literal gloss
 carries no parenthetical at all, so the Latin-script cue is simply absent. If the
 cue were what produces capture, those items should show little of it.
@@ -2503,7 +2503,7 @@ point in opposite directions.
 First, the mechanism is real, at least on the marker-based scorer. Laya-ml's
 \LAR{} is $0.746$ where the cue is present against $0.581$ where it is absent, a
 difference of $+0.165$ with a bootstrap interval of $[+0.145, +0.184]$; on
-Lod-lille it is $+0.037$ with an interval straddling zero. Part of the Bangla
+Lod-lille it is $+0.037$ with an interval straddling zero. Part of the Bengali
 capture we report is therefore attributable to a cue rather than to a reading of
 the expression, and we would not have found that without looking.
 
@@ -2522,7 +2522,7 @@ corpus.
 \toprule
 & \textbf{Laya} & \textbf{Lod} \\
 \midrule
-\multicolumn{3}{@{}l}{\emph{Bangla \LAR{} under \Dlit}} \\
+\multicolumn{3}{@{}l}{\emph{Bengali \LAR{} under \Dlit}} \\
 cue absent    & 0.581 & 0.871 \\
 $n$           & 5{,}485 & 560 \\
 cue present   & 0.746 & 0.909 \\
@@ -2538,14 +2538,14 @@ difference    & $+0.165$ & $+0.037$ \\
 \end{tabularx}
 \caption{\textbf{The Latin-script cue is real but does not carry the result.}
 \swL Laya-ml, \swD Lod-lille. Items are split by whether the idiom's literal gloss
-carries an English parenthetical, which is the only thing in a Bangla option list
+carries an English parenthetical, which is the only thing in a Bengali option list
 written in Latin script. Upper block: the cue is worth $+0.165$ of capture on the
 marker scorer and little on the independent-option scorer, yet capture without it
 is still $0.581$ and $0.871$ against a chance level of $0.250$. Lower block: the
 same split moves accuracy on families containing no literal option by at most
 $0.042$, and on Laya-ml by a consistent $1.4$ to $3.0$ points, an order of
 magnitude below what it buys on the literal family. The commercial arm cannot be split this way,
-since its only Bangla literal run is the pool, where every item carries a
+since its only Bengali literal run is the pool, where every item carries a
 parenthetical.}
 \label{tab:paren}
 \end{table}
@@ -2553,15 +2553,15 @@ parenthetical.}
 This bounds the cue rather than removing it. It covers the two open arms and not
 the commercial one, and the no-cue stratum is a different item set from the pool,
 so these numbers are not a clean subtraction from the matrix. The experiment that
-would settle it is to strip the parenthetical from the Bangla literal option and
-re-run the Bangla cell, which we have not done.
+would settle it is to strip the parenthetical from the Bengali literal option and
+re-run the Bengali cell, which we have not done.
 
 \paragraph{Item construction, and what it could explain.}
 \label{app:items}
 The literal gloss is an annotated field rather than a string we wrote, and in this
 corpus it is often lexically close to the idiom. Of $8{,}876$ items, $3{,}752$
 ($42.3\%$) have a single-word idiom, $3{,}333$ have two words and the rest three
-or more. On $1{,}303$ items ($14.7\%$) the Bangla part of the literal gloss is
+or more. On $1{,}303$ items ($14.7\%$) the Bengali part of the literal gloss is
 identical to the idiom, and on $1{,}599$ ($18.0\%$) it contains the idiom string
 verbatim. The literal option averages $41.1$ characters against $31.7$ for the
 gold gloss and is the longer of the two on $67\%$ of items, although against all
@@ -2618,26 +2618,26 @@ to literal capture specifically. The two therefore measure different things and
 the figure should not be read as a version of Table~\ref{tab:matrix}.
 
 \paragraph{What the four Laya-ml bars are.} Laya-ml has two checkpoints in play.
-The first two bars are the multilingual checkpoint on Bangla and on English, which
+The first two bars are the multilingual checkpoint on Bengali and on English, which
 is the within-model language contrast. The third and fourth use the vendor's
 English-only checkpoint, and exist as a control rather than as a result: the third
 runs it on the English condition, where it should and does perform, and the fourth
 runs it on Bengali script, where it sits at $0.283$, barely above the $0.250$
 chance line. That fourth bar is doing one specific job. It rules out the
-possibility that our Bangla numbers are an artifact of the option-marker scoring
+possibility that our Bengali numbers are an artifact of the option-marker scoring
 harness rather than of the language, because a checkpoint that is documented as
 unable to read the script fails here in the documented way. If the harness were
-manufacturing the Bangla deficit, this bar would not be distinguishable from the
-multilingual checkpoint's Bangla bar, and it is.
+manufacturing the Bengali deficit, this bar would not be distinguishable from the
+multilingual checkpoint's Bengali bar, and it is.
 
 \paragraph{The gains are not uniform, and the ordering is informative.} Lod-lille
 gains the most ($+0.380$), Laya-ml and Jev-1.13 roughly similar amounts ($+0.246$
 and $+0.230$). Lod-lille is the arm whose documentation states English-only
-training evaluation, and it is also the arm whose Bangla accuracy ($0.484$) is
+training evaluation, and it is also the arm whose Bengali accuracy ($0.484$) is
 closest to chance relative to its English accuracy ($0.864$). The natural reading
-is that its figurative knowledge is largely intact and the Bangla interface is
+is that its figurative knowledge is largely intact and the Bengali interface is
 where it is lost. We cannot confirm that without probing the model, which we do
-not do here, and we note the alternative: a model may also be worse at Bangla
+not do here, and we note the alternative: a model may also be worse at Bengali
 figurative semantics specifically, which would produce the same external
 behavior.
 
@@ -2652,11 +2652,11 @@ significant while marginal intervals overlap.
 \centering
 \includegraphics[width=0.74\linewidth]{figures/fig10_crosslingual.pdf}
 \caption{Accuracy by task language, grouped by model: \swL Laya-ml (four bars),
-\swD Lod-lille, \swJ Jev-1.13. \textbf{Solid} bars are Bangla input,
+\swD Lod-lille, \swJ Jev-1.13. \textbf{Solid} bars are Bengali input,
 \textbf{hatched} bars English; Laya-ml's third and fourth
 bars use the English-only checkpoint, the fourth being the control. Error bars
 95\% bootstrap CIs, dashed line chance. Every model gains between 23 and 38
-points when the paired English entry is presented instead of the Bangla idiom.}
+points when the paired English entry is presented instead of the Bengali idiom.}
 \label{fig:crosslingual}
 \end{figure*}
 
@@ -2687,8 +2687,8 @@ Jev-1.13  & 8{,}761 & 0.736 & [0.727, 0.745] \\
 \bottomrule
 \end{tabularx}
 \caption{\textbf{The common baseline across all three arms.}
-The condition is matched across models: a Bangla idiom followed by its
-Bangla figurative gloss with random distractors, the same instruction string and
+The condition is matched across models: a Bengali idiom followed by its
+Bengali figurative gloss with random distractors, the same instruction string and
 the same $k$. It is not byte-identical, because the commercial arm drew its
 sampled distractors under a disjoint seed namespace
 (Appendix~\ref{app:repro}), so the three option lists share the gold and differ
@@ -2699,7 +2699,7 @@ Jev--Lod $+0.259$, and Lod--Laya $+0.133$ (all $p<10^{-9}$).}
 \end{table}
 
 Figure~\ref{fig:threeway} plots Table~\ref{tab:threeway}, the one condition
-that is matched across all three arms: Bangla idiom, Bangla glosses, random
+that is matched across all three arms: Bengali idiom, Bengali glosses, random
 distractors, four options, gold position randomized, one instruction string. The
 sampled distractors are not the same three, because the commercial arm's blocks
 ran under their own seed namespace (Appendix~\ref{app:repro}); what is held is
@@ -2707,7 +2707,7 @@ the construction, not the byte string.
 
 \paragraph{Why only one condition qualifies.} Every other comparison in the paper
 is scoped by something the three arms do not share. The literal condition needs
-an annotated literal gloss, which exists in Bangla for the whole corpus but in
+an annotated literal gloss, which exists in Bengali for the whole corpus but in
 English only for the $3{,}265$-item pool. The confidence results need a comparable
 confidence signal, and the three arms expose three different ones: Laya-ml's
 maximum over option markers, which its shipped per-bucket temperatures were not
@@ -2764,7 +2764,7 @@ three-word expression a particular shuffle and the reversal coincide, and the
 harness logged both conditions independently and happened to produce the same
 state. We print what was logged. Equally, the \emph{substitute one word} row
 replaces the final word with an unrelated token, producing a string that is not
-Bangla in any idiomatic sense, and the model's probability on the gold gloss
+Bengali in any idiomatic sense, and the model's probability on the gold gloss
 \emph{rises} from $0.21$ to $0.24$. That single cell is the clearest illustration
 of \S\ref{sec:bagofwords}: damaging the expression beyond recognition does not cost the
 model anything, because the expression was not what it was reading.
@@ -2777,7 +2777,7 @@ aggregate is the claim and the item is an illustration.
 
 The lower block shows the E6 forms applied to the gold option. The scrambled row
 is worth comparing word by word with the full gloss: it contains the same lexical
-inventory in an order no Bangla reader would accept, and costs the models almost
+inventory in an order no Bengali reader would accept, and costs the models almost
 nothing (Table~\ref{tab:options}). The last row is the semantics-free control, and
 the table makes concrete what that control removes, which is everything except the
 option's label.
@@ -2791,7 +2791,7 @@ maximally far from the original in order while being deterministic rather than
 sampled. \emph{Delete one word} removes material, which should hurt any model
 relying on the full form. \emph{Substitute one word} replaces material with an
 unrelated token, producing a string that is not the idiom at all and is not
-idiomatic Bangla. \emph{Carrier sentence} adds the corpus's own example sentence
+idiomatic Bengali. \emph{Carrier sentence} adds the corpus's own example sentence
 around the intact idiom, which adds disambiguating context without touching the
 expression.
 
@@ -3000,7 +3000,7 @@ accuracy is known a priori and any confidence above zero is therefore unambiguou
 excess.
 
 \paragraph{Caveats.} Three bound what the \textsc{o}-series shows. First,
-truncation to six words is a weaker manipulation than it sounds: the median Bangla
+truncation to six words is a weaker manipulation than it sounds: the median Bengali
 gloss is four words, so truncation leaves $77.8\%$ of options untouched, and the
 English options, median seven words, are cut on $58.0\%$. The scramble is the
 informative row, since it is a no-op only on the $5.7\%$ of options that are a
@@ -3242,7 +3242,7 @@ authors having reported that fitting hurt held-out calibration. Both open arms
 are therefore untempered and comparable on that axis. The commercial arm's
 internal calibration is not observable.
 
-\paragraph{Seeds.} The Bangla arms use a per-experiment seed (E1 1000, E2 2000,
+\paragraph{Seeds.} The Bengali arms use a per-experiment seed (E1 1000, E2 2000,
 E3 3000, E4 4000, E6 6000, E7 7000) added to the item id, so each item's option
 permutation is reproducible and identical across arms. The split seed is
 20261001. The commercial arm uses a disjoint block seed set (order audit 17000,
@@ -3297,12 +3297,12 @@ its English-ladder value to four decimal places ($0.0472$), which is the check
 that the two constructions measure the same thing.
 
 \paragraph{Known gaps.} E2 was not run on the commercial arm. The reason is
-ordering rather than language or cost: its Bangla blocks, the control and the
+ordering rather than language or cost: its Bengali blocks, the control and the
 matrix, were planned before the surface-invariance pairs were, and we did not
 return to it. Cost was not the constraint: the whole commercial arm came to
 \$1.05, the \$0.9348 of the main blocks plus the \$0.1152 of the matrix run. The matrix covers the literal condition only; the other distractor
 families were not run in both languages. The confidence \emph{inversion} remains a
 two-arm result, although \S\ref{sec:confidence} reports the commercial arm's
-Bangla calibration from the matrix outputs.
+Bengali calibration from the matrix outputs.
 
 \end{document}
