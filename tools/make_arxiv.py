@@ -5,7 +5,8 @@ acl_latex.tex is the anonymous ARR source and stays the single place where the
 body text is edited. This script re-applies the preprint-only changes on top of
 it, so the two files can never drift:
 
-  - \\usepackage{acl} instead of [review]: no line numbers, no anonymity banner
+  - \\usepackage[preprint]{acl} instead of [review]: no line numbers and no
+    anonymity banner, but page numbers kept, which is what arXiv wants
   - fontawesome5, for the two link icons in the author block
   - a \\blfootnote macro for the unnumbered equal-contribution note
   - the real author block, laid out as in our LLM-Ideoplasticity preprint
@@ -39,7 +40,7 @@ AUTHOR_BLOCK = r"""\author{
     \\[3pt]
     \href{%s}{\faGithub{}~\texttt{sakhadib/literal-lock-in}}
     \quad
-    \href{%s}{\faGlobe{}~\texttt{sakhadib.github.io/literal-lock-in}}
+    \href{%s}{\faGlobeAmericas{}~\texttt{sakhadib.github.io/literal-lock-in}}
 }
 
 \begin{document}
@@ -59,7 +60,7 @@ BLFOOTNOTE = r"""% ── Unnumbered footnote, for the equal-contribution note �
 % ── Title ─────────────────────────────────────────────────────────────"""
 
 EDITS = [
-    (r"\usepackage[review]{acl}", r"\usepackage{acl}"),
+    (r"\usepackage[review]{acl}", r"\usepackage[preprint]{acl}"),
     (r"\usepackage{booktabs}", "\\usepackage{fontawesome5}\n\\usepackage{booktabs}"),
     (r"% ── Title ─────────────────────────────────────────────────────────────",
      BLFOOTNOTE),
